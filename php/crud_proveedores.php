@@ -22,20 +22,21 @@ if (isset($_POST['register'])){
 
         $Consulta = "INSERT INTO punto-venta_proveedores(nombre, direccion, colonia, cp, rfc, email, telefono, dias_c, usuario, fecha) VALUES ($nombre,$direccion=,$colonia,$cp,$rfc,$email,$telefono,NULL,NULL,NULL)";
 
-        $resultado = mysqli_query($conn, $Consulta)
+        $resultado = mysqli_query($conn, $Consulta);
         if($resultado){
-            <?php 
+            ?>
             <h2 class="ok">Insercion correcta</h2>
-            ?>
+           <?php
         }else{
-            <?php 
-            <h2 class="bad">nao nao</h2>
             ?>
+            <h2 class="bad">nao nao</h2>
+            <?php
         }
     }else{
-        <?php 
-        <h2 class="bad">Complete los campos</h2>
         ?>
+        <h2 class="bad">Complete los campos</h2>
+        <?php
+        }
     
 }
 ?>

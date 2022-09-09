@@ -66,7 +66,7 @@ include('fredyNav.php');
         </div>
         </form>
         <?php
-        include("crud_proveedores.php");
+        include("../php/crud_proveedores.php");
         ?>
     </ul>
 </body>
