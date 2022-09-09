@@ -5,7 +5,11 @@
   include('fredyNav.php');
 ?>
 </style>
+<<<<<<< Updated upstream
 <title>SIC | Inicio Punto de venta</title>
+=======
+<title>SIC | Inicio Punto de Venta</title>
+>>>>>>> Stashed changes
 </head>
 <main>
 <script>
@@ -25,18 +29,12 @@
 	<div id="bienvenida" class="modal">
 	  <div class="modal-content">
 			<?php
-	    $id = $_SESSION['user_id'];
-	    if ($id == 88) {
-	    	$Usuario = 'Elvira';
-	    	$MSJ = 'Usa el sistema correctamente o puedes tener una sanción y cancelación de cuenta (te estamos vigilando). ;) ';
-	    }else{
 	    	$Usuario = $_SESSION['user_name'];
-	    	$MSJ = 'SIC te invita a hacer un buen uso del sistema, que tengas un dia muy productivo. :)';
-	    }
+	    	$MSJ = 'Servicios Integrales de Computación: realiza tus ventas de la mejor manera, sonrie! :)';
 	  	?>
 	    <h3 class="red-text center">¡ Bienvenid@ !</h3><br>
 	    <h4 class="blue-text center"><b><?php echo $Usuario ?></b></h4><br>
-	    <h5><b>"<?php echo $MSJ ?>"</b></h5>	     
+	    <h5><b><?php echo $MSJ ?></b></h5>	     
 	  </div>
 	  <div class="modal-footer">
 	      <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cerrar<i class="material-icons right">close</i></a>
