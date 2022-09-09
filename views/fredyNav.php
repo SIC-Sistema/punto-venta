@@ -44,52 +44,53 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				<i class="material-icons">menu</i>
 			</a>
 			<ul class="right hide-on-med-and-down">
-				<li><a class='dropdown-button' data-target='dropdown1'><i class="material-icons left">phonelink_setup</i>Servicio Técnico <i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button' data-target='dropdown1'><i class="material-icons left">phonelink_setup</i>Catálogo <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown1' class='dropdown-content'>
-				    <li><a href="form_entradas.php" class="black-text"><i class="material-icons">add</i>Nuevo Dispositivo </a></li>
-				    <li><a href="dispositivos.php" class="black-text"><i class="material-icons">phonelink</i>Disp. En General </a></li>
-				    <li><a href="ver_almacen.php" class="black-text"><i class="material-icons">dashboard</i>Almacen <span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
-				    <li><a href="listos.php" class="black-text"><i class="material-icons">assignment_turned_in</i>Listos <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>
-				    <li><a href="pendientes.php" class="black-text"><i class="material-icons">assignment_late</i>Pendientes <span class="new badge pink" data-badge-caption=""><?php echo $pendientes['count(*)'];?></span> </a></li>    
-				    <li><a href="reporte_pagos_ST.php" class="black-text"><i class="material-icons">list</i>Reporte Pagos</a></li>
-				    <li><a href="rep_refacciones.php" class="black-text"><i class="material-icons">list</i>Rep. Refacciones</a></li>    			 
-				    <li><a href="bitacora_taller.php" class="black-text"><i class="material-icons">list</i>Trabajo Taller</a></li>    			 
-				    <li><a href="vehiculos.php" class="black-text"><i class="material-icons">directions_car</i>Vehiculos</a></li>    			 
+				    <li><a href="form_entradas.php" class="black-text"><i class="material-icons">add</i>Item 1 </a></li>
+				    <li><a href="dispositivos.php" class="black-text"><i class="material-icons">phonelink</i>Item 2  </a></li>
+				    <li><a href="ver_almacen.php" class="black-text"><i class="material-icons">dashboard</i>Item 3 <span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
+				    <li><a href="listos.php" class="black-text"><i class="material-icons">assignment_turned_in</i>Item 4  <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>
+				    <li><a href="pendientes.php" class="black-text"><i class="material-icons">assignment_late</i>Item 5  <span class="new badge pink" data-badge-caption=""><?php echo $pendientes['count(*)'];?></span> </a></li>    
+				    <li><a href="reporte_pagos_ST.php" class="black-text"><i class="material-icons">list</i>Item 6 </a></li>
+				    <li><a href="rep_refacciones.php" class="black-text"><i class="material-icons">list</i>Item 7</a></li>    			 
+				    <li><a href="bitacora_taller.php" class="black-text"><i class="material-icons">list</i>Item 8 </a></li>    			 
+				    <li><a href="vehiculos.php" class="black-text"><i class="material-icons">directions_car</i>Item 9 </a></li>    			 
  				 </ul>
-				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">language</i>Redes<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Orden+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">language</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Orden+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
-				    <li><a href="../views/form_instalacion.php" class="black-text"><i class="material-icons">add</i>Nueva Instalación</a></li>    
-					<li><a href="form_mantenimiento.php" class="black-text"><i class="material-icons">add_circle_outline</i>Nuevo Mantimiento</a></li>
-					<li><a href="form_orden.php" class="black-text"><i class="material-icons">add_circle</i>Nueva Orden</a></li>
+				    <li><a href="../views/form_instalacion.php" class="black-text"><i class="material-icons">add</i>Item 1</a></li>    
+					<li><a href="form_mantenimiento.php" class="black-text"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
+					<li><a href="form_orden.php" class="black-text"><i class="material-icons">add_circle</i>Item 3</a></li>
 					 <li><a href="clientes.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
-				    <li><a href="../views/instalaciones.php" class="black-text"><i class="material-icons">list</i>Instalaciones <span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']?></span></a></li>
-				    <li><a href="stock.php" class="black-text"> <i class="material-icons">assignment_ind</i>Stock </a></li>
-				    <li><a href="reportes.php" class="black-text"><i class="material-icons">perm_scan_wifi</i>Reportes <span class="new badge pink" data-badge-caption=""><?php echo $reportes['count(*)'];?></span></a></li>			    
-				    <li><a href="ordenes_servicio.php" class="black-text"><i class="material-icons">assignment</i>Orden Servicio<span class="new badge pink" data-badge-caption=""><?php echo $Orden; ?></span></a></li>			    
-				    <li><a href="mantenimiento.php" class="black-text"><i class="material-icons">build</i>Mantenimiento <span class="new badge pink" data-badge-caption=""><?php echo $Mantenimiento['count(*)'];?></span></a></li>			    
-				    <li><a href="tel.php" class="black-text"><i class="material-icons">phone</i>Teléfono <span class=" new badge pink" data-badge-caption=""><?php echo $tel['count(*)'];?></span></a></li>
-				    <li><a href="menu_rutas.php" class="black-text"><i class="material-icons">near_me</i>Rutas<span class="new badge pink" data-badge-caption=""><?php echo $rutas['count(*)'];?></span></a></li>
-				    <li><a class='dropdown-btn1 black-text' data-target='sub-dropdown4'><i class="material-icons left">assignment_ind</i> Facturacion <i class="material-icons right">chevron_right</i></a></li>
-				    <ul id='sub-dropdown4' class='dropdown-content'>
+				    <li><a href="../views/instalaciones.php" class="black-text"><i class="material-icons">list</i>Item 4 <span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']?></span></a></li>
+				    <li><a href="stock.php" class="black-text"> <i class="material-icons">assignment_ind</i>Item 5 </a></li>
+				    <li><a href="reportes.php" class="black-text"><i class="material-icons">perm_scan_wifi</i>Item 6 <span class="new badge pink" data-badge-caption=""><?php echo $reportes['count(*)'];?></span></a></li>			    
+				    <li><a href="ordenes_servicio.php" class="black-text"><i class="material-icons">assignment</i>Item 7<span class="new badge pink" data-badge-caption=""><?php echo $Orden; ?></span></a></li>			    
+				    <li><a href="mantenimiento.php" class="black-text"><i class="material-icons">build</i>Item 8 <span class="new badge pink" data-badge-caption=""><?php echo $Mantenimiento['count(*)'];?></span></a></li>			    
+				    <li><a href="tel.php" class="black-text"><i class="material-icons">phone</i>Item 9 <span class=" new badge pink" data-badge-caption=""><?php echo $tel['count(*)'];?></span></a></li>
+				    <li><a href="menu_rutas.php" class="black-text"><i class="material-icons">near_me</i>Item 10<span class="new badge pink" data-badge-caption=""><?php echo $rutas['count(*)'];?></span></a></li>
+				    <li><a class='dropdown-btn1 black-text' data-target='sub-dropdown4'><i class="material-icons left">assignment_ind</i> Item 11 <i class="material-icons right">chevron_right</i></a></li>
+				    <li><a href="catalogo.php" class="black-text"> <i class="material-icons">book</i>Item 12 </a></li>   
+					<ul id='sub-dropdown4' class='dropdown-content'>
 				    	<li><a href="facturar_p.php" class="black-text"><i class="material-icons">assignment_late</i>Pendientes </a></li>   
 				    	<li><a href="facturar_l.php" class="black-text"><i class="material-icons">assignment_turned_in</i>Listas </a></li>
 				    </ul>	
-					<li><a href="catalogo.php" class="black-text"> <i class="material-icons">book</i>Catalogo </a></li>    
- 				 </ul>
- 				<li><a class='dropdown-button' data-target='dropdown5'><i class="material-icons left">add</i>Mas <i class="material-icons right">arrow_drop_down</i></a></li>
+					 
+ 				</ul>
+ 				<li><a class='dropdown-button' data-target='dropdown5'><i class="material-icons left">add</i>Ventas <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown5' class='dropdown-content'>
-					<li><a href="centrales_pings.php" class="black-text"><i class="material-icons">settings_input_antenna</i>Centrales Pings </a></li>   
-				    <li><a href="paquetes.php" class="black-text"><i class="material-icons">import_export</i>Paquetes </a></li>   
-				    <li><a href="comunidades.php" class="black-text"><i class="material-icons">business</i>Comunidades </a></li>
-				    <li><a href="servidores.php" class="black-text"><i class="material-icons">router</i>Servidores </a></li>
-				    <li><a href="centrales.php" class="black-text"><i class="material-icons">satellite</i>Centrales </a></li>
-				    <li><a href="fichas.php" class="black-text"><i class="material-icons">tap_and_play</i>Fichas </a></li>
-				    <li><a href="perfiles.php" class="black-text"><i class="material-icons">note</i>Perfiles </a></li>
-				    <li><a href="pedidos.php" class="black-text"><i class="material-icons">assignment</i>Pedidos </a></li>
-				    <li><a href="sistema_mikrotik.php" class="black-text"><i class="material-icons">router</i>Mikrotik </a></li>
-				    <li><a href="form_actividad.php" class="black-text"><i class="material-icons">assignment_turned_in</i>Actividad </a></li>
-				    <li><a href="../views/inventario.php" class="black-text"><i class="material-icons">list</i>Inventario </a></li>
-				    <li><a href="../views/incidencias.php" class="black-text"><i class="material-icons">perm_scan_wifi</i>Incidencias </a></li>
+					<li><a href="centrales_pings.php" class="black-text"><i class="material-icons">settings_input_antenna</i>Item 1 </a></li>   
+				    <li><a href="paquetes.php" class="black-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
+				    <li><a href="comunidades.php" class="black-text"><i class="material-icons">business</i>Item 4 </a></li>
+				    <li><a href="servidores.php" class="black-text"><i class="material-icons">router</i>Item 4 </a></li>
+				    <li><a href="centrales.php" class="black-text"><i class="material-icons">satellite</i>Item 5 </a></li>
+				    <li><a href="fichas.php" class="black-text"><i class="material-icons">tap_and_play</i>Item 6 </a></li>
+				    <li><a href="perfiles.php" class="black-text"><i class="material-icons">note</i>Item 7 </a></li>
+				    <li><a href="pedidos.php" class="black-text"><i class="material-icons">assignment</i>Item 8 </a></li>
+				    <li><a href="sistema_mikrotik.php" class="black-text"><i class="material-icons">router</i>Item 9 </a></li>
+				    <li><a href="form_actividad.php" class="black-text"><i class="material-icons">assignment_turned_in</i>Item 10 </a></li>
+				    <li><a href="../views/inventario.php" class="black-text"><i class="material-icons">list</i>Item 11 </a></li>
+				    <li><a href="../views/incidencias.php" class="black-text"><i class="material-icons">perm_scan_wifi</i>Item 12 </a></li>
 				</ul>
 				<li><a class='dropdown-button' data-target='dropdown3'><i class="material-icons left">account_circle</i>Admin <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown3' class='dropdown-content'>
@@ -157,19 +158,19 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				<li>
 	    			<ul class="collapsible collapsible-accordion">
 	    				<li>
-	    				  <div class="collapsible-header"><i class="material-icons">phonelink_setup</i>Servicio Técnico <i class="material-icons right">arrow_drop_down</i></div>
+	    				  <div class="collapsible-header"><i class="material-icons">phonelink_setup</i>Catálogo <i class="material-icons right">arrow_drop_down</i></div>
 		      				<div class="collapsible-body indigo lighten-5">
 		      				  <span>
 		      					<ul>
-		      					  <li><a href="form_entrada.php"><i class="material-icons">add</i>Nuevo Dispositivo</a></li>
-			      				  <li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Disp. En General</a></li>
-				    			  <li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Almacen <span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
-			      				  <li><a href="listos.php"><i class="material-icons">assignment_turned_in</i>Listos <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>
-						    	  <li><a href="pendientes.php"><i class="material-icons">assignment_late</i>Pendientes<span class="new badge pink" data-badge-caption=""><?php echo $pendientes['count(*)'];?></span></a></li>
-						    	  <li><a href="reporte_pagos_ST.php"><i class="material-icons">list</i>Reporte Pagos</a></li>
-						    	  <li><a href="rep_refacciones.php"><i class="material-icons">list</i>Reporte Refacciones</a></li>
-				    			  <li><a href="bitacora_taller.php"><i class="material-icons">list</i>Trabajo Taller</a></li>  			 
-				    			  <li><a href="vehiculos.php"><i class="material-icons">directions_car</i>Vehiculos</a></li>    			 
+		      					  <li><a href="form_entrada.php"><i class="material-icons">add</i>Item 1</a></li>
+			      				  <li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Item 2</a></li>
+				    			  <li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
+			      				  <li><a href="listos.php"><i class="material-icons">assignment_turned_in</i>Item 4 <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>
+						    	  <li><a href="pendientes.php"><i class="material-icons">assignment_late</i>Item 5<span class="new badge pink" data-badge-caption=""><?php echo $pendientes['count(*)'];?></span></a></li>
+						    	  <li><a href="reporte_pagos_ST.php"><i class="material-icons">list</i>Item 6</a></li>
+						    	  <li><a href="rep_refacciones.php"><i class="material-icons">list</i>Item 7</a></li>
+				    			  <li><a href="bitacora_taller.php"><i class="material-icons">list</i>Item 8</a></li>  			 
+				    			  <li><a href="vehiculos.php"><i class="material-icons">directions_car</i>Item 9</a></li>    			 
 					    		</ul>
 					          </span>
 		      			  </div>    			
@@ -179,35 +180,57 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				<li>
 	    			<ul class="collapsible collapsible-accordion">
 	    				<li>
-	    				  <div class="collapsible-header"><i class="material-icons">language</i>Redes <i class="material-icons right">arrow_drop_down</i></div>
+	    				  <div class="collapsible-header"><i class="material-icons">phonelink_setup</i>Compras <i class="material-icons right">arrow_drop_down</i></div>
+		      				<div class="collapsible-body indigo lighten-5">
+		      				  <span>
+		      					<ul>
+								  <li><a href="form_entrada.php"><i class="material-icons">add</i>Item 1</a></li>
+			      				  <li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Item 2</a></li>
+				    			  <li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
+			      				  <li><a href="listos.php"><i class="material-icons">assignment_turned_in</i>Item 4 <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>
+						    	  <li><a href="pendientes.php"><i class="material-icons">assignment_late</i>Item 5<span class="new badge pink" data-badge-caption=""><?php echo $pendientes['count(*)'];?></span></a></li>
+						    	  <li><a href="reporte_pagos_ST.php"><i class="material-icons">list</i>Item 6</a></li>
+						    	  <li><a href="rep_refacciones.php"><i class="material-icons">list</i>Item 7</a></li>
+				    			  <li><a href="bitacora_taller.php"><i class="material-icons">list</i>Item 8</a></li>  			 
+				    			  <li><a href="vehiculos.php"><i class="material-icons">directions_car</i>Item 9</a></li>  			 
+					    		</ul>
+					          </span>
+		      			  </div>    			
+	    				</li>	    			
+	    			</ul>	     				
+	    		</li>
+				<li>
+	    			<ul class="collapsible collapsible-accordion">
+	    				<li>
+	    				  <div class="collapsible-header"><i class="material-icons">language</i>Ventas <i class="material-icons right">arrow_drop_down</i></div>
 		      				<div class="collapsible-body  indigo lighten-5">
 		      				  <span>
 		      					<ul>
-		      					  <li><a href="../views/form_instalacion.php"><i class="material-icons">add</i>Nueva Instalación</a></li>
-					 			  <li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Nuevo Mantenimiento</a></li>
-								  <li><a href="form_orden.php"><i class="material-icons">add_circle</i>Nueva Orden</a></li>
+		      					  <li><a href="../views/form_instalacion.php"><i class="material-icons">add</i>Item 1</a></li>
+					 			  <li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
+								  <li><a href="form_orden.php"><i class="material-icons">add_circle</i>Item 3</a></li>
 					 			  <li><a href="clientes.php"><i class="material-icons">people</i>Clientes </a></li>
-				    			  <li><a href="stock.php" class="black-text"> <i class="material-icons">assignment_ind</i>Stock </a></li>
-			      				  <li><a href="../views/instalaciones.php"><i class="material-icons">list</i>Instalaciones <span class="new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)'];?></span></a></li>
-						    	  <li><a href="reportes.php"><i class="material-icons">perm_scan_wifi</i>Reportes <span class=" new badge pink" data-badge-caption=""><?php echo $reportes['count(*)'];?></span></a></li>
-						    	  <li><a href="ordenes_servicio.php"><i class="material-icons">assignment</i>Orden Servicio<span class=" new badge pink" data-badge-caption=""><?php echo $Orden; ?></span></a></li>
-						    	  <li><a href="mantenimiento.php"><i class="material-icons">build</i>Mantenimiento<span class="new badge pink" data-badge-caption=""><?php echo $Mantenimiento['count(*)'];?></span></a></li>
-						    	  <li><a href="tel.php"><i class="material-icons">phone</i>Teléfono <span class=" new badge pink" data-badge-caption=""><?php echo $tel['count(*)'];?></span></a></li>
-						    	  <li><a href="menu_rutas.php"><i class="material-icons">near_me</i>Rutas <span class=" new badge pink" data-badge-caption=""><?php echo $rutas['count(*)'];?></span></a></li>
-				    			  <li><a href="form_actividad.php"><i class="material-icons">assignment_turned_in</i>Actividad </a></li>
-				    			  <li><a href="../views/inventario.php"><i class="material-icons">list</i>Inventario </a></li>
-						    	  <li><a href="facturar_p.php"><i class="material-icons">assignment_late</i>Fac. Pendientes </a></li>   
-				    			  <li><a href="facturar_l.php"><i class="material-icons">assignment_turned_in</i>Fac. Listas </a></li>
-						    	  <li><a href="paquetes.php"><i class="material-icons">import_export</i>Paquetes</a></li>
-						    	  <li><a href="comunidades.php"><i class="material-icons">business</i>Comunidades</a></li>
-						    	  <li><a href="servidores.php"><i class="material-icons">router</i>Servidores</a></li>
-				    			  <li><a href="centrales.php"><i class="material-icons">satellite</i>Centrales </a></li>
-				    			  <li><a href="fichas.php"><i class="material-icons">tap_and_play</i>Fichas </a></li>
-				    			  <li><a href="perfiles.php"><i class="material-icons">note</i>Perfiles </a></li>
-				    			  <li><a href="pedidos.php"><i class="material-icons">assignment</i>Pedidos </a></li>
-				    			  <li><a href="sistema_mikrotik.php"><i class="material-icons">router</i>Mikrotik </a></li>
-				    			  <li><a href="incidencias.php"><i class="material-icons">perm_scan_wifi</i>Incidencias </a></li>
-								  <li><a href="catologo.php"><i class="material-icons">book</i>Catalogo </a></li>
+				    			  <li><a href="stock.php" class="black-text"> <i class="material-icons">assignment_ind</i>Item 4 </a></li>
+			      				  <li><a href="../views/instalaciones.php"><i class="material-icons">list</i>Item 5 <span class="new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)'];?></span></a></li>
+						    	  <li><a href="reportes.php"><i class="material-icons">perm_scan_wifi</i>Item 6<span class=" new badge pink" data-badge-caption=""><?php echo $reportes['count(*)'];?></span></a></li>
+						    	  <li><a href="ordenes_servicio.php"><i class="material-icons">assignment</i>Item 7<span class=" new badge pink" data-badge-caption=""><?php echo $Orden; ?></span></a></li>
+						    	  <li><a href="mantenimiento.php"><i class="material-icons">build</i>Item 8<span class="new badge pink" data-badge-caption=""><?php echo $Mantenimiento['count(*)'];?></span></a></li>
+						    	  <li><a href="tel.php"><i class="material-icons">phone</i>Item 9<span class=" new badge pink" data-badge-caption=""><?php echo $tel['count(*)'];?></span></a></li>
+						    	  <li><a href="menu_rutas.php"><i class="material-icons">near_me</i>Item 10 <span class=" new badge pink" data-badge-caption=""><?php echo $rutas['count(*)'];?></span></a></li>
+				    			  <li><a href="form_actividad.php"><i class="material-icons">assignment_turned_in</i>Item 11 </a></li>
+				    			  <li><a href="../views/inventario.php"><i class="material-icons">list</i>Item 12 </a></li>
+						    	  <li><a href="facturar_p.php"><i class="material-icons">assignment_late</i>Item 13 </a></li>   
+				    			  <li><a href="facturar_l.php"><i class="material-icons">assignment_turned_in</i>Item 14 </a></li>
+						    	  <li><a href="paquetes.php"><i class="material-icons">import_export</i>Item 15</a></li>
+						    	  <li><a href="comunidades.php"><i class="material-icons">business</i>Item 16</a></li>
+						    	  <li><a href="servidores.php"><i class="material-icons">router</i>Item 17</a></li>
+				    			  <li><a href="centrales.php"><i class="material-icons">satellite</i>Item 18 </a></li>
+				    			  <li><a href="fichas.php"><i class="material-icons">tap_and_play</i>Item 19 </a></li>
+				    			  <li><a href="perfiles.php"><i class="material-icons">note</i>Item 20 </a></li>
+				    			  <li><a href="pedidos.php"><i class="material-icons">assignment</i>Item 21 </a></li>
+				    			  <li><a href="sistema_mikrotik.php"><i class="material-icons">router</i>Item 22 </a></li>
+				    			  <li><a href="incidencias.php"><i class="material-icons">perm_scan_wifi</i>Item 23 </a></li>
+								  <li><a href="catologo.php"><i class="material-icons">book</i>Item 24 </a></li>
 					    		</ul>
 					          </span>
 		      			  </div>    			

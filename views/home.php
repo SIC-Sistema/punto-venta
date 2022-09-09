@@ -5,7 +5,7 @@
   include('fredyNav.php');
 ?>
 </style>
-<title>SIC | Inicio</title>
+<title>SIC | Inicio Punto de venta</title>
 </head>
 <main>
 <script>
