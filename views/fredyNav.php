@@ -44,13 +44,13 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				<i class="material-icons">menu</i>
 			</a>
 			<ul class="right hide-on-med-and-down">
-				<li><a class='dropdown-button' data-target='dropdown1'><i class="material-icons left">phonelink_setup</i>Catálogo <i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button' data-target='dropdown1'><i class="material-icons left">library_books</i>Catálogo <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown1' class='dropdown-content'>
 				    <li><a href="form_entradas.php" class="black-text"><i class="material-icons">add</i>Item 1 </a></li>
 				    <li><a href="dispositivos.php" class="black-text"><i class="material-icons">phonelink</i>Item 2  </a></li>
 				    <li><a href="ver_almacen.php" class="black-text"><i class="material-icons">dashboard</i>Item 3 <span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>  			 
  				 </ul>
-				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">language</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Orden+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">library_add</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Orden+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
 				    <li><a href="../views/form_instalacion.php" class="black-text"><i class="material-icons">add</i>Item 1</a></li>    
 					<li><a href="form_mantenimiento.php" class="black-text"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
@@ -64,7 +64,7 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				    </ul>	
 					 
  				</ul>
- 				<li><a class='dropdown-button' data-target='dropdown5'><i class="material-icons left">add</i>Ventas <i class="material-icons right">arrow_drop_down</i></a></li>
+ 				<li><a class='dropdown-button' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown5' class='dropdown-content'>
 					<li><a href="centrales_pings.php" class="black-text"><i class="material-icons">settings_input_antenna</i>Item 1 </a></li>   
 				    <li><a href="paquetes.php" class="black-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
@@ -104,7 +104,7 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				<li>
 	    			<ul class="collapsible collapsible-accordion">
 	    				<li>
-	    				  <div class="collapsible-header"><i class="material-icons">phonelink_setup</i>Catálogo <i class="material-icons right">arrow_drop_down</i></div>
+	    				  <div class="collapsible-header"><i class="material-icons">library_books</i>Catálogo <i class="material-icons right">arrow_drop_down</i></div>
 		      				<div class="collapsible-body indigo lighten-5">
 		      				  <span>
 		      					<ul>
@@ -121,7 +121,7 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				<li>
 	    			<ul class="collapsible collapsible-accordion">
 	    				<li>
-	    				  <div class="collapsible-header"><i class="material-icons">phonelink_setup</i>Compras <i class="material-icons right">arrow_drop_down</i></div>
+	    				  <div class="collapsible-header"><i class="material-icons">library_add</i>Compras <i class="material-icons right">arrow_drop_down</i></div>
 		      				<div class="collapsible-body indigo lighten-5">
 		      				  <span>
 		      					<ul>
@@ -137,7 +137,7 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				<li>
 	    			<ul class="collapsible collapsible-accordion">
 	    				<li>
-	    				  <div class="collapsible-header"><i class="material-icons">language</i>Ventas <i class="material-icons right">arrow_drop_down</i></div>
+	    				  <div class="collapsible-header"><i class="material-icons">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></div>
 		      				<div class="collapsible-body  indigo lighten-5">
 		      				  <span>
 		      					<ul>
