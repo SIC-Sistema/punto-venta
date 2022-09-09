@@ -46,31 +46,31 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 			<ul class="right hide-on-med-and-down">
 				<li><a class='dropdown-button' data-target='dropdown1'><i class="material-icons left">library_books</i>Catálogo <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown1' class='dropdown-content'>
-				    <li><a href="form_entradas.php" class="black-text"><i class="material-icons">add</i>Item 1 </a></li>
-				    <li><a href="dispositivos.php" class="black-text"><i class="material-icons">phonelink</i>Item 2  </a></li>
-				    <li><a href="ver_almacen.php" class="black-text"><i class="material-icons">dashboard</i>Item 3 <span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>  			 
+				    <li><a href class="black-text"><i class="material-icons">add</i>Item 1 </a></li>
+				    <li><a href class="black-text"><i class="material-icons">phonelink</i>Item 2  </a></li>
+				    <li><a href class="black-text"><i class="material-icons">dashboard</i>Item 3 <span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>  			 
  				 </ul>
 				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">library_add</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Orden+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
-				    <li><a href="../views/form_instalacion.php" class="black-text"><i class="material-icons">add</i>Item 1</a></li>    
-					<li><a href="form_mantenimiento.php" class="black-text"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
-					<li><a href="form_orden.php" class="black-text"><i class="material-icons">add_circle</i>Item 3</a></li>
-					 <li><a href="clientes.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
-				    <li><a href="../views/instalaciones.php" class="black-text"><i class="material-icons">list</i>Item 4 <span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']?></span></a></li>
-				    <li><a class='dropdown-btn1 black-text' data-target='sub-dropdown4'><i class="material-icons left">assignment_ind</i> Item 11 <i class="material-icons right">chevron_right</i></a></li>
+				    <li><a href class="black-text"><i class="material-icons">add</i>Item 1</a></li>    
+					<li><a href class="black-text"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
+					<li><a href class="black-text"><i class="material-icons">add_circle</i>Item 3</a></li>
+					 <li><a href class="black-text"><i class="material-icons">people</i>Clientes </a></li>
+				    <li><a href class="black-text"><i class="material-icons">list</i>Item 4 <span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']?></span></a></li>
+				    <li><a class data-target='sub-dropdown4'><i class="material-icons left">assignment_ind</i> Item 11 <i class="material-icons right">chevron_right</i></a></li>
 					<ul id='sub-dropdown4' class='dropdown-content'>
-				    	<li><a href="facturar_p.php" class="black-text"><i class="material-icons">assignment_late</i>Pendientes </a></li>   
-				    	<li><a href="facturar_l.php" class="black-text"><i class="material-icons">assignment_turned_in</i>Listas </a></li>
+				    	<li><a href class="black-text"><i class="material-icons">assignment_late</i>Pendientes </a></li>   
+				    	<li><a href class="black-text"><i class="material-icons">assignment_turned_in</i>Listas </a></li>
 				    </ul>	
 					 
  				</ul>
  				<li><a class='dropdown-button' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown5' class='dropdown-content'>
-					<li><a href="centrales_pings.php" class="black-text"><i class="material-icons">settings_input_antenna</i>Item 1 </a></li>   
-				    <li><a href="paquetes.php" class="black-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
-				    <li><a href="comunidades.php" class="black-text"><i class="material-icons">business</i>Item 4 </a></li>
-				    <li><a href="servidores.php" class="black-text"><i class="material-icons">router</i>Item 4 </a></li>
-				    <li><a href="centrales.php" class="black-text"><i class="material-icons">satellite</i>Item 5 </a></li>
+					<li><a href class="black-text"><i class="material-icons">settings_input_antenna</i>Item 1 </a></li>   
+				    <li><a href class="black-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
+				    <li><a href class="black-text"><i class="material-icons">business</i>Item 4 </a></li>
+				    <li><a href class="black-text"><i class="material-icons">router</i>Item 4 </a></li>
+				    <li><a href class="black-text"><i class="material-icons">satellite</i>Item 5 </a></li>
 				</ul>
  				<li><a class='dropdown-button' data-target='dropdown4'><?php echo $_SESSION['user_name'];?> <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown4' class='dropdown-content'>
