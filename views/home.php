@@ -4,12 +4,7 @@
 <?php
   include('fredyNav.php');
 ?>
-</style>
-<<<<<<< Updated upstream
-<title>SIC | Inicio Punto de venta</title>
-=======
 <title>SIC | Inicio Punto de Venta</title>
->>>>>>> Stashed changes
 </head>
 <main>
 <script>
