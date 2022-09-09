@@ -57,7 +57,7 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 					<li><a href class="black-text"><i class="material-icons">add_circle</i>Item 3</a></li>
 					 <li><a href class="black-text"><i class="material-icons">people</i>Clientes </a></li>
 				    <li><a href class="black-text"><i class="material-icons">list</i>Item 4 <span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']?></span></a></li>
-				    <li><a class data-target='sub-dropdown4'><i class="material-icons left">assignment_ind</i> Item 11 <i class="material-icons right">chevron_right</i></a></li>
+				    <li><a class='dropdown-btn1 black-text' data-target='sub-dropdown4'><i class="material-icons left">assignment_ind</i> Item 11 <i class="material-icons right">chevron_right</i></a></li>
 					<ul id='sub-dropdown4' class='dropdown-content'>
 				    	<li><a href class="black-text"><i class="material-icons">assignment_late</i>Pendientes </a></li>   
 				    	<li><a href class="black-text"><i class="material-icons">assignment_turned_in</i>Listas </a></li>
