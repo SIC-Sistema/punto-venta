@@ -12,16 +12,9 @@ $Hoy = date('Y-m-d');
 $instalaciones = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM clientes WHERE instalacion IS NULL"));
 $reportes = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM reportes WHERE ((fecha_visita = '$Hoy'  AND atender_visita = 0) OR (fecha_visita < '$Hoy' AND atender_visita = 0 AND visita = 1) OR atendido != 1 OR atendido IS NULL) AND id_cliente < 10000"));
 $reportesEsp = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM reportes WHERE ((fecha_visita = '$Hoy'  AND atender_visita = 0) OR (fecha_visita < '$Hoy' AND atender_visita = 0 AND visita = 1) OR atendido != 1 OR atendido IS NULL) AND id_cliente > 10000 AND descripcion LIKE 'Reporte Especial:%'"));
-$Ordenes_Redes = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM orden_servicios  WHERE  estatus IN ('PorConfirmar', 'Revisar', 'Ejecutar', 'Cotizar', 'Cotizado', 'Pedir', 'Autorizado')  AND dpto = 1"));
-$Ordenes_Taller = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM orden_servicios  WHERE  estatus IN ('PorConfirmar', 'Revisar', 'Ejecutar', 'Cotizar', 'Cotizado', 'Pedir', 'Autorizado')  AND dpto = 2"));
-$Ordenes_Ventas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM orden_servicios  WHERE  estatus IN ('PorConfirmar', 'Revisar', 'Ejecutar', 'Cotizar', 'Cotizado', 'Pedir', 'Autorizado') AND dpto = 3"));
-if ($area['area'] == 'Taller' OR $id == 28) { $Orden = $Ordenes_Taller['count(*)']; }elseif ($id == 49 OR $id == 10 OR $id == 56 OR $id == 101) { $Orden = $Ordenes_Taller['count(*)']+$Ordenes_Ventas['count(*)']+$Ordenes_Redes['count(*)']; }elseif ( $area['area'] == 'Redes' OR $id == 25 OR $id == 28) {  $Orden = $Ordenes_Redes['count(*)'];  }else{ $Orden = $Ordenes_Ventas['count(*)']; }
 $Mantenimiento = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM reportes WHERE ((fecha_visita = '$Hoy'  AND atender_visita = 0) OR (fecha_visita < '$Hoy' AND atender_visita = 0 AND visita = 1) OR atendido != 1 OR atendido IS NULL) AND id_cliente > 10000 AND descripcion LIKE 'Mantenimiento:%'"));
-$tel = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM pagos WHERE Cotejado =1"));
-$pendientes = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositivos WHERE estatus IN ('Cotizado','En Proceso','Pendiente') AND fecha > '2019-01-01'"));
 $listos = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositivos WHERE estatus IN ('Listo (En Taller)','Listo (No Reparado)', 'Listo') AND fecha > '2019-01-01'"));
 $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositivos WHERE estatus = 'Almacen'"));
-$rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE estatus = 0"));
 ?>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,7 +43,7 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 				    <li><a href = "clientes_punto_venta.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
 				    <li><a href class="black-text"><i class="material-icons">dashboard</i>Item 3 <span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>  			 
  				 </ul>
-				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">library_add</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Orden+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">library_add</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
 				    <li><a href class="black-text"><i class="material-icons">add</i>Item 1</a></li>    
 					<li><a href class="black-text"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
@@ -98,62 +91,63 @@ $rutas = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM rutas WHERE 
 		</div>		
 	</nav>
 	</div>
+	<!-- BARRA DE NAVEGACION DE LA IZQUIERDA MOBILES Y TABLETAS --->
 	<ul class="sidenav indigo lighten-5" id="menu-responsive" style="width: 270px;">
-				<h2>Menú</h2>
-    			<li><div class="divider"></div></li><br>
-				<li>
-	    			<ul class="collapsible collapsible-accordion">
-	    				<li>
-	    				  <div class="collapsible-header"><i class="material-icons">library_books</i>Catálogo <i class="material-icons right">arrow_drop_down</i></div>
-		      				<div class="collapsible-body indigo lighten-5">
-		      				  <span>
-		      					<ul>
-		      					  <li><a href="form_entrada.php"><i class="material-icons">add</i>Item 1</a></li>
-			      				  <li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Item 2</a></li>
-				    			  <li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
-			      				  <li><a href="listos.php"><i class="material-icons">assignment_turned_in</i>Item 4 <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>    			 
-					    		</ul>
-					          </span>
-		      			  </div>    			
-	    				</li>	    			
-	    			</ul>	     				
-	    		</li>
-				<li>
-	    			<ul class="collapsible collapsible-accordion">
-	    				<li>
-	    				  <div class="collapsible-header"><i class="material-icons">library_add</i>Compras <i class="material-icons right">arrow_drop_down</i></div>
-		      				<div class="collapsible-body indigo lighten-5">
-		      				  <span>
-		      					<ul>
-								  <li><a href="form_entrada.php"><i class="material-icons">add</i>Item 1</a></li>
-			      				  <li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Item 2</a></li>
-				    			  <li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li> 			 
-					    		</ul>
-					          </span>
-		      			  </div>    			
-	    				</li>	    			
-	    			</ul>	     				
-	    		</li>
-				<li>
-	    			<ul class="collapsible collapsible-accordion">
-	    				<li>
-	    				  <div class="collapsible-header"><i class="material-icons">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></div>
-		      				<div class="collapsible-body  indigo lighten-5">
-		      				  <span>
-		      					<ul>
-		      					  <li><a href="../views/form_instalacion.php"><i class="material-icons">add</i>Item 1</a></li>
-					 			  <li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
-								  <li><a href="form_orden.php"><i class="material-icons">add_circle</i>Item 3</a></li>
-					 			  <li><a href="clientes.php"><i class="material-icons">people</i>Clientes </a></li>
-				    			  <li><a href="stock.php" class="black-text"> <i class="material-icons">assignment_ind</i>Item 4 </a></li>
-			      				  <li><a href="../views/instalaciones.php"><i class="material-icons">list</i>Item 5 <span class="new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)'];?></span></a></li>
-						    	  <li><a href="reportes.php"><i class="material-icons">perm_scan_wifi</i>Item 6<span class=" new badge pink" data-badge-caption=""><?php echo $reportes['count(*)'];?></span></a></li>
-					    		</ul>
-					          </span>
-		      			  </div>    			
-	    				</li>	    			
-	    			</ul>	     				
-	    		</li>
+		<h2>Menú</h2>
+    	<li><div class="divider"></div></li><br>
+		<li>
+	    	<ul class="collapsible collapsible-accordion">
+	    		<li>
+	    			<div class="collapsible-header"><i class="material-icons">library_books</i>Catálogo <i class="material-icons right">arrow_drop_down</i></div>
+		      		<div class="collapsible-body indigo lighten-5">
+		      		    <span>
+		      			  <ul>
+		      				<li><a href="form_entrada.php"><i class="material-icons">add</i>Item 1</a></li>
+			      			<li><a href = "clientes_punto_venta.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
+				    		<li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
+			      			<li><a href="listos.php"><i class="material-icons">assignment_turned_in</i>Item 4 <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>    			 
+					      </ul>
+					    </span>
+		      		</div>    			
+	    		</li>	    			
+	    	</ul>	     				
+	    </li>
+		<li>
+	    	<ul class="collapsible collapsible-accordion">
+	    		<li>
+	    			<div class="collapsible-header"><i class="material-icons">library_add</i>Compras <i class="material-icons right">arrow_drop_down</i></div>
+		      		<div class="collapsible-body indigo lighten-5">
+		      			<span>
+		      			  <ul>
+							<li><a href="form_entrada.php"><i class="material-icons">add</i>Item 1</a></li>
+			      			<li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Item 2</a></li>
+				    		<li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li> 			 
+					      </ul>
+					    </span>
+		      		</div>    			
+	    		</li>	    			
+	    	</ul>	     				
+	    </li>
+		<li>
+	    	<ul class="collapsible collapsible-accordion">
+	    		<li>
+	    			<div class="collapsible-header"><i class="material-icons">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></div>
+		      		<div class="collapsible-body  indigo lighten-5">
+		      			<span>
+		      			  <ul>
+		      				<li><a href="../views/form_instalacion.php"><i class="material-icons">add</i>Item 1</a></li>
+					 		<li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
+							<li><a href="form_orden.php"><i class="material-icons">add_circle</i>Item 3</a></li>
+					 		<li><a href="clientes.php"><i class="material-icons">people</i>Clientes </a></li>
+				    		<li><a href="stock.php" class="black-text"> <i class="material-icons">assignment_ind</i>Item 4 </a></li>
+			      			<li><a href="../views/instalaciones.php"><i class="material-icons">list</i>Item 5 <span class="new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)'];?></span></a></li>
+						    <li><a href="reportes.php"><i class="material-icons">perm_scan_wifi</i>Item 6<span class=" new badge pink" data-badge-caption=""><?php echo $reportes['count(*)'];?></span></a></li>
+					      </ul>
+					    </span>
+		      		</div>    			
+	    		</li>	    			
+	    	</ul>	     				
+	    </li>
 	</ul>
 	<?php 
 	include('../views/modals.php');
