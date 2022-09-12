@@ -50,7 +50,7 @@
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO NE LA DIRECCION "../php/control_clientes.php"
         $.post("../php/control_clientes.php", {
           //Cada valor se separa por una ,
-            accion: 1,
+            accion: 0,
             valorNombre: textoNombre,
             valorTelefono: textoTelefono,
             valorEmail: textoEmail,
