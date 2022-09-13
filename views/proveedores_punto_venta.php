@@ -27,7 +27,7 @@
 <body onload="buscar_proveedores();">
   <div class="container"><br><br>
     <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR CLIENTE    ///////   -->
-    <a href="add_cliente.php" class="waves-effect waves-light btn pink left right">Agregar Proveedor<i class="material-icons prefix left">add</i></a>
+    <a href="add_proveedor.php" class="waves-effect waves-light btn pink left right">Agregar Proveedor<i class="material-icons prefix left">add</i></a>
     <div class="row">
       <!--    //////    TITULO    ///////   -->
       <h3 class="hide-on-med-and-down col s12 m6 l6">Proveedores</h3>

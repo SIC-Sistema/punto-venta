@@ -68,7 +68,7 @@ switch ($Accion) {
             //La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
             //RECORREMOS UNO A UNO LOS CLIENTES CON EL WHILE
             while($proveedor = mysqli_fetch_array($consulta)) {
-                $proveedor .= '			
+                $contenido .= '			
 		          <tr>
 		            <td>'.$proveedor['id'].'</td>
 		            <td>'.$proveedor['nombre'].'</td>
