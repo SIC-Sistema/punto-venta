@@ -112,13 +112,12 @@ switch ($Accion) {
         //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
 		$sql = "UPDATE `punto_venta_proveedores` SET nombre = '$nombre', direccion = '$direccion', colonia = '$colonia', cp = '$cp', rfc = '$rfc', email = '$email', telefono = '$telefono', dias_c = '$dias_credito', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-		if(mysqli_query($conn, $sql)){
-			echo '<script >M.toast({html:"El proveedor se actualizo con exito.", classes: "rounded"})</script>';	
-		}else{
-			echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
-		}//FIN else DE ERROR
-		echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-
+        if(mysqli_query($conn, $sql)){
+            echo '<script >M.toast({html:"El proveedor se actualizo con exito.", classes: "rounded"})</script>'; 
+        }else{
+            echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>'; 
+        }//FIN else DE ERROR
+        echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         break;
     case 3:
         // $Accion es igual a 3 realiza:

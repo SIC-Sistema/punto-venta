@@ -19,8 +19,22 @@
         }, function(mensaje){
             //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_clientes.php"
             $("#clientesALL").html(mensaje);
-      });
-    }
+      });//FIN post
+    };//FIN function
+    //FUNCION QUE BORRA EL CLIENTES (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+    function borrar_cliente_pv(id){
+      var answer = confirm("Deseas eliminar el cliente N°"+id+"?");
+      if (answer) {
+        $.post("../php/control_clientes.php", { 
+          //Cada valor se separa por una ,
+            id: id,
+            accion: 3,
+        }, function(mensaje) {
+          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_clientes.php"
+          $("#borrarCliente").html(mensaje);
+        }); //FIN post
+      }//FIN IF
+    };//FIN function
   </script>
 </head>
 <main>
@@ -28,6 +42,8 @@
   <div class="container"><br><br>
     <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR CLIENTE    ///////   -->
     <a href="add_cliente.php" class="waves-effect waves-light btn pink left right">Agregar Cliente<i class="material-icons prefix left">add</i></a>
+    <!-- CREAMOS UN DIV EL CUAL TENGA id = "borrarCliente"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+    <div id="borrarCliente"></div>
     <div class="row">
       <!--    //////    TITULO    ///////   -->
       <h3 class="hide-on-med-and-down col s12 m6 l6">Clientes</h3>
