@@ -63,8 +63,8 @@
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_proveedor.php"
               $("#resultado_insert").html(mensaje);
           }); 
-      }
-    };
+      }//FIN else CONDICIONES
+    };//FIN function 
   </script>
 </head>
 <main>

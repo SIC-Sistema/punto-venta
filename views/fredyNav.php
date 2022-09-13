@@ -41,6 +41,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 				<ul id='dropdown1' class='dropdown-content'>
 				    <li><a href class="black-text"><i class="material-icons">add</i>Item 1 </a></li>
 				    <li><a href = "clientes_punto_venta.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
+					<li><a href = "proveedores_punto_venta.php" class="black-text"><i class="material-icons">person_pin</i>Proveedores </a></li>
 				    <li><a href class="black-text"><i class="material-icons">dashboard</i>Item 3 <span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>  			 
  				 </ul>
 				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">library_add</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
@@ -48,7 +49,8 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 				    <li><a href class="black-text"><i class="material-icons">add</i>Item 1</a></li>    
 					<li><a href class="black-text"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
 					<li><a href class="black-text"><i class="material-icons">add_circle</i>Item 3</a></li>
-					 <li><a href class="black-text"><i class="material-icons">people</i>Clientes </a></li>
+					<li><a href = "clientes_punto_venta.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
+							<li><a href = "proveedores_punto_venta.php" class="black-text"><i class="material-icons">person_pin</i>Proveedores </a></li>
 				    <li><a href class="black-text"><i class="material-icons">list</i>Item 4 <span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']?></span></a></li>
 				    <li><a class='dropdown-btn1 black-text' data-target='sub-dropdown4'><i class="material-icons left">assignment_ind</i> Item 11 <i class="material-icons right">chevron_right</i></a></li>
 					<ul id='sub-dropdown4' class='dropdown-content'>
@@ -104,6 +106,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 		      			  <ul>
 		      				<li><a href="form_entrada.php"><i class="material-icons">add</i>Item 1</a></li>
 			      			<li><a href = "clientes_punto_venta.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
+							  <li><a href = "proveedores_punto_venta.php" class="black-text"><i class="material-icons">person_pin</i>Proveedores </a></li>
 				    		<li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
 			      			<li><a href="listos.php"><i class="material-icons">assignment_turned_in</i>Item 4 <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>    			 
 					      </ul>
@@ -119,6 +122,8 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 		      		<div class="collapsible-body indigo lighten-5">
 		      			<span>
 		      			  <ul>
+							<li><a href = "clientes_punto_venta.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
+							<li><a href = "proveedores_punto_venta.php" class="black-text"><i class="material-icons">person_pin</i>Proveedores </a></li>
 							<li><a href="form_entrada.php"><i class="material-icons">add</i>Item 1</a></li>
 			      			<li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Item 2</a></li>
 				    		<li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li> 			 
