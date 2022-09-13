@@ -17,7 +17,7 @@
 
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
       var textoNombre = $("input#nombre").val();//ej:LA VARIABLE "textoNombre" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "nombre"
-      var textoTelefono = $("input#telefono").val();// ej: TRAE LE INFORMACION DEL INPUT FILA  (id="telefono")
+      var textoTelefono = $("input#telefono").val();// ej: TRAE LE INFORMACION DEL INPUT FILA 95 (id="telefono")
       var textoEmail = $("input#email").val();
       var textoRFC = $("input#rfc").val();
       var textoDireccion = $("input#direccion").val();
@@ -63,8 +63,8 @@
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_clientes.php"
               $("#resultado_insert").html(mensaje);
           }); 
-      }
-    };
+      }//FIN else CONDICIONES
+    };//FIN function 
   </script>
 </head>
 <main>

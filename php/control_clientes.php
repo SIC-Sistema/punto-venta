@@ -43,8 +43,9 @@ switch ($Accion) {
 	 	}// FIN else DE BUSCAR CLIENTE IGUAL
 
         break;
-    case 1:
+    case 1:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
+
     	//CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO
     	$Texto = $conn->real_escape_string($_POST['texto']);
 
@@ -70,6 +71,8 @@ switch ($Accion) {
 			//La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
 			//RECORREMOS UNO A UNO LOS CLIENTES CON EL WHILE	
 			while($cliente = mysqli_fetch_array($consulta)) {
+				$id_user = $cliente['usuario'];
+				$user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
 				//Output
 				$contenido .= '			
 		          <tr>
@@ -82,21 +85,38 @@ switch ($Accion) {
 		            <td>'.$cliente['colonia'].'</td>
 		            <td>'.$cliente['localidad'].'</td>
 		            <td>'.$cliente['cp'].'</td>
-		            <td>'.$cliente['usuario'].'</td>
+		            <td>'.$user['firstname'].'</td>
 		            <td>'.$cliente['fecha'].'</td>
-		            <td><form method="post" action="../views/editar_cliente.php"><input id="no_cliente" name="no_cliente" type="hidden" value="'.$cliente['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
+		            <td><form method="post" action="../views/editar_cliente_pv.php"><input id="id" name="id" type="hidden" value="'.$cliente['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="verificar_eliminar('.$cliente['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
-
 			}//FIN while
 		}//FIN else
-
 		echo $contenido;// MOSTRAMOS LA INFORMACION HTML
-
-
         break;
-    case 2:
+    case 2:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 2 realiza:
+
+    	//CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_cliente_pv.php" QUE NESECITAMOS PARA ACTUALIZAR
+    	$id = $conn->real_escape_string($_POST['id']);
+    	$Nombre = $conn->real_escape_string($_POST['valorNombre']);
+		$Telefono = $conn->real_escape_string($_POST['valorTelefono']);
+		$Email = $conn->real_escape_string($_POST['valorEmail']);
+		$RFC = $conn->real_escape_string($_POST['valorRFC']);
+		$Direccion = $conn->real_escape_string($_POST['valorDireccion']);
+		$Colonia = $conn->real_escape_string($_POST['valorColonia']);
+		$Localidad = $conn->real_escape_string($_POST['valorLocalidad']);
+		$CP = $conn->real_escape_string($_POST['valorCP']);
+
+		//CREAMO LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
+		$sql = "UPDATE `punto-venta_clientes` SET nombre = '$Nombre', telefono = '$Telefono', email = '$Email', rfc = '$RFC', direccion = '$Direccion', colonia = '$Colonia', localidad = '$Localidad', cp = '$CP' WHERE id = '$id'";
+		//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+		if(mysqli_query($conn, $sql)){
+			echo '<script >M.toast({html:"El cliente se actualizo con exito.", classes: "rounded"})</script>';	
+		}else{
+			echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
+		}//FIN else DE ERROR
+		echo '<script>recargar_clientes()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         break;
     case 3:
         // $Accion es igual a 3 realiza:
