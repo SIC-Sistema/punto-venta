@@ -38,13 +38,61 @@ switch ($Accion) {
 				echo '<script >M.toast({html:"El cliente se dió de alta satisfactoriamente.", classes: "rounded"})</script>';	
 			}else{
 				echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
-			}
-			echo '<script>recargar_clientes()</script>';
-	 	}
+			}//FIN else DE ERROR
+			echo '<script>recargar_clientes()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+	 	}// FIN else DE BUSCAR CLIENTE IGUAL
+
         break;
     case 1:
         // $Accion es igual a 1 realiza:
-		echo "HAY QUE CONSULTAR";
+    	//CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO
+    	$Texto = $conn->real_escape_string($_POST['texto']);
+
+    	//VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+		if ($Texto != "") {
+			//MOSTRARA LOS CLIENTES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
+			$sql = "SELECT * FROM `punto-venta_clientes` WHERE  nombre LIKE '%$Texto%'  OR id = '$Texto' OR rfc = '$Texto' OR colonia LIKE '%$Texto%' OR localidad LIKE '%$Texto%' ORDER BY id";	
+		}else{
+			//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
+			$sql = "SELECT * FROM `punto-venta_clientes`";
+		}//FIN else $Texto VACIO O NO
+
+		// REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+		$consulta = mysqli_query($conn, $sql);		
+		$contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
+
+		//VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+		if (mysqli_num_rows($consulta) == 0) {
+				echo '<script>M.toast({html:"No se encontraron clientes.", classes: "rounded"})</script>';
+			
+		} else {
+			//SI NO ESTA EN == 0 SI TIENE INFORMACION
+			//La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
+			//RECORREMOS UNO A UNO LOS CLIENTES CON EL WHILE	
+			while($cliente = mysqli_fetch_array($consulta)) {
+				//Output
+				$contenido .= '			
+		          <tr>
+		            <td>'.$cliente['id'].'</td>
+		            <td>'.$cliente['nombre'].'</td>
+		            <td>'.$cliente['telefono'].'</td>
+		            <td>'.$cliente['rfc'].'</td>
+		            <td>'.$cliente['email'].'</td>
+		            <td>'.$cliente['direccion'].'</td>
+		            <td>'.$cliente['colonia'].'</td>
+		            <td>'.$cliente['localidad'].'</td>
+		            <td>'.$cliente['cp'].'</td>
+		            <td>'.$cliente['usuario'].'</td>
+		            <td>'.$cliente['fecha'].'</td>
+		            <td><form method="post" action="../views/editar_cliente.php"><input id="no_cliente" name="no_cliente" type="hidden" value="'.$cliente['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
+		            <td><a onclick="verificar_eliminar('.$cliente['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+		          </tr>';
+
+			}//FIN while
+		}//FIN else
+
+		echo $contenido;// MOSTRAMOS LA INFORMACION HTML
+
 
         break;
     case 2:
@@ -53,4 +101,5 @@ switch ($Accion) {
     case 3:
         // $Accion es igual a 3 realiza:
         break;
-}
+}// FIN switch
+mysqli_close($conn);
