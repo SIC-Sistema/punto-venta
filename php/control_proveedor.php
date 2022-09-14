@@ -47,7 +47,7 @@ switch ($Accion) {
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
 
-        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO
+        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "proveedores_punto_venta.php"
         $Texto = $conn->real_escape_string($_POST['texto']);
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
@@ -86,7 +86,7 @@ switch ($Accion) {
 		            <td>'.$proveedor['usuario'].'</td>
 		            <td>'.$proveedor['fecha'].'</td>
 		            <td><form method="post" action="../views/editar_proveedor_pv.php"><input id="id" name="id" type="hidden" value="'.$proveedor['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
-		            <td><a onclick="verificar_eliminar('.$proveedor['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+		            <td><a onclick="borrar_proveedor_pv('.$proveedor['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
 
 			}//FIN while
@@ -121,8 +121,18 @@ switch ($Accion) {
         break;
     case 3:
         // $Accion es igual a 3 realiza:
+        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "proveedores_punto_venta.php" QUE NESECITAMOS PARA BORRAR
+        $id = $conn->real_escape_string($_POST['id']);
+    	#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL PROVEEDOR DE `punto_venta_proveedores`
+        if(mysqli_query($conn, "DELETE FROM `punto_venta_proveedores` WHERE `punto_venta_proveedores`.`id` = $id")){
+            #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+            echo '<script >M.toast({html:"Proveedor borrado con exito.", classes: "rounded"})</script>';
+        }else{
+            #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
+		    echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+        }
+        echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         break;
-
 }// FIN switch
 mysqli_close($conn);
     
