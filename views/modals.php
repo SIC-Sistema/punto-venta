@@ -11,10 +11,7 @@
   function recargar_articulo() {
     setTimeout("location.href='articulos_punto_venta.php'", 800);
   }
-
-
-
-  function admin() {
+  function home() {
     setTimeout("location.href='home.php'", 1000);
   }
 </script>
