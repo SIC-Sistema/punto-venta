@@ -8,6 +8,10 @@
   function recargar_usuarios() {
     setTimeout("location.href='usuarios.php'", 800);
   }
+  function recargar_articulo() {
+    setTimeout("location.href='articulos_punto_venta.php'", 800);
+  }
+
 
 
   function admin() {
