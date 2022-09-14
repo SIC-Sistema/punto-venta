@@ -8,9 +8,7 @@
   function recargar_usuarios() {
     setTimeout("location.href='usuarios.php'", 800);
   }
-
-
-  function admin() {
+  function home() {
     setTimeout("location.href='home.php'", 1000);
   }
 </script>
