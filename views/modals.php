@@ -1,14 +1,12 @@
-
 <script>
-
-function recargar_clientes() {
+  function recargar_clientes() {
     setTimeout("location.href='clientes_punto_venta.php'", 800);
   }
-function recargar_proveedores() {
+  function recargar_proveedores() {
     setTimeout("location.href='proveedores_punto_venta.php'", 800);
   }
-function recargar2() {
-    setTimeout("location.href='admin_clientes.php'", 800);
+  function recargar_usuarios() {
+    setTimeout("location.href='usuarios.php'", 800);
   }
 
 
