@@ -5,7 +5,7 @@ function recargar_clientes() {
     setTimeout("location.href='clientes_punto_venta.php'", 800);
   }
 function recargar_proveedores() {
-    setTimeout("location.href='proveedores_punto_venta.php'", 800);
+    setTimeout("location.href='../views/proveedores_punto_venta.php'", 800);
   }
 function recargar2() {
     setTimeout("location.href='admin_clientes.php'", 800);
