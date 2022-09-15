@@ -56,6 +56,8 @@
             <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_articulos();">
             <label for="busqueda">Buscar(N° Codigo, Descrpición, Precio, Unidad)</label>
           </div>
+          <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
+          <a href="../php/imprimir_catalogo.php" target="blank" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
         </div>
       </form>
     </div>
@@ -67,7 +69,7 @@
             <th>N°</th>
             <th>Codigo</th>
             <th>Descripción</th>
-            <th>Precio</th>
+            <th>Precio $</th>
             <th>Unidad</th>
             <th>Registro</th>
             <th>Fecha</th>
