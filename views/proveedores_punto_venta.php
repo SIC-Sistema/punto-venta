@@ -27,7 +27,6 @@
       if (answer) {
       //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_proveedor.php"
       $.post("../php/control_proveedor.php", {
-        $.post("../php/control_proveedor.php", {
           //Cada valor se separa por una ,
           id: id,
           accion: 3,
