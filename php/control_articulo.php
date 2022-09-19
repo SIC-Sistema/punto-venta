@@ -69,7 +69,6 @@ switch ($Accion) {
 				//Output
                 $contenido .= '			
 		          <tr>
-		            <td>'.$articulo['id'].'</td>
 		            <td>'.$articulo['codigo'].'</td>
 		            <td>'.$articulo['descripcion'].'</td>
 		            <td>'.$articulo['precio'].'</td>
@@ -109,15 +108,23 @@ switch ($Accion) {
         // $Accion es igual a 3 realiza:
         //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "articulos_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
-    	#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL PROVEEDOR DE `punto_venta_articulos`
+    	//Obtenemos la informacion del Usuario
+        $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
+        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR CLIENTES
+        if ($User['b_articulos'] == 1) {
+        #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto_venta_articulos`
         if(mysqli_query($conn, "DELETE FROM `punto_venta_articulos` WHERE `punto_venta_articulos`.`id` = $id")){
-            #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-            echo '<script >M.toast({html:"Artículo borrado con exito.", classes: "rounded"})</script>';
+        #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+            echo '<script >M.toast({html:"Articulo borrado con exito.", classes: "rounded"})</script>';
         }else{
-            #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-		    echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+        #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
+            echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
         }
         echo '<script>recargar_articulo()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+        }else{
+            echo '<script >M.toast({html:"Permiso denegado.", classes: "rounded"});
+            M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
+        }   
         break;
 }// FIN switch
 mysqli_close($conn);
