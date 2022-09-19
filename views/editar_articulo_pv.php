@@ -11,7 +11,7 @@ if (isset($_POST['id']) == false) {
 ?>
   <html>
   <head>
-  	<title>SIC | Editar Articulos</title>
+  	<title>SIC | Editar Artículos</title>
     <?php 
     //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
     include('fredyNav.php');
@@ -70,8 +70,8 @@ if (isset($_POST['id']) == false) {
     <div class="container"><br><br>
       <!--    //////    TITULO    ///////   -->
       <div class="row" >
-        <h3 class="hide-on-med-and-down">Editar Articulo N°<?php echo $id; ?></h3>
-        <h5 class="hide-on-large-only">Editar Articulo N°<?php echo $id; ?></h5>
+        <h3 class="hide-on-med-and-down">Editar Artículo N°<?php echo $id; ?></h3>
+        <h5 class="hide-on-large-only">Editar Artículo N°<?php echo $id; ?></h5>
       </div>
       <div class="row" >
        <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_update"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
@@ -108,7 +108,7 @@ if (isset($_POST['id']) == false) {
           </div>
         </div>
         </form>
-        <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPR HAGA LO QUE LA FUNCION CONTENGA -->
+        <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
         <a onclick="update_articulo(<?php echo $id; ?>);" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Guardar</a>
       </div> 
     </div><br>

@@ -47,8 +47,8 @@
     <div id="borrarArticulo"></div>
     <div class="row">
       <!--    //////    TITULO    ///////   -->
-      <h3 class="hide-on-med-and-down col s12 m6 l6">Articulos</h3>
-      <h5 class="hide-on-large-only col s12 m6 l6">Articulos</h5>
+      <h3 class="hide-on-med-and-down col s12 m6 l6">Artículos</h3>
+      <h5 class="hide-on-large-only col s12 m6 l6">Artículos</h5>
       <!--    //////    INPUT DE EL BUSCADOR    ///////   -->
       <form class="col s12 m6 l6">
         <div class="row">
