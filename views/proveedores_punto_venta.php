@@ -7,7 +7,7 @@
   ?>
   <title>SIC | Proveedores Punto Venta</title>
   <script>
-     //FUNCION QUE HACE LA BUSQUEDA DE CLIENTES (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+     //FUNCION QUE HACE LA BUSQUEDA DE PROVEEDORES (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
     function buscar_proveedores(){
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
       var texto = $("input#busqueda").val();
@@ -42,7 +42,7 @@
 <main>
 <body onload="buscar_proveedores();">
   <div class="container"><br><br>
-    <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR CLIENTE    ///////   -->
+    <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR PROVEEDOR    ///////   -->
     <a href="add_proveedor.php" class="waves-effect waves-light btn pink left right">Agregar Proveedor<i class="material-icons prefix left">add</i></a>
     <!-- CREAMOS UN DIV EL CUAL TENGA id = "borrarProveedor"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
     <div id="borrarProveedor"></div>
@@ -61,7 +61,7 @@
         </div>
       </form>
     </div>
-    <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS CLIENTES    ///////   -->
+    <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS PROVEEDORES    ///////   -->
     <div class="row">
       <table class="bordered highlight responsive-table">
         <thead>
@@ -81,7 +81,7 @@
             <th>Borrar</th>
           </tr>
         </thead>
-        <!-- DENTRO DEL tbody COLOCAMOS id = "proveedoresALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_clientes() -->
+        <!-- DENTRO DEL tbody COLOCAMOS id = "proveedoresALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_proveedores() -->
         <tbody id="proveedoresALL">
         </tbody>
       </table>

@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>SIC | Agregar Articulos</title>
+	<title>SIC | Agregar Artículos</title>
   <?php 
   //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
   include('fredyNav.php');
@@ -12,11 +12,11 @@
       return regex.test(email) ? true : false;
     };
 
-    //FUNCION QUE HACE LA INSERCION DEL CLIENTE (SE ACTIVA AL PRECIONAR UN BOTON)
+    //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
     function insert_articulo() {
 
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-      var textoCodigo = $("input#codigo").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "nombre"
+      var textoCodigo = $("input#codigo").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "codigo"
       var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA  (id="descripcion")
       var textoPrecio = $("input#precio").val();
       var textoUnidad = $("input#unidad").val();
@@ -55,8 +55,8 @@
   <div class="container"><br><br>
     <!--    //////    TITULO    ///////   -->
     <div class="row" >
-      <h3 class="hide-on-med-and-down">Registrar Articulo</h3>
-      <h5 class="hide-on-large-only">Registrar Articulo</h5>
+      <h3 class="hide-on-med-and-down">Registrar Artículo</h3>
+      <h5 class="hide-on-large-only">Registrar Artículo</h5>
     </div>
     <div class="row" >
      <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->

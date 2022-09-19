@@ -109,7 +109,7 @@ switch ($Accion) {
         $telefono = $conn->real_escape_string($_POST['valorTelefono']);
         $dias_credito = $conn->real_escape_string($_POST['valorDias_Credito']);
 
-        //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
+        //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL PROVEEDOR Y LA GUARDAMOS EN UNA VARIABLE
 		$sql = "UPDATE `punto_venta_proveedores` SET nombre = '$nombre', direccion = '$direccion', colonia = '$colonia', cp = '$cp', rfc = '$rfc', email = '$email', telefono = '$telefono', dias_c = '$dias_credito', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 		if(mysqli_query($conn, $sql)){

@@ -1,5 +1,5 @@
 <?php
-//VERIFICAMOS QUE SI NOS ENVIE POR POST EL ID DEL PROVEEDOR
+//VERIFICAMOS QUE SI NOS ENVIE POR POST EL ID DEL ARTICULO
 if (isset($_POST['id']) == false) {
   ?>
   <script>    
@@ -15,8 +15,8 @@ if (isset($_POST['id']) == false) {
     <?php 
     //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
     include('fredyNav.php');
-    $id = $_POST['id'];// POR EL METODO POST RECIBIMOS EL ID DEL CLIENTE
-    //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL CLIENTE Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos
+    $id = $_POST['id'];// POR EL METODO POST RECIBIMOS EL ID DEL ARTICULO
+    //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos
     $datos = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id=$id"));
     ?>
     <script>
@@ -30,7 +30,7 @@ if (isset($_POST['id']) == false) {
       function update_articulo(id) {
 
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-        var textoCodigo = $("input#codigo").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "nombre"
+        var textoCodigo = $("input#codigo").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "codigo"
         var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA  (id="descripcion")
         var textoPrecio = $("input#precio").val();
         var textoUnidad = $("input#unidad").val();
@@ -47,7 +47,7 @@ if (isset($_POST['id']) == false) {
         M.toast({html: 'El campo Unidad se encuentra vacío.', classes: 'rounded'});
         }else{
             //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_proveedor.php"
+            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_articulo.php"
             $.post("../php/control_articulo.php", {
             //Cada valor se separa por una ,
                 accion: 2,
@@ -57,7 +57,7 @@ if (isset($_POST['id']) == false) {
                 valorPrecio: textoPrecio,
                 valorUnidad: textoUnidad,
             }, function(mensaje) {
-                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_proveedor.php"
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_articulo.php"
                 $("#resultado_update").html(mensaje);
             }); 
         }//FIN else CONDICIONES

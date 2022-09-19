@@ -146,7 +146,7 @@ if (isset($_POST['id']) == false) {
           </div>
         </div>
         </form>
-        <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPR HAGA LO QUE LA FUNCION CONTENGA -->
+        <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
         <a onclick="update_proveedor(<?php echo $id; ?>);" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Guardar</a>
       </div> 
     </div><br>

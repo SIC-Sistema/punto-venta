@@ -5,7 +5,7 @@
   //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
   include('fredyNav.php');
   ?>
-  <title>SIC | Articulos Punto Venta</title>
+  <title>SIC | Artículos Punto Venta</title>
   <script>
      //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
     function buscar_articulos(){
@@ -21,17 +21,17 @@
             $("#articulosALL").html(mensaje);
       });//FIN post
     }//FIN function
-    //FUNCION QUE BORRA LOS PROVEEDORES (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+    //FUNCION QUE BORRA LOS ARTICULOS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
     function borrar_articulo_pv(id){
-      var answer = confirm("Deseas eliminar el articulo N°"+id+"?");
+      var answer = confirm("Deseas eliminar el artículo N°"+id+"?");
       if (answer) {
-        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_clientes.php"
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_articulo.php"
         $.post("../php/control_articulo.php", {
           //Cada valor se separa por una ,
           id: id,
           accion: 3,
         }, function(mensaje) {
-          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_proveedor.php"
+          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_articulo.php"
           $("#borrarArticulo").html(mensaje);
         }); //FIN post
       }//FIN IF
@@ -41,7 +41,7 @@
 <main>
 <body onload="buscar_articulos();">
   <div class="container"><br><br>
-    <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR CLIENTE    ///////   -->
+    <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR ARTICULO    ///////   -->
     <a href="add_articulo.php" class="waves-effect waves-light btn pink left right">Agregar Articulo<i class="material-icons prefix left">add</i></a>
     <!-- CREAMOS UN DIV EL CUAL TENGA id = "borrarProveedor"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
     <div id="borrarArticulo"></div>
@@ -62,7 +62,7 @@
         </div>
       </form>
     </div>
-    <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS CLIENTES    ///////   -->
+    <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS ARTICULO    ///////   -->
     <div class="row">
       <table class="bordered highlight responsive-table">
         <thead>
@@ -78,7 +78,7 @@
             <th>Borrar</th>
           </tr>
         </thead>
-        <!-- DENTRO DEL tbody COLOCAMOS id = "articulosALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_clientes() -->
+        <!-- DENTRO DEL tbody COLOCAMOS id = "articulosALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_articulos) -->
         <tbody id="articulosALL">
         </tbody>
       </table>
