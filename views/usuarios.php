@@ -15,21 +15,30 @@
   <script>
     //FUNCION QUE ENVIA LA INFORMACION PARA ELIMINAR UN USUARIO(SE ACTIVA CON BOTON DE BORRAR)
     function eliminar(id){
-      $.post("../php/delete_user.php", {
-        valorId: id,
-      }, function(mensaje) {
-        $("#resultado_usuarios").html(mensaje);
-      }); 
-    };
-    //FUNCION QUE MANDA LA INFORMACION PARA CAMBIAR DE ESTATRUS AL USUARIO ACTIVO-DESACTIVADO (SE ACCIONA CON BOTON)
+      var answer = confirm("Deseas eliminar el usuario N°"+id+"?");
+      if (answer) {
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_users.php"
+        $.post("../php/control_users.php", { 
+          accion: 3,
+          valorId: id,
+          }, function(mensaje) {
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_users.php"
+            $("#resultado_usuarios").html(mensaje);
+        }); //FIN post
+      };//FIN IF
+    }//FIN function
+    //FUNCION QUE MANDA LA INFORMACION PARA CAMBIAR DE ESTATUS AL USUARIO ACTIVO-DESACTIVADO (SE ACCIONA CON BOTON)
     function cambiar(estatus, id){
-      $.post("../php/cambiar_usuario.php", {
-        valorId: id,
-        valorEstatus: estatus,
-      }, function(mensaje) {
-        $("#resultado_usuarios").html(mensaje);
-      });  
-    };
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_users.php"
+      $.post("../php/control_users.php", { 
+          accion: 2,
+          valorId: id,
+          valorEstatus: estatus,
+        }, function(mensaje) {
+          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_users.php"
+          $("#resultado_usuarios").html(mensaje);
+        });  //FIN post
+    };//FIN function
   </script>
 </head>
 <main>
@@ -81,9 +90,7 @@
                      $BTN =($tmp['Estatus'] == 1)?'<a onclick="cambiar(0,'.$tmp['user_id'].');" class="btn-small waves-effect waves-light indigo">Desactivar</a>':'<a onclick="cambiar(1,'.$tmp['user_id'].');" class="btn-small waves-effect waves-light green">Activar</a';
                      // SI LOS USUARIOS SON ALFREDO Y GABRIEL MOSTRAR BONTONES DE CAMBIAR Y ELIMINAR
                      echo ($_SESSION['user_id'] == 10 OR $_SESSION['user_id'] == 49)? '<td>'.$BTN.'</td><td><a onclick="eliminar('.$tmp['user_id'].');" class="btn-floating btn-tiny waves-effect waves-light red darken-1"><i class="material-icons">delete</i></a></td><td><form method="post" action="../views/permisos.php"><input id="id" name="id" type="hidden" value="'.$tmp['user_id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>': ''; 
-                     ?>
-
-                    
+                     ?>                    
                   </tr>
                 <?php
                 }

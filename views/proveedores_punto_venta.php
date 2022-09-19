@@ -23,8 +23,10 @@
     }//FIN function
     //FUNCION QUE BORRA LOS PROVEEDORES (SE ACTIVA AL INICIAR EL BOTON BORRAR)
     function borrar_proveedor_pv(id){
-      var answer = confirm("Deseas eliminar el cliente N°"+id+"?");
+      var answer = confirm("Deseas eliminar el proveedor N°"+id+"?");
       if (answer) {
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_proveedor.php"
+      $.post("../php/control_proveedor.php", {
         $.post("../php/control_proveedor.php", {
           //Cada valor se separa por una ,
           id: id,

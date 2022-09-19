@@ -1,4 +1,6 @@
 <?php
+//INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
+include('fredyNav.php');
 //VERIFICAMOS QUE SI NOS ENVIE POR POST EL ID DEL CLIENTE
 if ($_SESSION['user_id'] == false) {
   ?>
@@ -14,8 +16,6 @@ if ($_SESSION['user_id'] == false) {
     <head>
     	<title>SIC | Perfil Usuario</title>
       <?php
-      //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
-      include('fredyNav.php');
       //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL USUARIO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos
       $user_id = $_SESSION['user_id'];
       $datos = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
@@ -44,7 +44,8 @@ if ($_SESSION['user_id'] == false) {
           }else if (textoEmail == "") {
             M.toast({html:"El campo E-mail se encuentra vacío", classes: "rounded"});
           }else {
-            $.post("../php/update_user.php", { 
+            $.post("../php/control_users.php", { 
+                accion: 1,
                 valorId: id,
                 valorNombres: textoNombres,
                 valorApellidos: textoApellidos,
@@ -61,7 +62,6 @@ if ($_SESSION['user_id'] == false) {
         }
       </script>
     </head>
-    
     <body>
       <div class="container" id="update_perfil">
         <div class="row">

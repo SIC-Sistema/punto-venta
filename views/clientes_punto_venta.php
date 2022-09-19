@@ -25,6 +25,7 @@
     function borrar_cliente_pv(id){
       var answer = confirm("Deseas eliminar el cliente N°"+id+"?");
       if (answer) {
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_clientes.php"
         $.post("../php/control_clientes.php", { 
           //Cada valor se separa por una ,
             id: id,

@@ -25,6 +25,7 @@
     function borrar_articulo_pv(id){
       var answer = confirm("Deseas eliminar el articulo N°"+id+"?");
       if (answer) {
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_clientes.php"
         $.post("../php/control_articulo.php", {
           //Cada valor se separa por una ,
           id: id,
