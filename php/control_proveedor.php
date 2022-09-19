@@ -123,23 +123,15 @@ switch ($Accion) {
         // $Accion es igual a 3 realiza:
         //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "proveedores_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
-    	//Obtenemos la informacion del Usuario
-        $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
-        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR CLIENTES
-        if ($User['b_proveedoress'] == 1) {
-        #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto_venta_proveedores`
-        if(mysqli_query($conn, "DELETE FROM `punto-venta_clientes` WHERE `punto_venta_proveedores`.`id` = $id")){
-        #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+    	#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL PROVEEDOR DE `punto_venta_proveedores`
+        if(mysqli_query($conn, "DELETE FROM `punto_venta_proveedores` WHERE `punto_venta_proveedores`.`id` = $id")){
+            #SI ES ELIMINADO MANDAR MSJ CON ALERTA
             echo '<script >M.toast({html:"Proveedor borrado con exito.", classes: "rounded"})</script>';
         }else{
-        #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-            echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+            #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
+		    echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
         }
         echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-        }else{
-            echo '<script >M.toast({html:"Permiso denegado.", classes: "rounded"});
-            M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
-        }   
         break;
 }// FIN switch
 mysqli_close($conn);
