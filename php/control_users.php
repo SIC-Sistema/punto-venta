@@ -107,7 +107,7 @@ switch ($Accion) {
         break;
     case 3:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 3 realiza:
-    
+
     	//CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "usuarios.php" QUE NESECITAMOS PARA BORRAR
     	$valorId = $conn->real_escape_string($_POST["valorId"]);
 
@@ -133,8 +133,9 @@ switch ($Accion) {
     	$BorrarVentas = $conn->real_escape_string($_POST["BorrarVentas"]);
     	$Ventas = $conn->real_escape_string($_POST["Ventas"]);
     	$Compras = $conn->real_escape_string($_POST["Compras"]);
+    	$Articulos = $conn->real_escape_string($_POST["Articulos"]);
     	//CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LOS PERMISOS DEL USUARIO Y LA GUARDAMOS EN UNA VARIABLE
-		$sql = "UPDATE users SET banco='$Banco', credito='$Credito', b_pagos='$BorrarPagos', b_clientes = '$BorrarClientes', b_ventas = '$BorrarVentas', ventas = '$Ventas', compras = '$Compras' WHERE user_id='$id'";
+		$sql = "UPDATE users SET banco='$Banco', credito='$Credito', b_pagos='$BorrarPagos', b_clientes = '$BorrarClientes', b_ventas = '$BorrarVentas', ventas = '$Ventas', compras = '$Compras',  b_articulos = '$Articulos' WHERE user_id='$id'";
 		//VERIFICAMOS QUE SE EJECUTE LA SENTENCIA EN MYSQL 
 		if(mysqli_query($conn, $sql)){
 			echo '<script>M.toast({html:"Permisos actualizados correctamente.", classes: "rounded"})</script>';
