@@ -122,15 +122,23 @@ switch ($Accion) {
         // $Accion es igual a 3 realiza:
     	//CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "clientes_punto_venta.php" QUE NESECITAMOS PARA BORRAR
     	$id = $conn->real_escape_string($_POST['id']);
-    	#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto-venta_clientes`
-		if(mysqli_query($conn, "DELETE FROM `punto-venta_clientes` WHERE `punto-venta_clientes`.`id` = $id")){
-		  #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-		  echo '<script >M.toast({html:"Cliente borrado con exito.", classes: "rounded"})</script>';
-		}else{
-		  #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-		  echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
-		}
-		echo '<script>recargar_clientes()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-        break;
+    	//Obtenemos la informacion del Usuario
+    	$User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
+    	//SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR CLIENTES
+    	if ($User['b_clientes'] == 1) {
+    		#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto-venta_clientes`
+			if(mysqli_query($conn, "DELETE FROM `punto-venta_clientes` WHERE `punto-venta_clientes`.`id` = $id")){
+			  #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+			  echo '<script >M.toast({html:"Cliente borrado con exito.", classes: "rounded"})</script>';
+			}else{
+			  #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
+			  echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+			}
+			echo '<script>recargar_clientes()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+	    }else{
+			echo '<script >M.toast({html:"Permiso denegado.", classes: "rounded"});
+			M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
+	    }   
+    	break;
 }// FIN switch
 mysqli_close($conn);
