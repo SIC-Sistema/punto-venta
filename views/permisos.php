@@ -45,6 +45,9 @@ if (isset($_POST['id']) == false) {
           if(document.getElementById('compras').checked==true){
             Compras = 1;
           }else { Compras = 0; }
+          if(document.getElementById('articulos').checked==true){
+            Articulos = 1;
+          }else { Articulos = 0; }
 
             //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO NE LA DIRECCION "../php/control_users.php"
             $.post("../php/control_users.php", { 
@@ -58,6 +61,7 @@ if (isset($_POST['id']) == false) {
                 BorrarVentas: BorrarVentas,
                 Ventas: Ventas,
                 Compras: Compras,                
+                Articulos: Articulos,                
             }, function(mensaje) {
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_users.php"
                 $("#cambio_permisos").html(mensaje);   
@@ -140,6 +144,13 @@ if (isset($_POST['id']) == false) {
                 <br>
                 <input type="checkbox" <?php echo ($datos['compras']  == 1)?"checked":"";?> id="compras"/>
                 <label for="compras">Compras</label>
+              </p>
+            </div>
+             <div class="col s6 m3 l3">
+              <p>
+                <br>
+                <input type="checkbox" <?php echo ($datos['articulos']  == 1)?"checked":"";?> id="articulos"/>
+                <label for="articulos">Borrar Articulos</label>
               </p>
             </div>
             
