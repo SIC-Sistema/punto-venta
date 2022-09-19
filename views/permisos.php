@@ -149,7 +149,7 @@ if (isset($_POST['id']) == false) {
              <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input type="checkbox" <?php echo ($datos['articulos']  == 1)?"checked":"";?> id="articulos"/>
+                <input type="checkbox" <?php echo ($datos['b_articulos']  == 1)?"checked":"";?> id="articulos"/>
                 <label for="articulos">Borrar Articulos</label>
               </p>
             </div>
