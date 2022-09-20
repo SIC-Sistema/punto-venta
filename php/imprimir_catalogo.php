@@ -50,12 +50,21 @@ $pdf->SetMargins(15, 35, 10);
 $pdf->SetAutoPageBreak(true, 35);
 $pdf->AliasNbPages();
 $pdf->AddPage('portrait', 'letter');
-$pdf->SetMargins(15, 45, 10);
 
+$pdf->setTitle(utf8_decode('SIC | CATALOGO: '));
+
+$pdf->SetY($pdf->GetY()+15);
+$pdf->SetFont('Arial', 'B', 14);
+$pdf->Cell(185,10,utf8_decode('CATALOGO'),0,0,'C');
+$pdf->SetDrawColor(30, 40, 125);
+$pdf->SetLineWidth(2);
+$pdf->Line(60,$pdf->GetY()+9, 150, $pdf->GetY()+9);
 
 /////   RECUADRO DERECHO    //////
-$pdf->SetY($pdf->GetY()-35);
-$pdf->SetX(104);
+$pdf->SetLineWidth(0);
+$pdf->SetTextColor(0,0,0);
+$pdf->SetY($pdf->GetY()+16);
+$pdf->SetX(25);
 $pdf->SetFont('Arial', 'B', 14);
 $pdf->Cell(90,21,utf8_decode('Fecha:'),0,0,'C');
 $pdf->SetDrawColor(30, 40, 125);

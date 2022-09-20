@@ -67,10 +67,12 @@
       <table class="bordered highlight responsive-table">
         <thead>
           <tr>
-            <th>Codigo</th>
+            <th>Código</th>
+            <th>Nombre</th>
             <th>Descripción</th>
-            <th>Precio $</th>
+            <th>Precio</th>
             <th>Unidad</th>
+            <th>C. Fiscal</th>
             <th>Registro</th>
             <th>Fecha</th>
             <th>Editar</th>

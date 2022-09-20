@@ -19,23 +19,26 @@ switch ($Accion) {
 
         //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "add_articulo.php" QUE NESECITAMOS PARA INSERTAR
         $codigo = $conn->real_escape_string($_POST['valorCodigo']);
+        $Nombre = $conn->real_escape_string($_POST['valorNombre']);
         $descripcion = $conn->real_escape_string($_POST['valorDescripcion']);
         $precio = $conn->real_escape_string($_POST['valorPrecio']);
         $unidad = $conn->real_escape_string($_POST['valorUnidad']);        
+        $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']);        
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
-		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo' AND descripcion='$descripcion'"))>0){
-            echo '<script >M.toast({html:"Ya se encuentra un cliente con los mismos datos registrados.", classes: "rounded"})</script>';
+		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo' OR codigo_fiscal='$CFiscal'"))>0){
+            echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
         }else{
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-            $sql = "INSERT INTO `punto_venta_articulos` (codigo, descripcion, precio, unidad, usuario, fecha) 
-               VALUES('$codigo', '$descripcion', '$precio', '$unidad','$id_user','$Fecha_hoy')";
+            $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, usuario, fecha) 
+               VALUES('$codigo', '$Nombre', '$descripcion', '$precio', '$unidad', '$CFiscal','$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"El artículo se dió de alta satisfactoriamente.", classes: "rounded"})</script>';	
+                echo '<script>recargar_articulo()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
 			}else{
                 echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
             }//FIN else DE ERROR
-            echo '<script>recargar_articulo()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+            
         }// FIN else DE BUSCAR ARTICULO IGUAL
 
         break;
@@ -70,10 +73,12 @@ switch ($Accion) {
                 $contenido .= '			
 		          <tr>
 		            <td>'.$articulo['codigo'].'</td>
+                    <td>'.$articulo['nombre'].'</td>
 		            <td>'.$articulo['descripcion'].'</td>
-		            <td>'.$articulo['precio'].'</td>
-		            <td>'.$articulo['unidad'].'</td>
-		            <td>'.$articulo['usuario'].'</td>
+		            <td>$'.$articulo['precio'].'</td>
+                    <td>'.$articulo['unidad'].'</td>
+		            <td>'.$articulo['codigo_fiscal'].'</td>
+		            <td>'.$user['firstname'].'</td>
 		            <td>'.$articulo['fecha'].'</td>
 		            <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="borrar_articulo_pv('.$articulo['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
@@ -91,18 +96,25 @@ switch ($Accion) {
         //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_articulo_pv.php" QUE NESECITAMOS PARA ACTUALIZAR
     	$id = $conn->real_escape_string($_POST['id']);
         $codigo = $conn->real_escape_string($_POST['valorCodigo']);
+        $Nombre = $conn->real_escape_string($_POST['valorNombre']);
         $descripcion = $conn->real_escape_string($_POST['valorDescripcion']);
         $precio = $conn->real_escape_string($_POST['valorPrecio']);
-        $unidad = $conn->real_escape_string($_POST['valorUnidad']);
-        //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
-		$sql = "UPDATE `punto_venta_articulos` SET codigo = '$codigo', descripcion = '$descripcion', precio = '$precio', unidad = '$unidad', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
-        //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-		if(mysqli_query($conn, $sql)){
-			echo '<script >M.toast({html:"El artículo se actualizo con exito.", classes: "rounded"})</script>';	
-		}else{
-			echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
-		}//FIN else DE ERROR
-		echo '<script>recargar_articulo()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+        $unidad = $conn->real_escape_string($_POST['valorUnidad']);        
+        $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']);        
+        //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
+        if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE (codigo='$codigo' OR codigo_fiscal='$CFiscal') AND id != $id"))>0){
+            echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
+        }else{
+            //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
+    		$sql = "UPDATE `punto_venta_articulos` SET codigo = '$codigo', nombre = '$Nombre', descripcion = '$descripcion', precio = '$precio', unidad = '$unidad', codigo_fiscal = '$CFiscal', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
+            //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+    		if(mysqli_query($conn, $sql)){
+    			echo '<script >M.toast({html:"El artículo se actualizo con exito.", classes: "rounded"})</script>';	
+                echo '<script>recargar_articulo()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+    		}else{
+    			echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
+    		}//FIN else DE ERROR
+    	}// fin else verificacion	
         break;
     case 3:
         // $Accion es igual a 3 realiza:

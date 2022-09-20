@@ -42,7 +42,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 					<li><a href = "proveedores_punto_venta.php" class="black-text"><i class="material-icons">person_pin</i>Proveedores </a></li>
 				    <li><a href = "clientes_punto_venta.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
 					<li><a href = "usuarios.php" class="black-text"><i class="material-icons">perm_identity</i>Usuarios </a></li>
-				    <li><a href = "articulos_punto_venta.php" class="black-text"><i class="material-icons">shopping_basket</i>Articulos </a></li>  			 
+				    <li><a href = "articulos_punto_venta.php" class="black-text"><i class="material-icons">dashboard</i>Articulos </a></li>  			 
  				 </ul>
 				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">library_add</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
@@ -104,10 +104,9 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 		      		    <span>
 		      			  <ul>
 							<li><a href = "proveedores_punto_venta.php"><i class="material-icons">person_pin</i>Proveedores </a></li>
-			      			<li><a href = "clientes_punto_venta.php"><i class="material-icons">people</i>Clientes </a></li>
+						    <li><a href = "clientes_punto_venta.php"><i class="material-icons">people</i>Clientes </a></li>
 							<li><a href = "usuarios.php"><i class="material-icons">perm_identity</i>Usuarios </a></li>
-				    		<li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li>
-			      			<li><a href="listos.php"><i class="material-icons">assignment_turned_in</i>Item 4 <span class="new badge pink" data-badge-caption=""><?php echo $listos['count(*)'];?></span> </a></li>    			 
+						    <li><a href = "articulos_punto_venta.php"><i class="material-icons">dashboard</i>Articulos </a></li>     			 
 					      </ul>
 					    </span>
 		      		</div>    			

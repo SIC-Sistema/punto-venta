@@ -156,7 +156,7 @@ if (isset($_POST['id']) == false) {
             
         </div>
         <div class="row s12">
-          <a onclick="cambiar_permisos(<?php echo $id; ?>);" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Guardar</a>
+          <a onclick="cambiar_permisos(<?php echo $id; ?>);" class="waves-effect waves-light btn pink right"><i class="material-icons right">save</i>Guardar</a>
         </div><br><br>
         <!-- CREAMOS UN DIV EL CUAL TENGA id="cambio_permisos" PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
         <div id="cambio_permisos"></div>

@@ -28,7 +28,7 @@ switch ($Accion) {
         $dias_credito = $conn->real_escape_string($_POST['valorDias_Credito']);
         
         //VERIFICAMOS QUE NO HALLA UN PROVEEDOR CON LOS MISMOS DATOS
-		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_proveedores` WHERE nombre='$nombre' AND direccion='$direccion' AND colonia='$colonia' AND cp='$cp' AND rfc='$rfc' AND email='$email'"))>0){
+		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_proveedores` WHERE (nombre='$nombre' AND direccion='$direccion' AND colonia='$colonia' AND cp='$cp') OR rfc='$rfc' OR email='$email'"))>0){
             echo '<script >M.toast({html:"Ya se encuentra un cliente con los mismos datos registrados.", classes: "rounded"})</script>';
         }else{
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
@@ -37,10 +37,10 @@ switch ($Accion) {
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"El proveedor se dió de alta satisfactoriamente.", classes: "rounded"})</script>';	
+                echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
 			}else{
                 echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
             }//FIN else DE ERROR
-            echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         }// FIN else DE BUSCAR PROVEEDOR IGUAL
 
         break;
@@ -52,7 +52,7 @@ switch ($Accion) {
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
 			//MOSTRARA LOS CLIENTES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
-			$sql = "SELECT * FROM `punto_venta_proveedores` WHERE  nombre LIKE '%$Texto%'  OR id = '$Texto' OR rfc = '$Texto' OR colonia LIKE '%$Texto%' OR direccion LIKE '%$Texto%' ORDER BY id";	
+			$sql = "SELECT * FROM `punto_venta_proveedores` WHERE  nombre LIKE '%$Texto%'  OR id = '$Texto' OR rfc LIKE '%$Texto%' OR colonia LIKE '%$Texto%' OR direccion LIKE '%$Texto%' ORDER BY id";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
 			$sql = "SELECT * FROM `punto_venta_proveedores`";
 		}//FIN else $Texto VACIO O NO
@@ -83,7 +83,7 @@ switch ($Accion) {
 		            <td>'.$proveedor['email'].'</td>
 		            <td>'.$proveedor['telefono'].'</td>
 		            <td>'.$proveedor['dias_c'].'</td>
-		            <td>'.$proveedor['usuario'].'</td>
+		            <td>'.$user['firstname'].'</td>
 		            <td>'.$proveedor['fecha'].'</td>
 		            <td><form method="post" action="../views/editar_proveedor_pv.php"><input id="id" name="id" type="hidden" value="'.$proveedor['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="borrar_proveedor_pv('.$proveedor['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
@@ -108,16 +108,21 @@ switch ($Accion) {
         $email = $conn->real_escape_string($_POST['valorEmail']);
         $telefono = $conn->real_escape_string($_POST['valorTelefono']);
         $dias_credito = $conn->real_escape_string($_POST['valorDias_Credito']);
-
-        //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL PROVEEDOR Y LA GUARDAMOS EN UNA VARIABLE
-		$sql = "UPDATE `punto_venta_proveedores` SET nombre = '$nombre', direccion = '$direccion', colonia = '$colonia', cp = '$cp', rfc = '$rfc', email = '$email', telefono = '$telefono', dias_c = '$dias_credito', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
-        //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-		if(mysqli_query($conn, $sql)){
-			echo '<script >M.toast({html:"El proveedor se actualizo con exito.", classes: "rounded"})</script>';	
-		}else{
-			echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
-		}//FIN else DE ERROR
-		echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+         //VERIFICAMOS QUE NO HALLA UN PROVEEDOR RFC o CORREO IGUAL Y NO SE REPITA
+        if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_proveedores` WHERE (rfc='$rfc' OR email='$email') AND id != $id"))>0){
+            echo '<script >M.toast({html:"RFC o Email repetido.", classes: "rounded"})</script>';
+        }else{
+            //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL PROVEEDOR Y LA GUARDAMOS EN UNA VARIABLE
+    		$sql = "UPDATE `punto_venta_proveedores` SET nombre = '$nombre', direccion = '$direccion', colonia = '$colonia', cp = '$cp', rfc = '$rfc', email = '$email', telefono = '$telefono', dias_c = '$dias_credito', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
+            //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+    		if(mysqli_query($conn, $sql)){
+    			echo '<script >M.toast({html:"El proveedor se actualizo con exito.", classes: "rounded"})</script>';
+                echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+	
+    		}else{
+    			echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
+    		}//FIN else DE ERROR
+    	}//FIN else VALIDAR
         break;
     case 3:
         // $Accion es igual a 3 realiza:

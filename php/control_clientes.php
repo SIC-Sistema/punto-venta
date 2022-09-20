@@ -27,7 +27,7 @@ switch ($Accion) {
 		$CP = $conn->real_escape_string($_POST['valorCP']);
 
 		//VERIFICAMOS QUE NO HALLA UN CLIENTE CON LOS MISMOS DATOS
-		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE nombre='$Nombre' AND telefono='$Telefono' AND email='$Email' AND rfc='$RFC' AND cp='$CP'"))>0){
+		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE(nombre='$Nombre' AND direccion='$Direccion' AND colonia='$Colonia' AND cp='$CP') OR rfc='$RFC' OR email='$Email'"))>0){
 	 		echo '<script >M.toast({html:"Ya se encuentra un cliente con los mismos datos registrados.", classes: "rounded"})</script>';
 	 	}else{
 	 		// SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
@@ -36,10 +36,10 @@ switch ($Accion) {
 			//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"El cliente se dió de alta satisfactoriamente.", classes: "rounded"})</script>';	
+				echo '<script>recargar_clientes()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
 			}else{
 				echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
 			}//FIN else DE ERROR
-			echo '<script>recargar_clientes()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
 	 	}// FIN else DE BUSCAR CLIENTE IGUAL
 
         break;
@@ -52,7 +52,7 @@ switch ($Accion) {
     	//VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
 			//MOSTRARA LOS CLIENTES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
-			$sql = "SELECT * FROM `punto-venta_clientes` WHERE  nombre LIKE '%$Texto%'  OR id = '$Texto' OR rfc = '$Texto' OR colonia LIKE '%$Texto%' OR localidad LIKE '%$Texto%' ORDER BY id";	
+			$sql = "SELECT * FROM `punto-venta_clientes` WHERE  nombre LIKE '%$Texto%' OR id = '$Texto' OR rfc LIKE '%$Texto%' OR colonia LIKE '%$Texto%' OR localidad LIKE '%$Texto%' ORDER BY id";	
 		}else{
 			//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
 			$sql = "SELECT * FROM `punto-venta_clientes`";
@@ -108,15 +108,20 @@ switch ($Accion) {
 		$Localidad = $conn->real_escape_string($_POST['valorLocalidad']);
 		$CP = $conn->real_escape_string($_POST['valorCP']);
 
-		//CREAMO LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
-		$sql = "UPDATE `punto-venta_clientes` SET nombre = '$Nombre', telefono = '$Telefono', email = '$Email', rfc = '$RFC', direccion = '$Direccion', colonia = '$Colonia', localidad = '$Localidad', cp = '$CP' WHERE id = '$id'";
-		//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-		if(mysqli_query($conn, $sql)){
-			echo '<script >M.toast({html:"El cliente se actualizo con exito.", classes: "rounded"})</script>';	
-		}else{
-			echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
-		}//FIN else DE ERROR
-		echo '<script>recargar_clientes()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+		//VERIFICAMOS QUE NO HALLA UN CLIENTE CON LOS MISMOS DATOS
+		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE (telefono = '$Telefono' OR rfc='$RFC' OR email='$Email') AND id != $id"))>0){
+	 		echo '<script >M.toast({html:"El RFC, Telefono o Email ya se encuentra registrados en la BD.", classes: "rounded"})</script>';
+	 	}else{
+			//CREAMO LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
+			$sql = "UPDATE `punto-venta_clientes` SET nombre = '$Nombre', telefono = '$Telefono', email = '$Email', rfc = '$RFC', direccion = '$Direccion', colonia = '$Colonia', localidad = '$Localidad', cp = '$CP' WHERE id = '$id'";
+			//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+			if(mysqli_query($conn, $sql)){
+				echo '<script >M.toast({html:"El cliente se actualizo con exito.", classes: "rounded"})</script>';	
+				echo '<script>recargar_clientes()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+			}else{
+				echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
+			}//FIN else DE ERROR
+		}// FIn else Validacion
         break;
     case 3:
         // $Accion es igual a 3 realiza:

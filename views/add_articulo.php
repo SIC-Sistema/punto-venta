@@ -17,20 +17,26 @@
 
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
       var textoCodigo = $("input#codigo").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "codigo"
-      var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA  (id="descripcion")
+      var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA 70 (id="descripcion")
+      var textoNombre = $("input#nombre").val();
       var textoPrecio = $("input#precio").val();
       var textoUnidad = $("input#unidad").val();
+      var textoCFiscal = $("input#c_fiscal").val();
 
       // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
       //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
       if (textoCodigo == "") {
         M.toast({html: 'El campo Código se encuentra vacío.', classes: 'rounded'});
+      }else if (textoNombre == "") {
+        M.toast({html: 'El campo Nombre se encuentra vacío.', classes: 'rounded'});
       }else if(textoDescripcion.length == ""){
         M.toast({html: 'El campo Descripción se encuentra vacío.', classes: 'rounded'});
-      }else if(textoPrecio == ""){
-        M.toast({html: 'El campo Precio se encuentra vacío.', classes: 'rounded'});
+      }else if(textoPrecio <= 0){
+        M.toast({html: 'El campo Precio no puede ser menor o igual a 0.', classes: 'rounded'});
       }else if(textoUnidad == ""){
         M.toast({html: 'El campo Unidad se encuentra vacío.', classes: 'rounded'});
+      }else if(textoCFiscal == ""){
+        M.toast({html: 'El campo Codigo Fiscal se encuentra vacío.', classes: 'rounded'});
       }else{
         //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_articulo.php"
@@ -38,9 +44,11 @@
           //Cada valor se separa por una ,
             accion: 0,
             valorCodigo: textoCodigo,
+            valorNombre: textoNombre,
             valorDescripcion: textoDescripcion,
             valorPrecio: textoPrecio,
             valorUnidad: textoUnidad,
+            valorCFiscal: textoCFiscal,
           }, function(mensaje) {
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_articulo.php"
               $("#resultado_insert").html(mensaje);
@@ -68,26 +76,36 @@
         <div class="col s12 m6 l6">
           <br>
           <div class="input-field">
-            <i class="material-icons prefix">equalizer</i>
-            <input id="codigo" type="text" class="validate" data-length="50" required>
-            <label for="codigo">Codigo:</label>
+            <i class="material-icons prefix">fiber_pin</i>
+            <input id="codigo" type="number" class="validate" data-length="50" required>
+            <label for="codigo">Código de Artículo:</label>
           </div>      
           <div class="input-field">
-            <i class="material-icons prefix">description</i>
-            <input id="descripcion" type="text" class="validate" data-length="80" required>
-            <label for="descripcion">Descripción:</label>
-          </div>         
+            <i class="material-icons prefix">edit</i>
+            <input id="nombre" type="text" class="validate" data-length="30" required>
+            <label for="nombre">Nombre:</label>
+          </div>  
+          <div class="input-field">
+            <i class="material-icons prefix">vpn_key</i>
+            <input id="c_fiscal" type="text" class="validate" data-length="80" required>
+            <label for="c_fiscal">Código Fiscal:</label>
+          </div>       
         </div>
         <!-- DIV DOBLE COLUMNA EN ESCRITORIO PARTE DERECHA -->
         <div class="col s12 m6 l6">
           <br>
           <div class="input-field">
             <i class="material-icons prefix">attach_money</i>
-            <input id="precio" type="text" class="validate" data-length="35" required>
+            <input id="precio" type="number" class="validate" data-length="35" required>
             <label for="precio">Precio:</label>
           </div>
           <div class="input-field">
-            <i class="material-icons prefix">shopping_basket</i>
+            <i class="material-icons prefix">description</i>
+            <input id="descripcion" type="text" class="validate" data-length="80" required>
+            <label for="descripcion">Descripción:</label>
+          </div> 
+          <div class="input-field">
+            <i class="material-icons prefix">local_offer</i>
             <input id="unidad" type="text" class="validate" data-length="15" required>
             <label for="unidad">Unidad:</label>
           </div>  
