@@ -50,7 +50,7 @@ switch ($Accion) {
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
 			//MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
-			$sql = "SELECT * FROM `punto_venta_articulos` WHERE  codigo LIKE '%$Texto%'  OR id = '$Texto' OR descripcion LIKE '%$Texto%' OR precio LIKE '%$Texto%' OR unidad LIKE '%$Texto%' ORDER BY id";	
+			$sql = "SELECT * FROM `punto_venta_articulos` WHERE  codigo LIKE '%$Texto%'  OR nombre LIKE '%$Texto%' OR descripcion LIKE '%$Texto%' OR codigo_fiscal LIKE '%$Texto%' ORDER BY id";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
 			$sql = "SELECT * FROM `punto_venta_articulos`";
 		}//FIN else $Texto VACIO O NO

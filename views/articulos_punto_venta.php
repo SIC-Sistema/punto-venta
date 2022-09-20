@@ -55,7 +55,7 @@
           <div class="input-field col s12">
             <i class="material-icons prefix">search</i>
             <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_articulos();">
-            <label for="busqueda">Buscar(Codigo, Descrpición, Precio, Unidad)</label>
+            <label for="busqueda">Buscar(Código, Nombre, Descrpición, Código Fiscal)</label>
           </div>
           <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
           <a href="../php/imprimir_catalogo.php" target="blank" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
