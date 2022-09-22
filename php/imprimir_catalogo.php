@@ -36,7 +36,7 @@ class PDF extends FPDF{
 	   $this->MultiCell(145,8,utf8_decode('Servicios Integrales De Computacion Sic'."\n".'sic.serviciosintegrales'."\n".'www.sicsom.com/ventas'."\n".' '),1,'L',1);
 	   $this->SetY(-25);
 	   $this->SetX(160);
-	   $this->MultiCell(56,6,utf8_decode('Av. Hidalgo No. 508 C. P. 99100, Sombrerete, Zac.'."\n".'Tels. 433 9 35 62 86 y 433 935 62 88'),1,'L',1);
+	   $this->MultiCell(56,6,utf8_decode('Av. Hidalgo No. 508 C. P. 99100, Sombrerete, Zac.'."\n".' '),1,'L',1);
 	   $this->SetY(-10);
 	   $this->SetX(160);
 	   $this->AliasNbPages('tpagina');
@@ -115,47 +115,6 @@ $pdf->SetLineWidth(0);
 $pdf->SetTextColor(0, 0, 0);
 $pdf->Ln();
 $aux = 1;
-while($articulos_catalogo = mysqli_fetch_array($catalogo)){ 
-
-	///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
-	$ContNombre = ceil(strlen($articulos_catalogo['nombre'])/16);
-	$ContDescripcion = ceil(strlen($articulos_catalogo['descripcion'])/36);
-	if ($ContDescripcion>$ContNombre) {
-		$Mayor = $ContDescripcion;
-	}else{
-		$Mayor = $ContNombre;
-	}
-	//LE DECIMOS CUANTAS FILAS AFECTA A LOS DEMAS
-	$Y = 6*$Mayor;
-	$AgregaG = $Mayor-1;
-	$AgregaN = $Mayor-$ContNombre;
-	$AgregaD = $Mayor-$ContDescripcion;
-
-	$pdf->SetX(15);
-	$pdf->SetFont('Helvetica', '', 11);
-   $pdf->MultiCell(8,6,utf8_decode($aux.str_repeat("\n", $AgregaG).' '),1,'C',1);
-   $pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(23);
-	$pdf->MultiCell(24,6,utf8_decode($articulos_catalogo['codigo'].str_repeat("\n", $AgregaG).' '),1,'C',1);
-   $pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(47);
-	$pdf->MultiCell(40,6,utf8_decode($articulos_catalogo['nombre'].str_repeat("\n", $AgregaN).' '),1,'C',1);
-	$pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(87);
-	$pdf->SetFont('Helvetica', '', 9);
-	$pdf->MultiCell(74,6,utf8_decode($articulos_catalogo['descripcion'].str_repeat("\n", $AgregaD).' '),1,'C',1);
-	$pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(161);
-	$pdf->SetFont('Helvetica', '', 12);
-	$pdf->MultiCell(20,6,utf8_decode('$'.$articulos_catalogo['precio'].str_repeat("\n", $AgregaG).' '),1,'R',1);
-   $pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(181);
-	$pdf->SetFont('Helvetica', '', 11);
-   $pdf->MultiCell(25,6,utf8_decode($articulos_catalogo['codigo_fiscal'].str_repeat("\n", $AgregaG).' '),1,'C',1);
-	$aux ++;
-}
-$articulos_catalogo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM punto_venta_articulos"));
-$catalogo = mysqli_query($conn, "SELECT * FROM punto_venta_articulos");
 while($articulos_catalogo = mysqli_fetch_array($catalogo)){ 
 
 	///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
