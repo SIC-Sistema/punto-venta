@@ -132,7 +132,7 @@ while($articulos_catalogo = mysqli_fetch_array($catalogo)){
 	$AgregaD = $Mayor-$ContDescripcion;
 
 	$pdf->SetX(15);
-	$pdf->SetFont('Helvetica', '', 11);
+	$pdf->SetFont('Helvetica', '', 10);
    $pdf->MultiCell(8,6,utf8_decode($aux.str_repeat("\n", $AgregaG).' '),1,'C',1);
    $pdf->SetY($pdf->GetY()-$Y);
 	$pdf->SetX(23);
@@ -146,11 +146,11 @@ while($articulos_catalogo = mysqli_fetch_array($catalogo)){
 	$pdf->MultiCell(74,6,utf8_decode($articulos_catalogo['descripcion'].str_repeat("\n", $AgregaD).' '),1,'C',1);
 	$pdf->SetY($pdf->GetY()-$Y);
 	$pdf->SetX(161);
-	$pdf->SetFont('Helvetica', '', 12);
+	$pdf->SetFont('Helvetica', '', 11);
 	$pdf->MultiCell(20,6,utf8_decode('$'.$articulos_catalogo['precio'].str_repeat("\n", $AgregaG).' '),1,'R',1);
    $pdf->SetY($pdf->GetY()-$Y);
 	$pdf->SetX(181);
-	$pdf->SetFont('Helvetica', '', 11);
+	$pdf->SetFont('Helvetica', '', 10);
    $pdf->MultiCell(25,6,utf8_decode($articulos_catalogo['codigo_fiscal'].str_repeat("\n", $AgregaG).' '),1,'C',1);
 	$aux ++;
 }
