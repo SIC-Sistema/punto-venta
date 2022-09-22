@@ -104,9 +104,9 @@ $pdf->SetTextColor(0, 0, 0);
 $pdf->Cell(8,8,utf8_decode('N°'),1,0,'C');
 $pdf->Cell(24,8,utf8_decode('Código'),1,0,'C');
 $pdf->Cell(40,8,utf8_decode('Producto'),1,0,'C');
-$pdf->Cell(74,8,utf8_decode('Descripción'),1,0,'C');
-$pdf->Cell(20,8,utf8_decode('Precio'),1,0,'C');
-$pdf->Cell(25,8,utf8_decode('C.Fiscal'),1,0,'C');
+$pdf->Cell(73,8,utf8_decode('Descripción'),1,0,'C');
+$pdf->Cell(22,8,utf8_decode('Precio'),1,0,'C');
+$pdf->Cell(24,8,utf8_decode('C.Fiscal'),1,0,'C');
 
 ////   CONTENIDO DE LA TABLA    /////
 $pdf->SetFillColor(240, 240, 240);
@@ -143,15 +143,15 @@ while($articulos_catalogo = mysqli_fetch_array($catalogo)){
 	$pdf->SetY($pdf->GetY()-$Y);
 	$pdf->SetX(87);
 	$pdf->SetFont('Helvetica', '', 9);
-	$pdf->MultiCell(74,6,utf8_decode($articulos_catalogo['descripcion'].str_repeat("\n", $AgregaD).' '),1,'C',1);
+	$pdf->MultiCell(73,6,utf8_decode($articulos_catalogo['descripcion'].str_repeat("\n", $AgregaD).' '),1,'C',1);
 	$pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(161);
-	$pdf->SetFont('Helvetica', '', 11);
-	$pdf->MultiCell(20,6,utf8_decode('$'.$articulos_catalogo['precio'].str_repeat("\n", $AgregaG).' '),1,'R',1);
+	$pdf->SetX(160);
+	$pdf->SetFont('Helvetica', 'B', 10);
+	$pdf->MultiCell(22,6,utf8_decode('$'.sprintf('%.2f', $articulos_catalogo['precio']).str_repeat("\n", $AgregaG).' '),1,'R',1);
    $pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(181);
+	$pdf->SetX(182);
 	$pdf->SetFont('Helvetica', '', 10);
-   $pdf->MultiCell(25,6,utf8_decode($articulos_catalogo['codigo_fiscal'].str_repeat("\n", $AgregaG).' '),1,'C',1);
+   $pdf->MultiCell(24,6,utf8_decode($articulos_catalogo['codigo_fiscal'].str_repeat("\n", $AgregaG).' '),1,'C',1);
 	$aux ++;
 }
 
