@@ -118,7 +118,7 @@ $aux = 1;
 while($articulos_catalogo = mysqli_fetch_array($catalogo)){ 
 
 	///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
-	$ContNombre = ceil(strlen($articulos_catalogo['nombre'])/16);
+	$ContNombre = ceil(strlen($articulos_catalogo['nombre'])/17);
 	$ContDescripcion = ceil(strlen($articulos_catalogo['descripcion'])/36);
 	if ($ContDescripcion>$ContNombre) {
 		$Mayor = $ContDescripcion;
