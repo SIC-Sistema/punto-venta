@@ -111,7 +111,7 @@
             <label for="repite_contra">Repite Contraseña</label>
           </div>
           <div class="input-field">
-            <a onclick="insert_usuario();" class="waves-effect waves-light btn pink right">GUARDAR<i class="material-icons right">send</i></a>
+            <a onclick="insert_usuario();" class="waves-effect waves-light btn pink right">GUARDAR<i class="material-icons right">save</i></a>
           </div>
         </div>        
       </div>

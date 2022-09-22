@@ -12,35 +12,35 @@ $catalogo = mysqli_query($conn, "SELECT * FROM punto_venta_articulos");
 class PDF extends FPDF{
    //Cabecera de página
    function Header(){ 
-	   $this->SetFont('Arial','B', 12);
-	   $this->Image('../img/logo_ticket.jpg', 185, 8, 20, 20, 'jpg');
-		$this->SetY($this->GetY()-20);
-	   $this->Cell(0,5,utf8_decode('SERVICIOS INTEGRALES DE COMPUTACIÓN'),0,0,'C');
-	   $this->Ln(8);
-	   $this->SetTextColor(40, 40, 135);
-	   $this->Cell(0,5,utf8_decode('"Tecnología y comunicación a tu alcance"'),0,0,'C');
+	   
    }
 
    //Pie de pagina 
    function footer(){
-	   $this->SetFont('Arial','', 10);
-	   $this->SetY(-33);
-	   $this->Write(5, 'facebook.com/SIC.SOMBRERETE');
-	   $this->Ln();
-	   $this->Write(5, 'www.sicsom.com');
-	   $this->SetY(-33);
-	   $this->SetX(-60);
-	   $this->Write(5, 'Avenida Hidalgo No. 508');
-	   $this->SetY(-28);
-	   $this->SetX(-69);
-	   $this->Write(5, 'C.P. 99100    Sombrerete, Zac.');
-	   $this->SetY(-23);
-	   $this->SetX(-79);
-	   $this->Write(5, 'Tels. 433 9 35 62 86 y 433 935 62 88');
-	   $this->SetY(-12);
-	   $this->SetX(-30);
+	   $this->SetFont('Helvetica','', 10);
+	   $this->SetFillColor(28, 98, 163);
+		$this->SetDrawColor(28, 98, 163);
+		$this->SetTextColor(255, 255, 255);
+	   $this->SetY(-35);
+		$this->SetX(0);
+	   $this->SetFont('Helvetica', 'B', 13);
+		$this->MultiCell(216,10,utf8_decode('    Siguenos en:                                                                                              Estamos ubicados en:'),0,'C',1);
+		$this->SetX(0);
+	   $this->MultiCell(15,15,utf8_decode(' '."\n".' '),1,'C',1);
+	   $this->SetY(-25);
+		$this->SetX(15);
+	   $this->SetFont('Helvetica', '', 10);
+		$this->Image('../img/icon-facebook.png', 5, 253, 9, 9, 'png'); /// LOGO FACEBOOK
+		$this->Image('../img/icon-tiktok.png', 5, 261, 9, 9, 'png'); /// LOGO TIKTOK
+		$this->Image('../img/icon-pagina.png', 5, 269, 9, 9, 'png'); /// LOGO PAGINA
+	   $this->MultiCell(145,8,utf8_decode('Servicios Integrales De Computacion Sic'."\n".'sic.serviciosintegrales'."\n".'www.sicsom.com/ventas'."\n".' '),1,'L',1);
+	   $this->SetY(-25);
+	   $this->SetX(160);
+	   $this->MultiCell(56,6,utf8_decode('Av. Hidalgo No. 508 C. P. 99100, Sombrerete, Zac.'."\n".'Tels. 433 9 35 62 86 y 433 935 62 88'),1,'L',1);
+	   $this->SetY(-10);
+	   $this->SetX(160);
 	   $this->AliasNbPages('tpagina');
-	   $this->Write(5, $this->PageNo().'/tpagina');
+	   $this->Cell(56,10,utf8_decode($this->PageNo().'/tpagina'),1,0,'R',1);
    }
 }
 
@@ -51,85 +51,148 @@ $pdf->SetAutoPageBreak(true, 35);
 $pdf->AliasNbPages();
 $pdf->AddPage('portrait', 'letter');
 
-$pdf->setTitle(utf8_decode('SIC | CATALOGO: '));
+$pdf->setTitle(utf8_decode('SIC | CATALOGO '));// TITULO BARRA NAVEGACION
 
-$pdf->SetY($pdf->GetY()+15);
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(185,10,utf8_decode('CATALOGO'),0,0,'C');
-$pdf->SetDrawColor(30, 40, 125);
-$pdf->SetLineWidth(2);
-$pdf->Line(60,$pdf->GetY()+9, 150, $pdf->GetY()+9);
-
-/////   RECUADRO DERECHO    //////
-$pdf->SetLineWidth(0);
-$pdf->SetTextColor(0,0,0);
-$pdf->SetY($pdf->GetY()+16);
-$pdf->SetX(25);
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(90,21,utf8_decode('Fecha:'),0,0,'C');
-$pdf->SetDrawColor(30, 40, 125);
-$pdf->SetLineWidth(1);
-$pdf->Line(105,$pdf->GetY()+15, 198, $pdf->GetY()+15);
+$pdf->SetFont('Helvetica','B', 12);
+$pdf->Image('../img/logo.jpg', 30, 10, 30, 30, 'jpg'); /// LOGO SIC
+/////   RECUADRO DERECHO  FECHA  //////
+$pdf->SetFillColor(28, 98, 163);
+$pdf->SetDrawColor(28, 98, 163);
+$pdf->SetTextColor(255, 255, 255);
+$pdf->SetY($pdf->GetY()-15);
+$pdf->SetX(120);
+$pdf->Cell(70,8,utf8_decode('Catálogo'),1,0,'C',1);
+$pdf->SetY($pdf->GetY()+8);
+$pdf->SetX(120);
+$pdf->SetTextColor(0, 0, 0);
+$pdf->SetFont('Helvetica', 'B', 10);
+$pdf->Cell(35,10,utf8_decode('Fecha Impresión:'),1,0,'C');
+$pdf->SetY($pdf->GetY());
+$pdf->SetX(155);
+$pdf->SetFont('Helvetica', '', 10);
+$pdf->Cell(35,10,date('Y-m-d'),1,0,'C');
+$pdf->Ln();
+/////   RECAUADRO AZUL DEL CENTRO   ////////
 $pdf->SetY($pdf->GetY()+10);
-$pdf->SetX(104);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(20,17,utf8_decode('Fecha Creación: ').$articulos_catalogo['fecha'],0,0,'');
-$pdf->SetY($pdf->GetY()+6);
-$pdf->SetX(104);
-$pdf->SetFont('Arial', 'B', 16);
-$pdf->SetTextColor(30, 40, 125);
-$pdf->SetDrawColor(0, 0, 0);
-$pdf->SetLineWidth(0);
-$pdf->Ln(10);
+$pdf->SetFillColor(28, 98, 163);
+$pdf->SetDrawColor(28, 98, 163);
+$pdf->SetTextColor(255, 255, 255);
+$pdf->SetFont('Helvetica', 'B', 14);
+$pdf->MultiCell(0,9,utf8_decode('SERVICIOS INTEGRALES DE COMPUTACIÓN'."\n".'¡Tecnología y Comunicación a tu alcance!'."\n"),0,'C',1);
+$pdf->SetFont('Helvetica', '', 10);
+$pdf->SetY($pdf->GetY());
+$pdf->MultiCell(0,5,utf8_decode('Internet, Telefonía, Asesoría, Implementación de Sistemas de Equipo de Cómputo, Consumibles, Accesorios, Redes, Cámaras de Vigilancia'."\n".'Tels: 433-93-562-86 y 433-93-562-88'),0,'C',1);
+$pdf->SetY($pdf->GetY());
+$pdf->SetFont('Helvetica', 'B', 12);
+$pdf->MultiCell(0,8,utf8_decode('GABRIEL VALLES REYES                                                                         RFC: VARG7511217E5'),0,'C',1);
+
+
 
 ////   TITULO ANTES DE TABLA  ///////
-$pdf->SetY($pdf->GetY()+6);
-$pdf->SetFont('Arial', 'B', 14);
+$pdf->SetFont('Helvetica', 'B', 15);
+$pdf->SetTextColor(28, 98, 163);
+$pdf->SetY($pdf->GetY()+8);
+$pdf->SetFont('Helvetica', 'B', 14);
 $pdf->Cell(180,10,utf8_decode('ARTICULOS: '),0,0,'C');
-$pdf->SetDrawColor(30, 40, 125);
-$pdf->SetLineWidth(1);
-$pdf->Line(83,$pdf->GetY()+8, 123, $pdf->GetY()+8);
-$pdf->Ln(12);
 
 /////   TABLA A MOSTRAR    //////
-$pdf->Cell(15,10,utf8_decode('No'),0,0,'C');
-$pdf->Cell(40,10,utf8_decode('Codigo'),0,0,'C');
-$pdf->Cell(57,10,utf8_decode('Descripcion'),0,0,'C');
-$pdf->Cell(33,10,utf8_decode('Precio'),0,0,'C');
-$pdf->Cell(39,10,utf8_decode('Unidad'),0,0,'C');
-$pdf->Line(15,$pdf->GetY()+9, 200, $pdf->GetY()+9);
+$pdf->SetY($pdf->GetY()+10);
+$pdf->MultiCell(0,11,utf8_decode('NOMBRE DE CATEGORIRA AHORITA NO SE VE PORQUE ESTA EN AZUL'),0,'C',1);
+$pdf->SetY($pdf->GetY());
+$pdf->SetFont('Helvetica', 'B', 10);
+$pdf->SetTextColor(0, 0, 0);
+$pdf->Cell(8,8,utf8_decode('N°'),1,0,'C');
+$pdf->Cell(24,8,utf8_decode('Código'),1,0,'C');
+$pdf->Cell(40,8,utf8_decode('Producto'),1,0,'C');
+$pdf->Cell(74,8,utf8_decode('Descripción'),1,0,'C');
+$pdf->Cell(20,8,utf8_decode('Precio'),1,0,'C');
+$pdf->Cell(25,8,utf8_decode('C.Fiscal'),1,0,'C');
+
 ////   CONTENIDO DE LA TABLA    /////
-$pdf->SetFont('Arial', '', 10);
 $pdf->SetFillColor(240, 240, 240);
-$pdf->SetDrawColor(255, 255, 255);
+$pdf->SetDrawColor(0, 0, 0);
 $pdf->SetLineWidth(0);
 $pdf->SetTextColor(0, 0, 0);
 $pdf->Ln();
 $aux = 1;
-
 while($articulos_catalogo = mysqli_fetch_array($catalogo)){ 
-	//$articulos_catalogo['descripcion'] =(strlen ($articulos_catalogo['descripcion'])>22)?'Link':$articulos_catalogo['descripcion'];
-	if (strlen ($articulos_catalogo['codigo'])>100 OR strlen ($articulos_catalogo['descripcion'])>60 OR strlen ($articulos_catalogo['precio'])>100 OR strlen ($articulos_catalogo['unidad'])>100) {
-		// Doble columna
-		$Y = 12;	$extra = ''."\n".' ';
+
+	///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
+	$ContNombre = ceil(strlen($articulos_catalogo['nombre'])/16);
+	$ContDescripcion = ceil(strlen($articulos_catalogo['descripcion'])/36);
+	if ($ContDescripcion>$ContNombre) {
+		$Mayor = $ContDescripcion;
 	}else{
-		// SENCILLA
-		$Y =6; $extra = '';
+		$Mayor = $ContNombre;
 	}
+	//LE DECIMOS CUANTAS FILAS AFECTA A LOS DEMAS
+	$Y = 6*$Mayor;
+	$AgregaG = $Mayor-1;
+	$AgregaN = $Mayor-$ContNombre;
+	$AgregaD = $Mayor-$ContDescripcion;
+
 	$pdf->SetX(15);
-    $pdf->MultiCell(15,6,utf8_decode($aux.$extra),1,'C',1);
-    $pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(30);
-	$pdf->MultiCell(40,6,utf8_decode((strlen ($articulos_catalogo['codigo'])>10)?$articulos_catalogo['codigo']:$articulos_catalogo['codigo'].$extra),1,'C',1);
+	$pdf->SetFont('Helvetica', '', 11);
+   $pdf->MultiCell(8,6,utf8_decode($aux.str_repeat("\n", $AgregaG).' '),1,'C',1);
+   $pdf->SetY($pdf->GetY()-$Y);
+	$pdf->SetX(23);
+	$pdf->MultiCell(24,6,utf8_decode($articulos_catalogo['codigo'].str_repeat("\n", $AgregaG).' '),1,'C',1);
+   $pdf->SetY($pdf->GetY()-$Y);
+	$pdf->SetX(47);
+	$pdf->MultiCell(40,6,utf8_decode($articulos_catalogo['nombre'].str_repeat("\n", $AgregaN).' '),1,'C',1);
 	$pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(70);
-	$pdf->MultiCell(60,6,utf8_decode((strlen ($articulos_catalogo['descripcion'])>30)?$articulos_catalogo['descripcion']:$articulos_catalogo['descripcion'].$extra),1,'C',1);
+	$pdf->SetX(87);
+	$pdf->SetFont('Helvetica', '', 9);
+	$pdf->MultiCell(74,6,utf8_decode($articulos_catalogo['descripcion'].str_repeat("\n", $AgregaD).' '),1,'C',1);
 	$pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(125);
-	$pdf->MultiCell(40,6,utf8_decode((strlen ($articulos_catalogo['precio'])>17)?$articulos_catalogo['precio']:$articulos_catalogo['precio'].$extra),1,'C',1);
-    $pdf->SetY($pdf->GetY()-$Y);
-	$pdf->SetX(160);
-    $pdf->MultiCell(40,6,utf8_decode((strlen ($articulos_catalogo['unidad'])>17)?$articulos_catalogo['unidad']:$articulos_catalogo['unidad'].$extra),1,'C',1);
+	$pdf->SetX(161);
+	$pdf->SetFont('Helvetica', '', 12);
+	$pdf->MultiCell(20,6,utf8_decode('$'.$articulos_catalogo['precio'].str_repeat("\n", $AgregaG).' '),1,'R',1);
+   $pdf->SetY($pdf->GetY()-$Y);
+	$pdf->SetX(181);
+	$pdf->SetFont('Helvetica', '', 11);
+   $pdf->MultiCell(25,6,utf8_decode($articulos_catalogo['codigo_fiscal'].str_repeat("\n", $AgregaG).' '),1,'C',1);
+	$aux ++;
+}
+$articulos_catalogo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM punto_venta_articulos"));
+$catalogo = mysqli_query($conn, "SELECT * FROM punto_venta_articulos");
+while($articulos_catalogo = mysqli_fetch_array($catalogo)){ 
+
+	///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
+	$ContNombre = ceil(strlen($articulos_catalogo['nombre'])/16);
+	$ContDescripcion = ceil(strlen($articulos_catalogo['descripcion'])/36);
+	if ($ContDescripcion>$ContNombre) {
+		$Mayor = $ContDescripcion;
+	}else{
+		$Mayor = $ContNombre;
+	}
+	//LE DECIMOS CUANTAS FILAS AFECTA A LOS DEMAS
+	$Y = 6*$Mayor;
+	$AgregaG = $Mayor-1;
+	$AgregaN = $Mayor-$ContNombre;
+	$AgregaD = $Mayor-$ContDescripcion;
+
+	$pdf->SetX(15);
+	$pdf->SetFont('Helvetica', '', 11);
+   $pdf->MultiCell(8,6,utf8_decode($aux.str_repeat("\n", $AgregaG).' '),1,'C',1);
+   $pdf->SetY($pdf->GetY()-$Y);
+	$pdf->SetX(23);
+	$pdf->MultiCell(24,6,utf8_decode($articulos_catalogo['codigo'].str_repeat("\n", $AgregaG).' '),1,'C',1);
+   $pdf->SetY($pdf->GetY()-$Y);
+	$pdf->SetX(47);
+	$pdf->MultiCell(40,6,utf8_decode($articulos_catalogo['nombre'].str_repeat("\n", $AgregaN).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-$Y);
+	$pdf->SetX(87);
+	$pdf->SetFont('Helvetica', '', 9);
+	$pdf->MultiCell(74,6,utf8_decode($articulos_catalogo['descripcion'].str_repeat("\n", $AgregaD).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-$Y);
+	$pdf->SetX(161);
+	$pdf->SetFont('Helvetica', '', 12);
+	$pdf->MultiCell(20,6,utf8_decode('$'.$articulos_catalogo['precio'].str_repeat("\n", $AgregaG).' '),1,'R',1);
+   $pdf->SetY($pdf->GetY()-$Y);
+	$pdf->SetX(181);
+	$pdf->SetFont('Helvetica', '', 11);
+   $pdf->MultiCell(25,6,utf8_decode($articulos_catalogo['codigo_fiscal'].str_repeat("\n", $AgregaG).' '),1,'C',1);
 	$aux ++;
 }
 
