@@ -6,15 +6,15 @@
 ?>
 <title>SIC | Editar Categoria</title>
 <script>
-  function update_categoria() {
+  function update_categoria(id) {
       var textoNombre = $("input#nombre").val();
-
+      var textoId = $("input#id_categoria").val();
       if (textoNombre == "") {
-        M.toast({html:"Por favor ingrese el nombre la comunidad.", classes: "rounded"});
+        M.toast({html:"Por favor ingrese el nombre la categoria.", classes: "rounded"});
       }else{
         $.post("../php/update_categoria.php", {
-            id: id,
-            valorNombre: textoNombre
+            id: textoId,
+            valorNombre: textoNombre,
           }, function(mensaje) {
               $("#resultado_update_categoria").html(mensaje);
           }); 
@@ -40,7 +40,7 @@ $id_categoria = $_POST['no_categoria'];
 </div>
 <?php
 
-$categoria = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM punto_venta_categorias WHERE id=$id_categoria"));
+$categoria = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM punto_venta_categorias WHERE id='$id_categoria'"));
 ?>
   <div class="container">
   <br>
@@ -48,7 +48,7 @@ $categoria = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM punto_venta_c
   <h5 class="hide-on-large-only">Editando Categoria</h5>
   <br>
     <div class="row">
-     <input type="hidden" id="id_categoria" value="<?php echo $categoria['id_categoria'];?>">
+     <input type="hidden" id="id_categoria" value="<?php echo $categoria['id'];?>">
       <div class="input-field col s12 m3 l3">
         <input type="text" id="nombre" value="<?php echo $categoria['nombre'];?>">
         <label for="nombre">Nombre de la Categoria:</label>

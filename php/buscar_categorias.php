@@ -25,6 +25,7 @@ if ($filas == 0) {
                 <td>'.$resultados['id'].'</td>
 		        <td>'.$resultados['nombre'].'</td>
 		        <td><form method="post" action="../views/editar_categoria.php"><input name="no_categoria" type="hidden" value="'.$resultados['id'].'"><button type="submit" class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
+                <td><a onclick="borrar_categoria('.$resultados['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		    </tr>';
 	}//Fin while $resultados
 } //Fin else $filas

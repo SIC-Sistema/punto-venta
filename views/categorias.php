@@ -39,7 +39,6 @@ function insert_categoria() {
     <h3 class="hide-on-med-and-down">Registrar Categoria</h3>
     <h5 class="hide-on-large-only">Registrar Categoria</h5>
   </div>
-  <a onclick="insert_categoria();" class="waves-effect waves-light btn pink left right"><i class="material-icons center">send</i></a>
     <div class="row">
       <div class="input-field col s7 m4 l4">
          <i class="material-icons prefix">business</i>
