@@ -15,7 +15,7 @@
 </script>
 <body>
 	<div class="row">
-		 <img class="materialboxed" width="100%" src="../img/home.jpg">
+		 <img class="materialboxed" width="100%" src="../img/banner1PV.jpg">
 	</div>
  	<div class="row container">
  		<h4 class="center-align">Servicios Integrales de Computación</h4>

@@ -30,21 +30,21 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 		.dropdown-content{  overflow: visible;	}
 	  </style>
 	<div class="navbar-fixed">
-	<nav class="indigo darken-4">
+	<nav class="indigo lighten-5">
 		<div class="nav-wrapper container">
-			<a  class="brand-logo" href="home.php"><img  class="responsive-img" style="width: 60px; height: 56px;" src="../img/logo.jpg"></a>
+			<a  class="brand-logo" href="home.php"><img  class="responsive-img" style="width: 60px; height: 58px;" src="../img/logo.jpg"></a>
 			<a href="#" data-target="menu-responsive" class="sidenav-trigger">
 				<i class="material-icons">menu</i>
 			</a>
 			<ul class="right hide-on-med-and-down">
-				<li><a class='dropdown-button' data-target='dropdown1'><i class="material-icons left">library_books</i>Catálogo <i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button black-text' data-target='dropdown1'><i class="material-icons left">library_books</i>Catálogo <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown1' class='dropdown-content'>
 					<li><a href = "proveedores_punto_venta.php" class="black-text"><i class="material-icons">person_pin</i>Proveedores </a></li>
 				    <li><a href = "clientes_punto_venta.php" class="black-text"><i class="material-icons">people</i>Clientes </a></li>
 					<li><a href = "usuarios.php" class="black-text"><i class="material-icons">perm_identity</i>Usuarios </a></li>
 				    <li><a href = "articulos_punto_venta.php" class="black-text"><i class="material-icons">dashboard</i>Articulos </a></li>  			 
  				 </ul>
-				<li><a class='dropdown-button' data-target='dropdown2'><i class="material-icons left">library_add</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button black-text' data-target='dropdown2'><i class="material-icons left">library_add</i>Compras<span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
 				    <li><a href class="black-text"><i class="material-icons">add</i>Item 1</a></li>    
 					<li><a href class="black-text"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
@@ -58,7 +58,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 				    </ul>	
 					 
  				</ul>
- 				<li><a class='dropdown-button' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></a></li>
+ 				<li><a class='dropdown-button black-text' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown5' class='dropdown-content'>
 					<li><a href class="black-text"><i class="material-icons">settings_input_antenna</i>Item 1 </a></li>   
 				    <li><a href class="black-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
@@ -66,7 +66,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 				    <li><a href class="black-text"><i class="material-icons">router</i>Item 4 </a></li>
 				    <li><a href class="black-text"><i class="material-icons">satellite</i>Item 5 </a></li>
 				</ul>
- 				<li><a class='dropdown-button' data-target='dropdown4'><?php echo $_SESSION['user_name'];?> <i class="material-icons right">arrow_drop_down</i></a></li>
+ 				<li><a class='dropdown-button black-text' data-target='dropdown4'><?php echo $_SESSION['user_name'];?> <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown4' class='dropdown-content'>
 				    <li><a href="../../SIC5.0" class="black-text"><i class="material-icons">laptop_mac</i>Sistema SIC5.0 </a></li>
 				    <li><a href="perfil_user.php" class="black-text"><i class="material-icons">account_circle</i>Perfil </a></li>
@@ -74,7 +74,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
  				 </ul>
 			</ul>
 			<ul class="right hide-on-large-only hide-on-small-only">
-				<li><a class='dropdown-button' data-target='dropdown10'><?php echo $_SESSION['user_name'];?> <i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button black-text' data-target='dropdown10'><?php echo $_SESSION['user_name'];?> <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown10' class='dropdown-content'>
 					<li><a href="../../SIC5.0" class="black-text"><i class="material-icons">laptop_mac</i>Sistema SIC5.0 </a></li>
 				    <li><a href="perfil_user.php" class="black-text"><i class="material-icons">account_circle</i>Perfil </a></li>
@@ -82,7 +82,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
  				 </ul>
 			</ul>
 			<ul class="right hide-on-med-and-up">
-		        <li><a class='dropdown-button' data-target='dropdown8'><i class="material-icons left">account_circle</i><b>></b></a></li>
+		        <li><a class='dropdown-button black-text' data-target='dropdown8'><i class="material-icons left">account_circle</i><b>></b></a></li>
 				<ul id='dropdown8' class='dropdown-content'>
 					<li><a href="../../SIC5.0" class="black-text"><i class="material-icons">laptop_mac</i>Sistema SIC5.0 </a></li>
 				    <li><a href="perfil_user.php" class="black-text"><i class="material-icons">account_circle</i>Perfil </a></li>
@@ -153,7 +153,6 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 	</ul>
 	<?php 
 	include('../views/modals.php');
-	include('../php/scripts.php');
 	?>
 	<script src="js/jquery-3.1.1.js"></script>
 	<!--JavaScript at end of body for optimized loading-->
@@ -192,4 +191,42 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 		      direction: 'left'
 		    });
 		});
+		$('.dropdown-button2').dropdown({
+		      inDuration: 300,
+		      outDuration: 225,
+		      constrain_width: false, // Does not change width of dropdown to that of the activator
+		      hover: true, // Activate on hover
+		      gutter: ($('.dropdown-content').width()*3)/2.5 + 5, // Spacing from edge
+		      belowOrigin: false, // Displays dropdown below the button
+		      alignment: 'left' // Displays dropdown with edge aligned to the left of button
+		    }
+		);
+		$('.button-collapse').sideNav({
+		      menuWidth: 347, 
+		      edge: 'left',
+		      closeOnClick: false,
+		      draggable: true 
+		    }
+		  );
+
+		$('.modal').modal();
+
+		$(document).ready(function(){
+    		$('.slider').slider();
+		});
+		$(document).ready(function(){
+		  $('.materialboxed').materialbox();
+		});  
+
+	    var toastElement = document.querySelector('.toast');
+	    var toastInstance = M.Toast.getInstance(toastElement);
+	    toastInstance.dismiss(); 
+  
+		M.AutoInit();
+        var options={
+        };
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.carousel');
+            var instances = M.Carousel.init(elems, options);
+        });
 	</script>
