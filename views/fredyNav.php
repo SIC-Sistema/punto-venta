@@ -32,7 +32,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 	<div class="navbar-fixed">
 	<nav class="indigo lighten-5">
 		<div class="nav-wrapper container">
-			<a  class="brand-logo" href="home.php"><img  class="responsive-img" style="width: 60px; height: 58px;" src="../img/logo.jpg"></a>
+			<a  class="brand-logo" href="home.php"><img  class="responsive-img" style="width: 60px; height: 58px;" src="../img/LogoSIC.png"></a>
 			<a href="#" data-target="menu-responsive" class="sidenav-trigger">
 				<i class="material-icons">menu</i>
 			</a>
