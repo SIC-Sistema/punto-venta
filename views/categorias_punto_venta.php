@@ -72,8 +72,8 @@
                 <div id="borrarCategoria"></div>
                 <div class="row">
                     <!--    //////    TITULO    ///////   -->
-                    <h3 class="hide-on-med-and-down col s12 m6 l6">Categoria</h3>
-                    <h5 class="hide-on-large-only col s12 m6 l6">Categoria</h5>
+                    <h3 class="hide-on-med-and-down col s12 m6 l6">Categorias</h3>
+                    <h5 class="hide-on-large-only col s12 m6 l6">Categorias</h5>
                     <!--    //////    INPUT DEl REGISTRO DE LA CATEGORIA    ///////   -->
                     <form class="col s12 m6 l6">
                         <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
