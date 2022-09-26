@@ -73,6 +73,7 @@
             <th>Precio</th>
             <th>Unidad</th>
             <th>C. Fiscal</th>
+            <th>Categoria</th>
             <th>Registro</th>
             <th>Fecha</th>
             <th>Editar</th>

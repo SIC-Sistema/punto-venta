@@ -4,6 +4,8 @@
   <?php 
   //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
   include('fredyNav.php');
+  include('../php/conexion.php');
+  $sql = "SELECT nombre FROM punto_venta_categorias";
   ?>
   <script>
     //FUNCION QUE AL USAR VALIDA LA VARIABLE QUE LLEVE UN FORMATO DE CORREO 
@@ -22,6 +24,7 @@
       var textoPrecio = $("input#precio").val();
       var textoUnidad = $("input#unidad").val();
       var textoCFiscal = $("input#c_fiscal").val();
+      var textoCategoria = $("input#categoria").val();
 
       // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
       //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
@@ -37,6 +40,8 @@
         M.toast({html: 'El campo Unidad se encuentra vacío.', classes: 'rounded'});
       }else if(textoCFiscal == ""){
         M.toast({html: 'El campo Codigo Fiscal se encuentra vacío.', classes: 'rounded'});
+      }else if(textoCategoria == ""){
+        M.toast({html: 'El campo de Categoria se encuentra vacío.', classes: 'rounded'});
       }else{
         //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_articulo.php"
@@ -49,6 +54,7 @@
             valorPrecio: textoPrecio,
             valorUnidad: textoUnidad,
             valorCFiscal: textoCFiscal,
+            valorCategoria: textoCategoria,
           }, function(mensaje) {
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_articulo.php"
               $("#resultado_insert").html(mensaje);
@@ -89,7 +95,35 @@
             <i class="material-icons prefix">vpn_key</i>
             <input id="c_fiscal" type="text" class="validate" data-length="80" required>
             <label for="c_fiscal">Código Fiscal:</label>
-          </div>       
+          </div>
+          <!-- CAJA DE SELECCION DE CATEGORIAS -->
+          <div class="input-field">
+            <i class="material-icons prefix">view_list</i>
+            <label for="categoria">Categoria:</label>
+            <select id="categoria" name="categoria" class="validate">
+                <?php 
+                  // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+                  $consulta = mysqli_query($conn, $sql);		
+                  $contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
+
+                  //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+                  if (mysqli_num_rows($consulta) == 0) {
+                          echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';
+                  } else {
+                      //SI NO ESTA EN == 0 SI TIENE INFORMACION
+                      //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
+                      //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
+                      while($categoria_pv = mysqli_fetch_array($consulta)) {
+                      //Output
+                      ?>
+                      <option value="<?php echo $categoria_pv['id'];?>"><?php echo $categoria_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>
+                      <?php
+                      }//FIN while
+                  }//FIN else
+                ?>
+                <option value="vacio" selected> </option>
+            </select>
+          </div>        
         </div>
         <!-- DIV DOBLE COLUMNA EN ESCRITORIO PARTE DERECHA -->
         <div class="col s12 m6 l6">

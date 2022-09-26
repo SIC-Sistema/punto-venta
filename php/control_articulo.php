@@ -23,14 +23,15 @@ switch ($Accion) {
         $descripcion = $conn->real_escape_string($_POST['valorDescripcion']);
         $precio = $conn->real_escape_string($_POST['valorPrecio']);
         $unidad = $conn->real_escape_string($_POST['valorUnidad']);        
-        $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']);        
+        $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']); 
+        $Categoria = $conn->real_escape_string($_POST['valorCategoria']);    
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
 		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo' OR codigo_fiscal='$CFiscal'"))>0){
             echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
         }else{
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-            $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, usuario, fecha) 
-               VALUES('$codigo', '$Nombre', '$descripcion', '$precio', '$unidad', '$CFiscal','$id_user','$Fecha_hoy')";
+            $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, categoria, usuario, fecha) 
+               VALUES('$codigo', '$Nombre', '$descripcion', '$precio', '$unidad', '$CFiscal', '$Categoria', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"El artículo se dió de alta satisfactoriamente.", classes: "rounded"})</script>';	
@@ -68,7 +69,9 @@ switch ($Accion) {
             //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
             while($articulo = mysqli_fetch_array($consulta)) {
                 $id_user = $articulo['usuario'];
+                $id_categoria = $articulo['categoria'];
 				$user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
+                $categoria_pv = mysqli_fetch_array(mysqli_query($conn, "SELECT id FROM `punto_venta_categorias` WHERE id=$id_categoria"));
 				//Output
                 $contenido .= '			
 		          <tr>
@@ -78,6 +81,7 @@ switch ($Accion) {
 		            <td>$'.$articulo['precio'].'</td>
                     <td>'.$articulo['unidad'].'</td>
 		            <td>'.$articulo['codigo_fiscal'].'</td>
+                    <td>'.$categoria_pv['id'].'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td>'.$articulo['fecha'].'</td>
 		            <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
@@ -100,13 +104,14 @@ switch ($Accion) {
         $descripcion = $conn->real_escape_string($_POST['valorDescripcion']);
         $precio = $conn->real_escape_string($_POST['valorPrecio']);
         $unidad = $conn->real_escape_string($_POST['valorUnidad']);        
-        $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']);        
+        $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']);
+        $Categoria = $conn->real_escape_string($_POST['valorCategoria']);        
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
         if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE (codigo='$codigo' OR codigo_fiscal='$CFiscal') AND id != $id"))>0){
             echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
         }else{
             //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
-    		$sql = "UPDATE `punto_venta_articulos` SET codigo = '$codigo', nombre = '$Nombre', descripcion = '$descripcion', precio = '$precio', unidad = '$unidad', codigo_fiscal = '$CFiscal', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
+    		$sql = "UPDATE `punto_venta_articulos` SET codigo = '$codigo', nombre = '$Nombre', descripcion = '$descripcion', precio = '$precio', unidad = '$unidad', codigo_fiscal = '$CFiscal', categoria = '$Categoria', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
     		if(mysqli_query($conn, $sql)){
     			echo '<script >M.toast({html:"El artículo se actualizo con exito.", classes: "rounded"})</script>';	
