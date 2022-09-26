@@ -14,7 +14,7 @@
 	 });
 </script>
 <body>
-	<div class="row">
+	<div class="row ">
 		 <img class="materialboxed" width="100%" src="../img/banner1PV.jpg">
 	</div>
  	<div class="row container">
