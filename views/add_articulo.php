@@ -5,15 +5,9 @@
   //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
   include('fredyNav.php');
   include('../php/conexion.php');
-  $sql = "SELECT nombre FROM punto_venta_categorias";
+  $sql = "SELECT * FROM punto_venta_categorias";
   ?>
   <script>
-    //FUNCION QUE AL USAR VALIDA LA VARIABLE QUE LLEVE UN FORMATO DE CORREO 
-    function validar_email( email )   {
-      var regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-      return regex.test(email) ? true : false;
-    };
-
     //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
     function insert_articulo() {
 
@@ -24,7 +18,7 @@
       var textoPrecio = $("input#precio").val();
       var textoUnidad = $("input#unidad").val();
       var textoCFiscal = $("input#c_fiscal").val();
-      var textoCategoria = $("input#categoria").val();
+      var textoCategoria = $("select#categoria").val();
 
       // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
       //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
@@ -40,7 +34,7 @@
         M.toast({html: 'El campo Unidad se encuentra vacío.', classes: 'rounded'});
       }else if(textoCFiscal == ""){
         M.toast({html: 'El campo Codigo Fiscal se encuentra vacío.', classes: 'rounded'});
-      }else if(textoCategoria == ""){
+      }else if(textoCategoria == 0){
         M.toast({html: 'El campo de Categoria se encuentra vacío.', classes: 'rounded'});
       }else{
         //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
@@ -99,8 +93,9 @@
           <!-- CAJA DE SELECCION DE CATEGORIAS -->
           <div class="input-field">
             <i class="material-icons prefix">view_list</i>
-            <label for="categoria">Categoria:</label>
+            <!--<label for="categoria">Categoria:</label>-->
             <select id="categoria" name="categoria" class="validate">
+            <option value="0" select>Seleccione una categoria</option>
                 <?php 
                   // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
                   $consulta = mysqli_query($conn, $sql);		
@@ -116,12 +111,12 @@
                       while($categoria_pv = mysqli_fetch_array($consulta)) {
                       //Output
                       ?>
-                      <option value="<?php echo $categoria_pv['id'];?>"><?php echo $categoria_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>
+                      
+                      <option value="<?php echo $categoria_pv['id'];?>"><?php echo $categoria_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>-->
                       <?php
                       }//FIN while
                   }//FIN else
                 ?>
-                <option value="vacio" selected> </option>
             </select>
           </div>        
         </div>
