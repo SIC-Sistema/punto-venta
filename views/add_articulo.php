@@ -95,6 +95,7 @@
             <i class="material-icons prefix">view_list</i>
             <!--<label for="categoria">Categoria:</label>-->
             <select id="categoria" name="categoria" class="validate">
+            <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
             <option value="0" select>Seleccione una categoria</option>
                 <?php 
                   // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
