@@ -100,57 +100,73 @@ if (isset($_POST['id']) == false) {
             <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input type="checkbox" <?php echo ($datos['banco'] == 1)?"checked":"";?> id="banco"/>
-                <label for="banco">Banco</label>
+                <label>
+                  <input type="checkbox" <?php echo ($datos['banco'] == 1)?"checked":"";?> id="banco"/>
+                  <span for="banco">Banco</span>
+                </label>
               </p>
             </div>
             <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input type="checkbox" <?php echo ($datos['credito']  == 1)?"checked":"";?> id="credito"/>
-                <label for="credito">Credito</label>
+                <label>
+                  <input type="checkbox" <?php echo ($datos['credito']  == 1)?"checked":"";?> id="credito"/>
+                  <span for="credito">Credito</span>
+                </label>
               </p>
             </div>
             <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input type="checkbox" <?php echo ($datos['b_pagos']  == 1)?"checked":"";?> id="b_pagos"/>
-                <label for="b_pagos">Borrar Pagos</label>
+                <label>
+                  <input type="checkbox" <?php echo ($datos['b_pagos']  == 1)?"checked":"";?> id="b_pagos"/>
+                  <span for="b_pagos">Borrar Pagos</span>
+                </label>
               </p>
             </div>
             <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input type="checkbox" <?php echo ($datos['b_clientes']  == 1)?"checked":"";?> id="b_clientes"/>
-                <label for="b_clientes">Borrar Clientes</label>
+                <label>
+                  <input type="checkbox" <?php echo ($datos['b_clientes']  == 1)?"checked":"";?> id="b_clientes"/>
+                  <span for="b_clientes">Borrar Clientes</span>
+                </label>
               </p>
             </div>
             <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input  type="checkbox" <?php echo ($datos['b_ventas']  == 1)?"checked":"";?> id="b_ventas"/>
-                <label for="b_ventas">Borrar Ventas</label>
+                <label>
+                  <input  type="checkbox" <?php echo ($datos['b_ventas']  == 1)?"checked":"";?> id="b_ventas"/>
+                  <span for="b_ventas">Borrar Ventas</span>
+                </label>
               </p>
             </div>
             <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input type="checkbox" <?php echo ($datos['ventas']  == 1)?"checked":"";?> id="ventas"/>
-                <label for="ventas">Ventas</label>
+                <label>
+                  <input type="checkbox" <?php echo ($datos['ventas']  == 1)?"checked":"";?> id="ventas"/>
+                  <span for="ventas">Ventas</span>
+                </label>
               </p>
             </div>
             <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input type="checkbox" <?php echo ($datos['compras']  == 1)?"checked":"";?> id="compras"/>
-                <label for="compras">Compras</label>
+                <label>
+                  <input type="checkbox" <?php echo ($datos['compras']  == 1)?"checked":"";?> id="compras"/>
+                  <span for="compras">Compras</span>
+                </label>
               </p>
             </div>
              <div class="col s6 m3 l3">
               <p>
                 <br>
-                <input type="checkbox" <?php echo ($datos['b_articulos']  == 1)?"checked":"";?> id="articulos"/>
-                <label for="articulos">Borrar Articulos</label>
+                <label>
+                  <input type="checkbox" <?php echo ($datos['b_articulos']  == 1)?"checked":"";?> id="articulos"/>
+                  <span for="articulos">Borrar Articulos</span>
+                </label>
               </p>
             </div>
             

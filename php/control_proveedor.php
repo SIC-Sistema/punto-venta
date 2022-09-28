@@ -128,15 +128,24 @@ switch ($Accion) {
         // $Accion es igual a 3 realiza:
         //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "proveedores_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
-    	#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL PROVEEDOR DE `punto_venta_proveedores`
-        if(mysqli_query($conn, "DELETE FROM `punto_venta_proveedores` WHERE `punto_venta_proveedores`.`id` = $id")){
-            #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-            echo '<script >M.toast({html:"Proveedor borrado con exito.", classes: "rounded"})</script>';
-        }else{
-            #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-		    echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+        #SELECCIONAMOS LA INFORMACION A BORRAR
+        $proveedor = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_proveedores` WHERE id = $id"));
+        #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_proveedor` PARA NO PERDER INFORMACION
+        $sql = "INSERT INTO `pv_borrar_proveedor` (nombre, direccion, colonia, cp, rfc, email, telefono, registro, borro, fecha_borro) 
+                VALUES('".$proveedor['nombre']."', '".$proveedor['direccion']."', '".$proveedor['colonia']."', '".$proveedor['cp']."', '".$proveedor['rfc']."', '".$proveedor['email']."', '".$proveedor['telefono']."', '".$proveedor['usuario']."', '$id_user','$Fecha_hoy')";
+        //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+        if(mysqli_query($conn, $sql)){
+            //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_proveedores`
+        	#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL PROVEEDOR DE `punto_venta_proveedores`
+            if(mysqli_query($conn, "DELETE FROM `punto_venta_proveedores` WHERE `punto_venta_proveedores`.`id` = $id")){
+                #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+                echo '<script >M.toast({html:"Proveedor borrado con exito.", classes: "rounded"})</script>';
+                echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+            }else{
+                #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
+    		    echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+            }
         }
-        echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         break;
 }// FIN switch
 mysqli_close($conn);

@@ -129,15 +129,24 @@ switch ($Accion) {
         $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
         //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR CLIENTES
         if ($User['b_articulos'] == 1) {
-        #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto_venta_articulos`
-        if(mysqli_query($conn, "DELETE FROM `punto_venta_articulos` WHERE `punto_venta_articulos`.`id` = $id")){
-        #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-            echo '<script >M.toast({html:"Articulo borrado con exito.", classes: "rounded"})</script>';
-        }else{
-        #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-            echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
-        }
-        echo '<script>recargar_articulo()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+            #SELECCIONAMOS LA INFORMACION A BORRAR
+            $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id = $id"));
+            #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_articulos` PARA NO PERDER INFORMACION
+            $sql = "INSERT INTO `pv_borrar_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, imagen, registro, borro, fecha_borro) 
+                VALUES('".$articulo['codigo']."', '".$articulo['nombre']."', '".$articulo['descripcion']."', '".$articulo['precio']."', '".$articulo['unidad']."', '".$articulo['codigo_fiscal']."', '".$articulo['codigo_unidad']."', '".$articulo['modelo']."', '".$articulo['categoria']."', '".$articulo['imagen']."', '".$articulo['usuario']."', '$id_user','$Fecha_hoy')";
+            //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+            if(mysqli_query($conn, $sql)){
+                //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `pv_borrar_proveedor`
+                #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto_venta_articulos`
+                if(mysqli_query($conn, "DELETE FROM `punto_venta_articulos` WHERE `punto_venta_articulos`.`id` = $id")){
+                #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+                    echo '<script >M.toast({html:"Articulo borrado con exito.", classes: "rounded"})</script>';
+                    echo '<script>recargar_articulo()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+                }else{
+                #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
+                    echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+                }
+            }
         }else{
             echo '<script >M.toast({html:"Permiso denegado.", classes: "rounded"});
             M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
