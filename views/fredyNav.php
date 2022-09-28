@@ -43,7 +43,8 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 				    <li><a href = "clientes_punto_venta.php" class="indigo-text"><i class="material-icons">people</i>Clientes </a></li>
 					<li><a href = "usuarios.php" class="indigo-text"><i class="material-icons">perm_identity</i>Usuarios </a></li>
 				    <li><a href = "articulos_punto_venta.php" class="indigo-text"><i class="material-icons">dashboard</i>Articulos </a></li>
-					<li><a href = "categorias_punto_venta.php" class="indigo-text"><i class="material-icons">view_list</i>Categorias </a></li>  			 
+					<li><a href = "categorias_punto_venta.php" class="indigo-text"><i class="material-icons">view_list</i>Categorias </a></li>
+					<li><a href = "almacenes_punto_venta.php" class="indigo-text"><i class="material-icons">assignment_turned_in</i>Almacenes </a></li>   			 
  				 </ul>
 				<li><a class='dropdown-button indigo-text' data-target='dropdown2'><i class="material-icons left">library_add</i><b>Compras</b><span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
@@ -108,7 +109,8 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 						    <li><a href = "clientes_punto_venta.php"><i class="material-icons">people</i>Clientes </a></li>
 							<li><a href = "usuarios.php"><i class="material-icons">perm_identity</i>Usuarios </a></li>
 						    <li><a href = "articulos_punto_venta.php"><i class="material-icons">dashboard</i>Articulos </a></li>
-							<li><a href = "categorias_punto_venta.php"><i class="material-icons">view_list</i>Categorias </a></li>     			 
+							<li><a href = "categorias_punto_venta.php"><i class="material-icons">view_list</i>Categorias </a></li>
+							<li><a href = "almacenes_punto_venta.php"><i class="material-icons">assignment_turned_in</i>Categorias </a></li>   			 
 					      </ul>
 					    </span>
 		      		</div>    			
