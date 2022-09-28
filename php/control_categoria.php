@@ -106,23 +106,24 @@ switch ($Accion) {
         // $Accion es igual a 3 realiza:
         //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "categorias_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
-    	//Obtenemos la informacion del Usuario
-        $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
-        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR CLIENTES
-        if ($User['b_categorias'] == 1) {
-        #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto_venta_categorias`
-        if(mysqli_query($conn, "DELETE FROM `punto_venta_categorias` WHERE `punto_venta_categorias`.`id` = $id")){
-        #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-            echo '<script >M.toast({html:"Categoria borrada con exito.", classes: "rounded"})</script>';
-        }else{
-        #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-            echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
-        }
-        echo '<script>recargar_categoria()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-        }else{
-            echo '<script >M.toast({html:"Permiso denegado.", classes: "rounded"});
-            M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
-        }   
+    	 #SELECCIONAMOS LA INFORMACION A BORRAR
+        $categoria = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_categorias` WHERE id = $id"));
+        #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_categorias` PARA NO PERDER INFORMACION
+        $sql = "INSERT INTO `pv_borrar_categorias` (id_categoria, nombre, registro, borro, fecha_borro) 
+                VALUES($id, '".$categoria['nombre']."', '".$categoria['usuario']."', '$id_user','$Fecha_hoy')";
+        //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+        if(mysqli_query($conn, $sql)){
+            //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_categorias`
+            #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto_venta_categorias`
+            if(mysqli_query($conn, "DELETE FROM `punto_venta_categorias` WHERE `punto_venta_categorias`.`id` = $id")){
+            #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+                echo '<script >M.toast({html:"Categoria borrada con exito.", classes: "rounded"})</script>';
+                echo '<script>recargar_categoria()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+            }else{
+            #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
+                echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+            }
+        } 
         break;
 }// FIN switch
 mysqli_close($conn);

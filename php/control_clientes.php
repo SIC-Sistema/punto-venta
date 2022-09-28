@@ -134,8 +134,8 @@ switch ($Accion) {
     		#SELECCIONAMOS LA INFORMACION A BORRAR
     		$cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id = $id"));
     		#CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_cliente` PARA NO PERDER INFORMACION
-			$sql = "INSERT INTO `pv_borrar_cliente` (nombre, telefono, direccion, colonia, cp, rfc, email, localidad, registro, borro, fecha_borro) 
-				VALUES('".$cliente['nombre']."', '".$cliente['telefono']."', '".$cliente['direccion']."', '".$cliente['colonia']."', '".$cliente['cp']."', '".$cliente['rfc']."', '".$cliente['email']."', '".$cliente['localidad']."', '".$cliente['usuario']."', '$id_user','$Fecha_hoy')";
+			$sql = "INSERT INTO `pv_borrar_cliente` (id_cliente, nombre, telefono, direccion, colonia, cp, rfc, email, localidad, registro, borro, fecha_borro) 
+				VALUES($id, '".$cliente['nombre']."', '".$cliente['telefono']."', '".$cliente['direccion']."', '".$cliente['colonia']."', '".$cliente['cp']."', '".$cliente['rfc']."', '".$cliente['email']."', '".$cliente['localidad']."', '".$cliente['usuario']."', '$id_user','$Fecha_hoy')";
 			//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				//SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto-venta_clientes`

@@ -132,8 +132,8 @@ switch ($Accion) {
             #SELECCIONAMOS LA INFORMACION A BORRAR
             $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id = $id"));
             #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_articulos` PARA NO PERDER INFORMACION
-            $sql = "INSERT INTO `pv_borrar_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, imagen, registro, borro, fecha_borro) 
-                VALUES('".$articulo['codigo']."', '".$articulo['nombre']."', '".$articulo['descripcion']."', '".$articulo['precio']."', '".$articulo['unidad']."', '".$articulo['codigo_fiscal']."', '".$articulo['codigo_unidad']."', '".$articulo['modelo']."', '".$articulo['categoria']."', '".$articulo['imagen']."', '".$articulo['usuario']."', '$id_user','$Fecha_hoy')";
+            $sql = "INSERT INTO `pv_borrar_articulos` (id_articulo, codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, imagen, registro, borro, fecha_borro) 
+                VALUES($id, '".$articulo['codigo']."', '".$articulo['nombre']."', '".$articulo['descripcion']."', '".$articulo['precio']."', '".$articulo['unidad']."', '".$articulo['codigo_fiscal']."', '".$articulo['codigo_unidad']."', '".$articulo['modelo']."', '".$articulo['categoria']."', '".$articulo['imagen']."', '".$articulo['usuario']."', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
                 //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `pv_borrar_proveedor`
