@@ -84,7 +84,7 @@
                     </div>
                     <div class="col s12 m4 l4"><br><br>
                         <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
-                        <a onclick="insert_categoria();" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Agregar</a>
+                        <a onclick="insert_categoria();" class="waves-effect waves-light btn pink right">Agregar<i class="material-icons left">send</i></a>
                     </div>
 
                     <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
