@@ -51,7 +51,7 @@ switch ($Accion) {
         $Texto = $conn->real_escape_string($_POST['texto']);
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
-			//MOSTRARA LOS CLIENTES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
+			//MOSTRARA LOS PROVEEDORES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
 			$sql = "SELECT * FROM `punto_venta_proveedores` WHERE  nombre LIKE '%$Texto%'  OR id = '$Texto' OR rfc LIKE '%$Texto%' OR colonia LIKE '%$Texto%' OR direccion LIKE '%$Texto%' ORDER BY id";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
 			$sql = "SELECT * FROM `punto_venta_proveedores`";
@@ -67,7 +67,7 @@ switch ($Accion) {
         } else {
             //SI NO ESTA EN == 0 SI TIENE INFORMACION
             //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
-            //RECORREMOS UNO A UNO LOS CLIENTES CON EL WHILE
+            //RECORREMOS UNO A UNO LOS PROVEEDORES CON EL WHILE
             while($proveedor = mysqli_fetch_array($consulta)) {
                 $id_user = $proveedor['usuario'];
 				$user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));

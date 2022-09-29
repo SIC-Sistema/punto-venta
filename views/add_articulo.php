@@ -5,7 +5,6 @@
   //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
   include('fredyNav.php');
   include('../php/conexion.php');
-  $sql = "SELECT * FROM punto_venta_categorias";
   ?>
   <script>
     //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
@@ -13,10 +12,12 @@
 
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
       var textoCodigo = $("input#codigo").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "codigo"
-      var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA 70 (id="descripcion")
+      var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA 142 (id="descripcion")
       var textoNombre = $("input#nombre").val();
+      var textoModelo = $("input#modelo").val();
       var textoPrecio = $("input#precio").val();
       var textoUnidad = $("input#unidad").val();
+      var textoCUnidad = $("input#codigo_unidad").val();
       var textoCFiscal = $("input#c_fiscal").val();
       var textoCategoria = $("select#categoria").val();
 
@@ -26,12 +27,16 @@
         M.toast({html: 'El campo Código se encuentra vacío.', classes: 'rounded'});
       }else if (textoNombre == "") {
         M.toast({html: 'El campo Nombre se encuentra vacío.', classes: 'rounded'});
+      }else if (textoModelo == "") {
+        M.toast({html: 'El campo Marca se encuentra vacío.', classes: 'rounded'});
       }else if(textoDescripcion.length == ""){
         M.toast({html: 'El campo Descripción se encuentra vacío.', classes: 'rounded'});
       }else if(textoPrecio <= 0){
         M.toast({html: 'El campo Precio no puede ser menor o igual a 0.', classes: 'rounded'});
       }else if(textoUnidad == ""){
         M.toast({html: 'El campo Unidad se encuentra vacío.', classes: 'rounded'});
+      }else if(textoCUnidad == ""){
+        M.toast({html: 'El campo Codigo Unidad se encuentra vacío.', classes: 'rounded'});
       }else if(textoCFiscal == ""){
         M.toast({html: 'El campo Codigo Fiscal se encuentra vacío.', classes: 'rounded'});
       }else if(textoCategoria == 0){
@@ -44,9 +49,11 @@
             accion: 0,
             valorCodigo: textoCodigo,
             valorNombre: textoNombre,
+            valorModelo: textoModelo,
             valorDescripcion: textoDescripcion,
             valorPrecio: textoPrecio,
             valorUnidad: textoUnidad,
+            valorCUnidad: textoCUnidad,
             valorCFiscal: textoCFiscal,
             valorCategoria: textoCategoria,
           }, function(mensaje) {
@@ -86,6 +93,11 @@
             <label for="nombre">Nombre:</label>
           </div>  
           <div class="input-field">
+            <i class="material-icons prefix">local_offer</i>
+            <input id="modelo" type="text" class="validate" data-length="30" required>
+            <label for="modelo">Modelo:</label>
+          </div>  
+          <div class="input-field">
             <i class="material-icons prefix">vpn_key</i>
             <input id="c_fiscal" type="text" class="validate" data-length="80" required>
             <label for="c_fiscal">Código Fiscal:</label>
@@ -95,29 +107,24 @@
             <i class="material-icons prefix">view_list</i>
             <!--<label for="categoria">Categoria:</label>-->
             <select id="categoria" name="categoria" class="validate">
-            <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
-            <option value="0" select>Seleccione una categoria</option>
-                <?php 
-                  // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-                  $consulta = mysqli_query($conn, $sql);		
-                  $contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
-
-                  //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
-                  if (mysqli_num_rows($consulta) == 0) {
-                          echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';
-                  } else {
-                      //SI NO ESTA EN == 0 SI TIENE INFORMACION
-                      //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
-                      //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
-                      while($categoria_pv = mysqli_fetch_array($consulta)) {
-                      //Output
-                      ?>
-                      
-                      <option value="<?php echo $categoria_pv['id'];?>"><?php echo $categoria_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>-->
-                      <?php
-                      }//FIN while
-                  }//FIN else
-                ?>
+              <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
+              <option value="0" select>Seleccione una categoria</option>
+              <?php 
+                // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+                $consulta = mysqli_query($conn,"SELECT * FROM punto_venta_categorias";
+                //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+                if (mysqli_num_rows($consulta) == 0) {
+                  echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';
+                } else {
+                  //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
+                  while($categoria_pv = mysqli_fetch_array($consulta)) {
+                  //Output
+                  ?>                      
+                  <option value="<?php echo $categoria_pv['id'];?>"><?php echo $categoria_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>-->
+                  <?php
+                }//FIN while
+              }//FIN else
+              ?>
             </select>
           </div>        
         </div>
@@ -138,6 +145,11 @@
             <i class="material-icons prefix">local_offer</i>
             <input id="unidad" type="text" class="validate" data-length="15" required>
             <label for="unidad">Unidad:</label>
+          </div>
+          <div class="input-field">
+            <i class="material-icons prefix">vpn_key</i>
+            <input id="codigo_unidad" type="text" class="validate" data-length="15" required>
+            <label for="codigo_unidad">Código Unidad:</label>
           </div>  
         </div>
       </form>

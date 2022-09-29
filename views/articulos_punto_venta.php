@@ -68,10 +68,13 @@
         <thead>
           <tr>
             <th>Código</th>
+            <th>Imagen</th>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Modelo</th>
             <th>Precio</th>
             <th>Unidad</th>
+            <th>C. Unidad</th>
             <th>C. Fiscal</th>
             <th>Categoria</th>
             <th>Registro</th>

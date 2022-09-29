@@ -19,7 +19,7 @@ switch ($Accion) {
 
         //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA INSERTAR
         $Nombre = $conn->real_escape_string($_POST['valorNombre']);     
-        //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
+        //VERIFICAMOS QUE NO HALLA UNA CATEGORIA CON LOS MISMOS DATOS
 		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_categorias` WHERE nombre='$Nombre' "))>0){
             echo '<script >M.toast({html:"Ya se encuentra una categoria con el mismo Nombre.", classes: "rounded"})</script>';
         }else{
@@ -32,8 +32,7 @@ switch ($Accion) {
                 echo '<script>recargar_categoria()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
 			}else{
                 echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
-            }//FIN else DE ERROR
-            
+            }//FIN else DE ERROR            
         }// FIN else DE BUSCAR CATEGORIA IGUAL
 
         break;
@@ -44,7 +43,7 @@ switch ($Accion) {
         $Texto = $conn->real_escape_string($_POST['texto']);
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
-			//MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
+			//MOSTRARA LAS CATEGORIAS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
 			$sql = "SELECT * FROM `punto_venta_categorias` WHERE  nombre LIKE '%$Texto%' ORDER BY id";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
 			$sql = "SELECT * FROM `punto_venta_categorias`";
@@ -56,7 +55,7 @@ switch ($Accion) {
 
 		//VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
 		if (mysqli_num_rows($consulta) == 0) {
-				echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';
+			echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';
         } else {
             //SI NO ESTA EN == 0 SI TIENE INFORMACION
             //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
@@ -77,7 +76,6 @@ switch ($Accion) {
 
 			}//FIN while
         }//FIN else
-
         echo $contenido;// MOSTRAMOS LA INFORMACION HTML
 
         break;
@@ -87,11 +85,11 @@ switch ($Accion) {
         //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_categoria_pv.php" QUE NESECITAMOS PARA ACTUALIZAR
     	$id = $conn->real_escape_string($_POST['id']);
         $Nombre = $conn->real_escape_string($_POST['valorNombre']);    
-        //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
+        //VERIFICAMOS QUE NO HALLA UNA CATEGORIA CON LOS MISMOS DATOS
         if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_categorias` WHERE (nombre='$Nombre') AND id != $id"))>0){
             echo '<script >M.toast({html:"Ya se encuentra una categoria con el mismo nombre.", classes: "rounded"})</script>';
         }else{
-            //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
+            //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DE LA CATEGORIA Y LA GUARDAMOS EN UNA VARIABLE
     		$sql = "UPDATE `punto_venta_categorias` SET nombre = '$Nombre', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
     		if(mysqli_query($conn, $sql)){
@@ -114,7 +112,7 @@ switch ($Accion) {
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
         if(mysqli_query($conn, $sql)){
             //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_categorias`
-            #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CLIENTE DE `punto_venta_categorias`
+            #VERIFICAMOS QUE SE BORRE CORRECTAMENTE LA CATEGORIA DE `punto_venta_categorias`
             if(mysqli_query($conn, "DELETE FROM `punto_venta_categorias` WHERE `punto_venta_categorias`.`id` = $id")){
             #SI ES ELIMINADO MANDAR MSJ CON ALERTA
                 echo '<script >M.toast({html:"Categoria borrada con exito.", classes: "rounded"})</script>';
