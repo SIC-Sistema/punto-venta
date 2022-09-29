@@ -75,16 +75,18 @@
                     <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
                     <div id="resultado_insert"></div>
                     <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
-                    <div class="col s12 m8 l8"><br>    
+                    <div class="col s12 m6 l6"><br>    
                         <div class="input-field">
                             <i class="material-icons prefix">add</i>
                             <input id="nombre"  name="nombre" type="text" class="validate" data-length="30" required>
                             <label for="nombre">Nueva categoria</label>   
                         </div>
                     </div>
-                    <div class="col s12 m4 l4"><br><br>
+                    <div class="col s12 m6 l6">
+                        <br>
+                        <br>
                         <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
-                        <a onclick="insert_categoria();" class="waves-effect waves-light btn pink right">Agregar<i class="material-icons left">send</i></a>
+                        <a onclick="insert_categoria();" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Agregar</a>
                     </div>
 
                     <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   

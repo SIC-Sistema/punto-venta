@@ -39,6 +39,9 @@ if (isset($_POST['id']) == false) {
           if(document.getElementById('b_ventas').checked==true){
             BorrarVentas = 1;
           }else { BorrarVentas = 0; }
+          if(document.getElementById('b_almacenes').checked==true){
+            BorrarAlmacenes = 1;
+          }else { BorrarAlmacenes = 0; }
           if(document.getElementById('ventas').checked==true){
             Ventas = 1;
           }else { Ventas = 0; }
@@ -59,6 +62,7 @@ if (isset($_POST['id']) == false) {
                 BorrarPagos: BorrarPagos,
                 BorrarClientes: BorrarClientes,
                 BorrarVentas: BorrarVentas,
+                BorrarAlmacenes: BorrarAlmacenes,
                 Ventas: Ventas,
                 Compras: Compras,                
                 Articulos: Articulos,                
@@ -139,6 +143,15 @@ if (isset($_POST['id']) == false) {
                 <label>
                   <input  type="checkbox" <?php echo ($datos['b_ventas']  == 1)?"checked":"";?> id="b_ventas"/>
                   <span for="b_ventas">Borrar Ventas</span>
+                </label>
+              </p>
+            </div>
+            <div class="col s6 m3 l3">
+              <p>
+                <br>
+                <label>
+                  <input  type="checkbox" <?php echo ($datos['b_almacenes']  == 1)?"checked":"";?> id="b_almacenes"/>
+                  <span for="b_almacenes">Borrar Almacenes</span>
                 </label>
               </p>
             </div>
