@@ -54,8 +54,8 @@ if (isset($_POST['id']) == false) {
     <div class="container"><br><br>
       <!--    //////    TITULO    ///////   -->
       <div class="row" >
-        <h3 class="hide-on-med-and-down">Editar Categoria N°<?php echo $id; ?></h3>
-        <h5 class="hide-on-large-only">Editar Categoria N°<?php echo $id; ?></h5>
+        <h3 class="hide-on-med-and-down">Editar Almacen N°<?php echo $id; ?></h3>
+        <h5 class="hide-on-large-only">Editar Almacen N°<?php echo $id; ?></h5>
       </div>
       <div class="row" >
        <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_update"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->

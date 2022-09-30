@@ -121,7 +121,7 @@ switch ($Accion) {
 		    echo '<script>M.toast({html:"Hubo un error, intentelo mas tarde.", classes: "rounded"})</script>';
 		}
         break;
-    case 4:///////////////           IMPORTANTE               ///////////////
+	case 4:///////////////           IMPORTANTE               ///////////////
     	//$Accion es gual a 4 relizar:
 
     	//CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "permisos.php" QUE NESECITAMOS PARA CAMBIARLOS
@@ -135,8 +135,9 @@ switch ($Accion) {
     	$Ventas = $conn->real_escape_string($_POST["Ventas"]);
     	$Compras = $conn->real_escape_string($_POST["Compras"]);
     	$Articulos = $conn->real_escape_string($_POST["Articulos"]);
+		$Almacen = $conn->real_escape_string($_POST["valorAlmacen"]);
     	//CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LOS PERMISOS DEL USUARIO Y LA GUARDAMOS EN UNA VARIABLE
-		$sql = "UPDATE users SET banco='$Banco', credito='$Credito', b_pagos='$BorrarPagos', b_clientes = '$BorrarClientes', b_ventas = '$BorrarVentas', ventas = '$Ventas', compras = '$Compras',  b_articulos = '$Articulos', b_almacenes = '$BorrarAlmacenes' WHERE user_id='$id'";
+		$sql = "UPDATE users SET banco='$Banco', credito='$Credito', b_pagos='$BorrarPagos', b_clientes = '$BorrarClientes', b_ventas = '$BorrarVentas', ventas = '$Ventas', compras = '$Compras',  b_articulos = '$Articulos', b_almacenes = '$BorrarAlmacenes', almacen = '$Almacen' WHERE user_id='$id'";
 		//VERIFICAMOS QUE SE EJECUTE LA SENTENCIA EN MYSQL 
 		if(mysqli_query($conn, $sql)){
 			echo '<script>M.toast({html:"Permisos actualizados correctamente.", classes: "rounded"})</script>';
