@@ -48,7 +48,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 				<li><a class='dropdown-button indigo-text' data-target='dropdown2'><i class="material-icons left">library_add</i><b>Compras</b><span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
 					<li><a href = "almacenes_punto_venta.php" class="indigo-text"><i class="material-icons">assignment_turned_in</i>Almacenes</a></li>    
-					<li><a href class="indigo-text"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
+					<li><a href = "almacen_punto_venta.php" class="indigo-text"><i class="material-icons">list</i>Mi Almacen</a></li>
 					<li><a href class="indigo-text"><i class="material-icons">add_circle</i>Item 3</a></li>
 					<li><a href = "clientes_punto_venta.php" class="indigo-text"><i class="material-icons">people</i>Clientes </a></li>
 				    <li><a href class="indigo-text"><i class="material-icons">list</i>Item 4 <span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']?></span></a></li>
@@ -122,8 +122,8 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 		      		<div class="collapsible-body indigo lighten-5">
 		      			<span>
 		      			  <ul>
-							<li><a href = "clientes_punto_venta.php"><i class="material-icons">people</i>Clientes </a></li>
 							<li><a href = "almacenes_punto_venta.php"><i class="material-icons">assignment_turned_in</i>Almacenes</a></li>
+							<li><a href = "almacen_punto_venta.php"><i class="material-icons">list</i>Mi Almacen</a></li>
 			      			<li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Item 2</a></li>
 				    		<li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li> 			 
 					      </ul>

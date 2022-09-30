@@ -198,7 +198,8 @@ if (isset($_POST['id']) == false) {
             <h5 class="hide-on-large-only">Asignar Almacen a Usuario:</h5>
           </div>
           <!-- CAJA DE SELECCION DE ALMACENES -->
-          <div class="input-field">
+          <div class="row col s12">
+          <div class="input-field col s12 m6 l5">
             <i class="material-icons prefix">view_list</i>
             <select id="almacen" name="almacen" class="validate">
               <!-- CONDICIÓN IF PARA QUE EL SELECT APAREZCA CON LA INFORMACIÓN CARGADA PREVIEMAENTE EN CASO DE CONTENER-->
@@ -227,6 +228,7 @@ if (isset($_POST['id']) == false) {
                 }//FIN else
               ?>
             </select>
+          </div>
           </div>
            <!--BOTON DE GURARDAR PERMISOS-->
           <div class="row s12">

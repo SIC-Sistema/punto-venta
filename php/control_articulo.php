@@ -49,12 +49,12 @@ switch ($Accion) {
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
 
-        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "punto_venta_articulos.php"
+        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "articulos_punto_venta.php"
         $Texto = $conn->real_escape_string($_POST['texto']);
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
 			//MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
-			$sql = "SELECT * FROM `punto_venta_articulos` WHERE  codigo LIKE '%$Texto%'  OR nombre LIKE '%$Texto%' OR descripcion LIKE '%$Texto%' OR codigo_fiscal LIKE '%$Texto%' ORDER BY id";	
+			$sql = "SELECT * FROM `punto_venta_articulos` WHERE  codigo LIKE '%$Texto%' OR nombre LIKE '%$Texto%' OR descripcion LIKE '%$Texto%' OR codigo_fiscal LIKE '%$Texto%' ORDER BY id";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
 			$sql = "SELECT * FROM `punto_venta_articulos` LIMIT 50";
 		}//FIN else $Texto VACIO O NO
@@ -84,7 +84,7 @@ switch ($Accion) {
                     <td>'.$articulo['nombre'].'</td>
 		            <td>'.$articulo['descripcion'].'</td>
                     <td>'.$articulo['modelo'].'</td>
-		            <td>$'.$articulo['precio'].'</td>
+		            <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
                     <td>'.$articulo['unidad'].'</td>
                     <td>'.$articulo['codigo_unidad'].'</td>
 		            <td>'.$articulo['codigo_fiscal'].'</td>

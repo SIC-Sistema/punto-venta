@@ -21,6 +21,7 @@
             $("#almacenesALL").html(mensaje);
       });//FIN post
     }//FIN function
+
     //FUNCION QUE BORRA LOS ALMACENES (SE ACTIVA AL INICIAR EL BOTON BORRAR)
     function borrar_almacen(id){
       var answer = confirm("Deseas eliminar el almacen N°"+id+"?");
@@ -36,8 +37,7 @@
         }); //FIN post
       }//FIN IF
     };//FIN function
-  </script>
-  <script>
+
     //FUNCION QUE HACE LA INSERCION DE LA CATEGORIA (SE ACTIVA AL PRESIONAR UN BOTON)
     function insert_almacen() {
 
@@ -54,7 +54,7 @@
         $.post("../php/control_almacen.php", {
           //Cada valor se separa por una ,
             accion: 0,
-            valorNombre: textoNombre
+            valorNombre: textoNombre,
           }, function(mensaje) {
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_almacen.php"
               $("#resultado_insert").html(mensaje);
@@ -63,65 +63,60 @@
     };//FIN function 
   </script>
 </head>
-    <main>
-        <body onload="buscar_almacenes();">
-            <div class="container"><br><br>
-                <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR ALMACEN    ///////   -->
-                <!-- CREAMOS UN DIV EL CUAL TENGA id = "borrarAlmacen"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-                <div id="borrarAlmacen"></div>
+<body onload="buscar_almacenes();">
+    <div class="container"><br><br>
+        <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR ALMACEN    ///////   -->
+        <!-- CREAMOS UN DIV EL CUAL TENGA id = "borrarAlmacen"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+        <div id="borrarAlmacen"></div>
+        <div class="row">
+            <!--    //////    TITULO    ///////   -->
+            <h3 class="hide-on-med-and-down col s12 m6 l6">Almacenes</h3>
+            <h5 class="hide-on-large-only col s12 m6 l6">Almacenes</h5>
+            <!--    //////    INPUT DEl REGISTRO DE LA CATEGORIA    ///////   -->
+            <form class="col s12 m6 l6">
+                <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+                <div id="resultado_insert"></div>
                 <div class="row">
-                    <!--    //////    TITULO    ///////   -->
-                    <h3 class="hide-on-med-and-down col s12 m6 l6">Almacenes</h3>
-                    <h5 class="hide-on-large-only col s12 m6 l6">Almacenes</h5>
-                    <!--    //////    INPUT DEl REGISTRO DE LA CATEGORIA    ///////   -->
-                    <form class="col s12 m6 l6">
-                        <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-                        <div id="resultado_insert"></div>
-                        <div class="row">
-                            <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
-                            <!-- DIV QUE SEPARA A DOBLE COLUMNA PARTE IZQ.-->
-                            <div class="col s12 m6 l6">
-                                <br>    
-                                <div class="input-field">
-                                    <i class="material-icons prefix">add</i>
-                                    <input id="nombre"  name="nombre" type="text" class="validate" data-length="30" required>
-                                    <label for="nombre">Nuevo Almacen</label>   
-                                </div>
-                            </div>
-                            <div class="col s12 m6 l6">
-                                <br>
-                                <br>
-                                <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
-                                <a onclick="insert_almacen();" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Agregar</a>
-                            </div>
-                            <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
-                            <div class="input-field col s12">
-                                <i class="material-icons prefix">search</i>
-                                <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_almacenes();">
-                                <label for="busqueda">Busqueda por nombre:</label>
-                            </div>       
+                <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
+                    <!-- DIV QUE SEPARA A DOBLE COLUMNA .-->
+                    <div class="col s12 m6 l6"><br>    
+                        <div class="input-field">
+                            <i class="material-icons prefix">add</i>
+                            <input id="nombre"  name="nombre" type="text" class="validate" data-length="30" required>
+                            <label for="nombre">Nuevo Almacen</label>   
                         </div>
-                    </form>
-                </div><br>
-                <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS ARTICULO    ///////   -->
-                <div class="row">
-                    <table class="bordered highlight responsive-table">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Usuario</th>
-                                <th>Fecha</th>
-                                <th>Editar</th>
-                                <th>Borrar</th>
-                            </tr>
-                        </thead>
-                        <!-- DENTRO DEL tbody COLOCAMOS id = "almacenesALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_categorias() -->
-                        <tbody id="almacenesALL">
-                        </tbody>
-                    </table>
-                </div><br><br>
-            </div>
-        </body>
-    </main>
+                    </div>
+                    <div class="col s12 m6 l6"><br><br>
+                        <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
+                        <a onclick="insert_almacen();" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Agregar</a>
+                    </div>
+                    <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">search</i>
+                        <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_almacenes();">
+                        <label for="busqueda">Busqueda por nombre:</label>
+                    </div>       
+                </div>
+            </form>
+        </div><br>
+        <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS ARTICULO    ///////   -->
+        <div class="row">
+            <table class="bordered highlight responsive-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Editar</th>
+                        <th>Borrar</th>
+                    </tr>
+                </thead>
+                <!-- DENTRO DEL tbody COLOCAMOS id = "almacenesALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_categorias() -->
+                <tbody id="almacenesALL">
+                </tbody>
+            </table>
+        </div><br><br>
+    </div>
+</body>
 </html>

@@ -39,7 +39,7 @@ switch ($Accion) {
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
 
-        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "punto_venta_categorias.php"
+        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "categorias_punto_venta.php"
         $Texto = $conn->real_escape_string($_POST['texto']);
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
