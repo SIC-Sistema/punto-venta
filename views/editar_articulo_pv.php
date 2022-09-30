@@ -15,7 +15,8 @@ if (isset($_POST['id']) == false) {
     <?php 
     //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
     include('fredyNav.php');
-    include('../php/conexion.php');
+    //ARCHIVO QUE RESTRINGE A QUE SOLO ALGUNOS USUARIOS PUEDAN ACCEDER
+    include('../php/cobrador.php');
     $id = $_POST['id'];// POR EL METODO POST RECIBIMOS EL ID DEL ARTICULO
     //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos
     $datos = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id=$id"));

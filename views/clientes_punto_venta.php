@@ -4,6 +4,8 @@
   <?php
   //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
   include('fredyNav.php');
+  //ARCHIVO QUE RESTRINGE A QUE SOLO ALGUNOS USUARIOS PUEDAN ACCEDER
+  include('../php/cobrador.php');
   ?>
   <title>SIC | Clientes Punto Venta</title>
   <script>
