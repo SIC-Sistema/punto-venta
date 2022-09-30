@@ -55,7 +55,7 @@ if (isset($_POST['id']) == false) {
           if(document.getElementById('articulos').checked==true){
             Articulos = 1;
           }else { Articulos = 0; }
-          if (textoAlmacen == 0) {
+          if (textoAlmacen == "") {
             M.toast({html: 'El campo Almacen se encuentra vacío.', classes: 'rounded'});
           }else{
 
@@ -208,7 +208,7 @@ if (isset($_POST['id']) == false) {
               <?php else: ?>
               <!--OPTION PARA NO SELECCIONAR NADA-->
               <option value="<?php echo $datos['almacen']; ?>" select><?php echo $almacen_variable['nombre'];?></option>
-              <option value="0">--Ninguno--</option>
+              <option value=0>--Ninguno--</option>
               <?php endif ?><!-- END IF PHP -->
               <?php 
                 // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
