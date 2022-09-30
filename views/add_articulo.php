@@ -95,7 +95,7 @@
           <div class="input-field">
             <i class="material-icons prefix">local_offer</i>
             <input id="modelo" type="text" class="validate" data-length="30" required>
-            <label for="modelo">Modelo:</label>
+            <label for="modelo">Marca:</label>
           </div>  
           <div class="input-field">
             <i class="material-icons prefix">vpn_key</i>
@@ -111,7 +111,7 @@
               <option value="0" select>Seleccione una categoria</option>
               <?php 
                 // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-                $consulta = mysqli_query($conn,"SELECT * FROM punto_venta_categorias";
+                $consulta = mysqli_query($conn,"SELECT * FROM punto_venta_categorias");
                 //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
                 if (mysqli_num_rows($consulta) == 0) {
                   echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';

@@ -112,7 +112,7 @@ if (isset($_POST['id']) == false) {
             <div class="input-field">
               <i class="material-icons prefix">local_offer</i>
               <input id="modelo" type="text" class="validate" data-length="30" required value="<?php echo $datos['modelo']; ?>">
-              <label for="modelo">Modelo:</label>
+              <label for="modelo">Marca:</label>
             </div>  
             <div class="input-field">
               <i class="material-icons prefix">vpn_key</i>

@@ -33,6 +33,20 @@
         });//FIN post
       }//FIN function
 
+      //FUNCION QUE MANDA IMPRIMIR EL CATALOGO SEGUN EL ID DE CATEGORIA
+      function imprimir_catalogo(){
+        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+        var id = $("select#categoria").val();
+        if (id == '') {
+          M.toast({html: 'Seleccione una categoria.', classes: 'rounded'});
+        }else{
+          var a = document.createElement("a");
+          a.href = "../php/imprimir_catalogo.php?id="+id;
+          a.target = "blank";
+          a.click();
+        } 
+      }
+
       //FUNCION QUE BORRA LOS ARTICULOS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
       function borrar_articulo_pv(id){
         var answer = confirm("Deseas eliminar el artículo N°"+id+"?");
@@ -71,8 +85,34 @@
               <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_articulos();">
               <label for="busqueda">Buscar(Código, Nombre, Descrpición, Código Fiscal)</label>
             </div>
+            <!-- CAJA DE SELECCION DE CATEGORIAS -->
+            <div class="col s12 m5 l5">
+              <!--<label for="categoria">Categoria:</label>-->
+              <select id="categoria" name="categoria" class="validate">
+                <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
+                <option value="" select>Elegir Categoria</option>
+                <option value="0">Todas</option>
+                <?php 
+                  // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+                  $consulta = mysqli_query($conn,"SELECT * FROM punto_venta_categorias");
+                  //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+                  if (mysqli_num_rows($consulta) == 0) {
+                    echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';
+                  } else {
+                    //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
+                    while($categoria_pv = mysqli_fetch_array($consulta)) {
+                    //Output
+                    ?>                      
+                    <option value="<?php echo $categoria_pv['id'];?>"><?php echo $categoria_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>-->
+                    <?php
+                  }//FIN while
+                }//FIN else
+                ?>
+              </select>
+            </div>
             <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
-            <a href="../php/imprimir_catalogo.php" target="blank" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
+            <a onclick="imprimir_catalogo()" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
+
           </div>
         </form>
       </div>
@@ -85,7 +125,7 @@
               <th>Imagen</th>
               <th>Nombre</th>
               <th>Descripción</th>
-              <th>Modelo</th>
+              <th>Marca</th>
               <th>Precio</th>
               <th>Unidad</th>
               <th>C. Unidad</th>
