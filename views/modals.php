@@ -23,49 +23,30 @@
 </script>
 <!--Termina Script Buscar clientes-->
 
-<!-- Modal Buscar clientes redes-->
-  <div id="buscar_clientes_redes" class="modal modal-fixed-footer">
-    <div class="modal-content">
-      <nav>
-        <div class="nav-wrapper">
-          <form>
-            <div class="input-field pink lighten-4">
-              <input id="buscar_cliente_redes" type="search" placeholder="Buscar Cliente" maxlength="30" value="" autocomplete="off" onKeyUp="PulsarTeclaRedes();" autofocus="true" required>
-              <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-              <i class="material-icons">close</i>
-            </div>
-          </form>
-        </div>
-      </nav>
-      <p><div id="resultado_clientes_redes"></div></p>
-    </div>
-    <div class="modal-footer container">
-      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cerrar<i class="material-icons right">close</i></a>
-    </div>
-  </div>
-<!--.....Termina Modal Buscar clientes redes-->
 
-<!-- Modal Buscar clientes -->
-  <div id="buscar_clientes" class="modal modal-fixed-footer">
-    <div class="modal-content">
-      <nav>
-        <div class="nav-wrapper">
-          <form>
-            <div class="input-field pink lighten-4">
-              <input id="buscar_cliente" type="search" placeholder="Buscar Cliente" maxlength="30" value="" autocomplete="off" onKeyUp="PulsarTecla();" autofocus="true" required>
-              <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-              <i class="material-icons">close</i>
+<!-- Modal PAGOS IMPOTANTE! -->
+<div id="modal_addArticulo" class="modal"><br>
+  <div class="modal-content">
+    <div class="row">
+        <h6 class="col s12 m5 l5">.</h6>
+        <!--    //////    INPUT DE EL BUSCADOR    ///////   -->
+        <form class="col s12 m7 l7">
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">search</i>
+              <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_compras();">
+              <label for="busqueda">Buscar Artículo(Código, Nombre, Descripcion)</label>
             </div>
-          </form>
-        </div>
-      </nav>
-      <p><div id="resultado_clientes"></div></p>
-    </div>
-    <div class="modal-footer container">
-      <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cerrar<i class="material-icons right">close</i></a>
+          </div>
+        </form>
     </div>
   </div>
-<!--.....Termina Modal Buscar clientes-->
+  <div class="modal-footer">
+      <a href="#" class="waves-effect waves-light btn-small red right">Cancelar<i class="material-icons left">close</i></a>
+      <a href="#" class="waves-effect waves-light btn-small indigo right">Registrar<i class="material-icons left">done</i></a>
+  </div><br>
+</div>
+<!--Cierre modal AGREGAR ARTICULOS COMPRA IMPORTANTE! -->
 
 <!--Modal cortes-->
 <div id="corte" class="modal">

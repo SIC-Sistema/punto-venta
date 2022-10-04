@@ -56,7 +56,7 @@
             valorEmail: textoEmail,
             valorUsuario: textoUsuario,
             valorContra: textoContra,
-            valorRol: textoRol
+            valorRol: textoRol,
           }, function(mensaje) {
               $("#resultado_usuarios").html(mensaje);
           }); 
@@ -122,7 +122,6 @@
 </html>
 <?php 
   include('../views/modals.php');
-  include('../php/scripts.php');
   ?>
   <script src="js/jquery-3.1.1.js"></script>
   <!--JavaScript at end of body for optimized loading-->

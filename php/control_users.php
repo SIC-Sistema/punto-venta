@@ -3,16 +3,18 @@
 include_once("password_compatibility_library.php");
 //ARCHIVO QUE CONTIENE LA VARIABLE CON LA CONEXION A LA BASE DE DATOS
 include('../php/conexion.php');
-//ARCHIVO QUE CONDICIONA QUE TENGAMOS ACCESO A ESTE ARCHIVO SOLO SI HAY SESSION INICIADA Y NOS PREMITE TIMAR LA INFORMACION DE ESTA
-include('is_logged.php');
+
 //DEFINIMOS LA ZONA  HORARIA
 date_default_timezone_set('America/Mexico_City');
-$id_user = $_SESSION['user_id'];// ID DEL USUARIO LOGEADO
 $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
 
 //CON POST TOMAMOS UN VALOR DEL 0 AL 4 PARA VER QUE ACCION HACER (Insertar = 0, Actualizar Info = 1, Actualizar Est = 2, Borrar = 3, Permisos = 4)
 $Accion = $conn->real_escape_string($_POST['accion']);
-
+if ($Accion != 0) {
+	//ARCHIVO QUE CONDICIONA QUE TENGAMOS ACCESO A ESTE ARCHIVO SOLO SI HAY SESSION INICIADA Y NOS PREMITE TIMAR LA INFORMACION DE ESTA
+	include('is_logged.php');
+	$id_user = $_SESSION['user_id'];// ID DEL USUARIO LOGEADO
+}
 //UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, Actualizar Info = 1, Actualizar Est = 2, Borrar = 3, Permisos = 4)
 switch ($Accion) {
     case 0:  ///////////////           IMPORTANTE               ///////////////
@@ -50,12 +52,8 @@ switch ($Accion) {
 		            VALUES ('$valorFirstName','$valorLastName','$valorUserName', '$valorUserPassword_hash', '$valorUserEmail','$date_added','$valorUserRol')";
 		    // Si el usuario fue añadido con éxito
 		    if (mysqli_query($conn,$sql)) {
-		        ?>
-		        <script>
-		          M.toast({html:"Usuario añadido correctamente.", classes: "rounded"});
-		          setTimeout("location.href='login.php'", 800);
-		        </script>
-		        <?php
+		        echo '<script>M.toast({html:"Usuario añadido correctamente.", classes: "rounded"})</script>';
+				echo '<script>recargar_usuarios()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
 		    } else {
 		        echo '<script>M.toast({html:"Hubo un error, intentelo mas tarde.", classes: "rounded"})</script>';
 		    }
