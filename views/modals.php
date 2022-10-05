@@ -2,6 +2,9 @@
   function recargar_clientes() {
     setTimeout("location.href='clientes_punto_venta.php'", 800);
   }
+  function recargar_add_compra() {
+    setTimeout("location.href='add_compra.php'", 800);
+  }
   function recargar_proveedores() {
     setTimeout("location.href='proveedores_punto_venta.php'", 800);
   }
@@ -24,7 +27,7 @@
 <!--Termina Script Buscar clientes-->
 
 
-<!-- Modal PAGOS IMPOTANTE! -->
+<!-- Modal AGREGAR ARTICULOS IMPOTANTE! -->
 <div id="modal_addArticulo" class="modal"><br>
   <div class="modal-content">
     <div class="row">
@@ -34,16 +37,16 @@
           <div class="row">
             <div class="input-field col s12">
               <i class="material-icons prefix">search</i>
-              <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_compras();">
+              <input id="busqueda" name="busqueda" type="text" class="validate" autocomplete="off" onKeyUp="buscar_articulos();" autofocus="true" required>
               <label for="busqueda">Buscar Artículo(Código, Nombre, Descripcion)</label>
             </div>
           </div>
         </form>
+        <div id="tablaArticulo"></div>
     </div>
   </div>
   <div class="modal-footer">
-      <a href="#" class="waves-effect waves-light btn-small red right">Cancelar<i class="material-icons left">close</i></a>
-      <a href="#" class="waves-effect waves-light btn-small indigo right">Registrar<i class="material-icons left">done</i></a>
+      <a href="#" class="modal-action modal-close waves-effect waves-green red btn-small">Cerrar<i class="material-icons left">close</i></a>
   </div><br>
 </div>
 <!--Cierre modal AGREGAR ARTICULOS COMPRA IMPORTANTE! -->

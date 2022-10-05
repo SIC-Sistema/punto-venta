@@ -32,7 +32,7 @@
           id: id,
           accion: 3,
         }, function(mensaje) {
-          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_categoria.php"
+          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_almacenes.php"
           $("#borrarAlmacen").html(mensaje);
         }); //FIN post
       }//FIN IF

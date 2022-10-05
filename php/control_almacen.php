@@ -21,7 +21,7 @@ switch ($Accion) {
         $Nombre = $conn->real_escape_string($_POST['valorNombre']);     
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
 		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_almacenes` WHERE nombre='$Nombre' "))>0){
-            echo '<script >M.toast({html:"Ya se encuentra una categoria con el mismo Nombre.", classes: "rounded"})</script>';
+            echo '<script >M.toast({html:"Ya se encuentra un almacen con el mismo Nombre.", classes: "rounded"})</script>';
         }else{
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
             $sql = "INSERT INTO `punto_venta_almacenes` (nombre, usuario, fecha) 

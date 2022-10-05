@@ -47,7 +47,7 @@
     <div id="resultado_usuarios">
       <div class="row"><br>
         <h3>Usuarios</h3> 
-        <a href="form_usuario.php" class="waves-effect waves-light btn pink right">Agregar Usuario<i class="material-icons right">send</i></a><br><br>
+        <a href="form_usuario.php" class="waves-effect waves-light btn pink right">Agregar Usuario<i class="material-icons left">add</i></a><br><br>
       </div>
       <div class="row">
         <table class="bordered highlight responsive-table">
