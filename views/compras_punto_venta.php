@@ -56,7 +56,7 @@
           <div class="row">
             <div class="input-field col s12">
               <i class="material-icons prefix">search</i>
-              <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_compras();">
+              <input id="busqueda" name="busqueda" type="text" onkeyup="buscar_compras();">
               <label for="busqueda">Buscar(N° Compra, Proveedor, N° Factura)</label>
             </div>
           </div>

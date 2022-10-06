@@ -102,7 +102,7 @@
       function buscar_articulos(){
         
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
-        var texto = $("input#busqueda").val();
+        var texto = $("input#busquedaArticulo").val();
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
         $.post("../php/control_compra.php", {
             //Cada valor se separa por una ,
