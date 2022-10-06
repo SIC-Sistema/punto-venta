@@ -66,7 +66,7 @@
         }//FIN ELSE insert
       }// FIN function
 
-      //FUNCION QUE BORRA LOS ALMACENES (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+      //FUNCION QUE BORRA LOS ARTICULOS TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
       function borrar_lista_articulo(id){
         var answer = confirm("Deseas eliminar el artículo N°"+id+" de la lista ?");
         if (answer) {
@@ -77,7 +77,23 @@
             id: id,
           }, function(mensaje) {
             //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
-            $("#resultado_borrar_lista").html(mensaje);
+            $("#articulosCompra").html(mensaje);
+          }); //FIN post
+        }//FIN IF
+      };//FIN function
+
+      //FUNCION QUE BORRA TODOS LOS ARTICULOS DE TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+      function borrar_lista_all(usuario){
+        var answer = confirm("Deseas cancelar la compra?");
+        if (answer) {
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+          $.post("../php/control_compra.php", {
+            //Cada valor se separa por una ,
+            accion: 8,
+            usuario: usuario,
+          }, function(mensaje) {
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+            $("#articulosCompra").html(mensaje);
           }); //FIN post
         }//FIN IF
       };//FIN function
@@ -99,7 +115,7 @@
       }//FIN function
 
       //FUNCION QUE MODIFICARA LOS VALORES DE LOS TOTALES
-      function totales(id_art, id_usuario, ){
+      function totales(id_art, id_usuario){
         //RECIBIMOS LOS VALORES DE LOS INPUTS AFECTADOS
         var CantidadA_Aux = $("input#cantidadA"+id_art).val();
         var PrecioC_Aux = $("input#precio_compra"+id_art).val();
@@ -109,6 +125,7 @@
         var PrecioC = parseFloat(PrecioC_Aux);
         var Importe = parseFloat(Importe_Aux); 
         var Total = parseFloat(Total_Aux);
+
         //MODIFICAMOS LOS VALPORES DE LOS INPUTS EN CUANTO CAMBIE ALGUN VALOR
         document.getElementById("importe"+id_art).value = (PrecioC*CantidadA).toFixed(2);          
         document.getElementById("subtotal").value =((Total+((PrecioC*CantidadA)-Importe))-((Total+((PrecioC*CantidadA)-Importe))*0.16)).toFixed(2);
@@ -116,7 +133,19 @@
         document.getElementById("totalCompra").value =(Total+((PrecioC*CantidadA)-Importe)).toFixed(2);
 
         //REALIZAREMOS LOS CAMBIOS EN LA BASE DE DATOS
-
+        //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+        $.post("../php/control_compra.php", {
+            //Cada valor se separa por una ,
+            accion: 5,
+            valorIdArt: id_art,
+            valorIdUs: id_usuario,
+            valorCantidadA: CantidadA,
+            valorPrecioU: PrecioC,
+          }, function(mensaje){
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+              $("#resultado_insert").html(mensaje);
+        });//FIN post
       }
 
       //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
@@ -180,16 +209,14 @@
   <body onload="tmp_articulos(<?php echo $user_id;?>,0)">
     <!-- DENTRO DE ESTE DIV VA TODO EL CONTENIDO Y HACE QUE SE VEA AL CENTRO DE LA PANTALLA.-->
     <div class="container">
+      <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+      <div id="resultado_insert"></div>
       <!--    //////    TITULO    ///////   -->
       <div class="row" >
         <h3 class="hide-on-med-and-down">Registrar Compra</h3>
         <h5 class="hide-on-large-only">Registrar Compra</h5>
       </div>
       <div class="row" >
-       <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-       <div id="resultado_insert"></div>
-       <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_borrar_lista"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-       <div id="resultado_borrar_lista"></div>
        <div class="row">
         <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
         <form class="row col s12" name="formCompras">
