@@ -136,6 +136,7 @@ switch ($Accion) {
 
         //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "almacen_punto_venta.php"
         $Texto = $conn->real_escape_string($_POST['texto']);
+        //RECIBE UN ID IMPORTANTE
         $id = $conn->real_escape_string($_POST['id']);
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
         if ($Texto != "") {
@@ -167,7 +168,7 @@ switch ($Accion) {
                     <td>'.$articulo['descripcion'].'</td>
                     <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
                     <td>'.$almacen['cantidad'].' '.$articulo['unidad'].'</td>
-                    <td><form method="post" action="../views/editar_almacen_pv.php"><input id="id" name="id" type="hidden" value="'.$id.'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
+                    <td><a method="post" href="#EditarAlmacen" class="modal-trigger"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></a></td>
                   </tr>';
 
             }//FIN while
@@ -176,7 +177,40 @@ switch ($Accion) {
         echo $contenido;// MOSTRAMOS LA INFORMACION HTML
         // code...
         break;
+    case 5:///////////////           IMPORTANTE               ///////////////
+        // $Accion es igual a 5 realiza:
+        // OBTENEMOS LA INFORMACION DEL USUARIO PARA OBTENER EL DATO DEL ALMACEN
+        $user_id = $_SESSION['user_id'];
+        $datacenter = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
+        $id_almacen = $datacenter['almacen'];// ID DEL ALMACEN ASIGNADO AL USUARIO LOGEADO
+        //SACAMOS LA INFORMACION DEL ALMACEN
+        $Almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto_venta_almacenes` WHERE almacen=$id_almacen"));
+    
+        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_mi_almacen_pv.php" QUE NESECITAMOS PARA ACTUALIZAR
+        $id = $conn->real_escape_string($_POST['id']);
+        $Precio = $conn->real_escape_string($_POST['valorPrecio']);
+        $Cantidad_ = $conn->real_escape_string($_POST['valorCantidad']);
+        $DesArticulo = $conn->real_escape_string($_POST['valorDescripcion_Articulo']);
+        $DesCambio = $conn->real_escape_string($_POST['valorDescripcion_Cambio']);
+
+        //SACAMOS LA INFORMACION DEL ARTICULO Y LO GURADAMOS EN UNA VARIABLE LLAMADA $Producto
+        $Producto = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto_venta_articulos` WHERE id=$id"));
+         
+    
+        //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ALMACEN Y LA GUARDAMOS EN UNA VARIABLE
+        $sql1 = "UPDATE `punto_venta_articulos` SET precio = '$Precio', descripcion = '$DesArticulo'  WHERE id = '$id'";
+        $sql2 = "UPDATE `punto_venta_almacen_general` SET cantidad = '$Cantidad_', descripcion = '$DesArticulo'  WHERE id_articulo = '$id'";
+        $sql3 = "INSERT INTO `punto_venta_modificaciones_mi_almacen` (descripcion_cambio, producto, almacen, usuario, fecha) VALUES('$DesCambio','$Producto','$Almacen','$id_user','$Fecha_hoy')  WHERE producto = '$id'";
+        //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+        if(mysqli_query($conn, $sql)){
+            echo '<script >M.toast({html:"El almacen se actualizó con exito.", classes: "rounded"})</script>';	
+            echo '<script>recargar_almacen_lista()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+        }else{
+            echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
+        }//FIN else DE ERROR	
+    break;
 }// FIN switch
+
 mysqli_close($conn);
     
 ?>
