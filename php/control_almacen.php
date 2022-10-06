@@ -179,6 +179,9 @@ switch ($Accion) {
         break;
     case 5:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 5 realiza:
+
+        //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
+        include('fredyNav.php');
         // OBTENEMOS LA INFORMACION DEL USUARIO PARA OBTENER EL DATO DEL ALMACEN
         $user_id = $_SESSION['user_id'];
         $datacenter = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
@@ -201,13 +204,17 @@ switch ($Accion) {
         $sql1 = "UPDATE `punto_venta_articulos` SET precio = '$Precio', descripcion = '$DesArticulo'  WHERE id = '$id'";
         $sql2 = "UPDATE `punto_venta_almacen_general` SET cantidad = '$Cantidad_', descripcion = '$DesArticulo'  WHERE id_articulo = '$id'";
         $sql3 = "INSERT INTO `punto_venta_modificaciones_mi_almacen` (descripcion_cambio, producto, almacen, usuario, fecha) VALUES('$DesCambio','$Producto','$Almacen','$id_user','$Fecha_hoy')  WHERE producto = '$id'";
-        //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-        if(mysqli_query($conn, $sql)){
-            echo '<script >M.toast({html:"El almacen se actualizó con exito.", classes: "rounded"})</script>';	
-            echo '<script>recargar_almacen_lista()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+        //VERIFICAMOS QUE LAS SENTECIAS SON EJECUTADAS CON EXITO!
+        if(mysqli_query($conn, $sql1)){
+            if(mysqli_query($conn, $sql2)){
+                if(mysqli_query($conn, $sql3)){
+                    echo '<script >M.toast({html:"Los datos se actualizarón con exito.", classes: "rounded"})</script>';	
+                    echo '<script>recargar_mi_almacen()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+                }
+            }        
         }else{
-            echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
-        }//FIN else DE ERROR	
+            echo '<script >M.toast({html:"Ha ocurrio un error con la inserción de datos...", classes: "rounded"})</script>';	
+        }//FIN else DE ERROR
     break;
 }// FIN switch
 

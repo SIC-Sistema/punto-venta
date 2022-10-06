@@ -20,6 +20,9 @@
   function recargar_almacen_lista() {
     setTimeout("location.href='almacenes_punto_venta.php'", 800);
   }
+  function recargar_mi_almacen() {
+    setTimeout("location.href='almacen_punto_venta.php'", 800);
+  }
   function home() {
     setTimeout("location.href='home.php'", 1000);
   }
