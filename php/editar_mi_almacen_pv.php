@@ -45,7 +45,9 @@ if (isset($_POST['id']) == false) {
       valorCantidad: textoCantidad,
       valorDescripcion_Articulo: textoDescripcion_Articulo,
       valorDescripcion_Cambio: textoDescripcion_Cambio,
-      }); 
+      }, function(mensaje) {
+        //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_almacen.php" EN LA ACCION 5
+        $("#resultado_update").html(mensaje);
     }//FIN else CONDICIONES
   </script>
 <?php

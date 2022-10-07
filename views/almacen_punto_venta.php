@@ -41,6 +41,25 @@ if ($datos['almacen'] == 0) {
             $("#Almacen").html(mensaje);
       });//FIN post
     }//FIN function
+    //FUNCION QUE ABRE EL MODAL PARA EDITAR LOS ARTICULOS.
+    function editarArticulosAlmacen(id){
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_almacen.php" PARA MOSTRAR EL MODAL
+        $.post("modal_almacen.php", {
+          //Cada valor se separa por una ,
+            id:id,
+          }, function(mensaje){
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_almacen.php"
+              $("#modal").html(mensaje);
+        });//FIN post
+      }//FIN function
+    //FUNCION QUE MANDA IMPRIMIR EL CATALOGO SEGUN EL ID DE CATEGORIA
+    function imprimir_catalogo(){
+        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+        var a = document.createElement("a");
+        a.href = "../php/imprimir_mi_almacen.php?id="+id;
+        a.target = "blank";
+        a.click();
+      }
   </script>
   <body onload="buscarAlmacen(<?php echo $id_almacen; ?>)">
     <div class="container">
@@ -48,13 +67,18 @@ if ($datos['almacen'] == 0) {
         <h2 class="hide-on-med-and-down">Almacen: <?php echo $id_almacen.'. '.$almacen['nombre']; ?></h2>
         <h4 class="hide-on-large-only">Almacen: <?php echo $id_almacen.'. '.$almacen['nombre']; ?></h4>
       </div>
-      <form class="row col s12">
-         <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
-          <div class="input-field col s12 m6 l6 right">
-              <i class="material-icons prefix">search</i>
-              <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscarAlmacen(<?php echo $id_almacen; ?>);">
-              <label for="busqueda">Codigo, Articulo, Descripcion, Marca</label>
-          </div>    
+      <form class="row col s12 m6 l6">
+        <div class="col">
+          <br>
+          <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
+          <a onclick="imprimir_catalogo()" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR ARTÍCULOS</a>
+        </div>
+        <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
+        <div class="input-field col s12 m6 l6 right">
+          <i class="material-icons prefix">search</i>
+          <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscarAlmacen(<?php echo $id_almacen; ?>);">
+          <label for="busqueda">Buscar: (Codigo, Articulo, Descripcion, Marca)</label>
+        </div>
       </form>
       <table>
         <thead>
