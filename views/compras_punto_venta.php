@@ -10,16 +10,16 @@
     <title>SIC | Compras Punto Venta</title>
     <script>
       //FUNCION QUE HACE LA BUSQUEDA DE Compras (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
-      function buscar_articulos(){
+      function buscar_compras(){
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
         var texto = $("input#busqueda").val();
-        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compras.php"
-        $.post("../php/control_compras.php", {
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+        $.post("../php/control_compra.php", {
           //Cada valor se separa por una ,
             texto: texto,
             accion: 1,
           }, function(mensaje){
-              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compras.php"
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
               $("#ComprasALL").html(mensaje);
         });//FIN post
       }//FIN function
@@ -27,13 +27,13 @@
       function borrar_compra_pv(id){
         var answer = confirm("Deseas eliminar el compra N°"+id+"?");
         if (answer) {
-        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compras.php"
-        $.post("../php/control_compras.php", {
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+        $.post("../php/control_compra.php", {
             //Cada valor se separa por una ,
             id: id,
             accion: 3,
           }, function(mensaje) {
-            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compras.php"
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
             $("#borrarcompra").html(mensaje);
           }); //FIN post
         }//FIN IF
@@ -57,7 +57,7 @@
             <div class="input-field col s12">
               <i class="material-icons prefix">search</i>
               <input id="busqueda" name="busqueda" type="text" onkeyup="buscar_compras();">
-              <label for="busqueda">Buscar(N° Compra, Proveedor, N° Factura)</label>
+              <label for="busqueda">Buscar(N° Compra, N° Proveedor, N° Factura)</label>
             </div>
           </div>
         </form>

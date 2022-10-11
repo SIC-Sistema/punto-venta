@@ -150,74 +150,74 @@
 
       //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
       function insert_compra() {
-
+        almacen = <?php echo $datos_user['almacen']; ?>;
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-        var textoCodigo = $("input#codigo").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "codigo"
-        var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA  (id="descripcion")
-        var textoNombre = $("input#nombre").val();
-        var textoModelo = $("input#modelo").val();
-        var textoPrecio = $("input#precio").val();
-        var textoUnidad = $("input#unidad").val();
-        var textoCUnidad = $("input#codigo_unidad").val();
-        var textoCFiscal = $("input#c_fiscal").val();
-        var textoCategoria = $("select#categoria").val();
+        var textoFactura = $("input#factura").val();//ej:LA VARIABLE "textoFactura" GUARDAREMOS LA INFORMACION QUE ESTE EN EL SELECT QUE TENGA EL id = "codigo"
+        var textoProveedor = $("select#proveedor").val();
+
+        if(document.getElementById('cambio').checked==true){
+          textoTipoCambio = "Credito";  
+        }else{    
+          textoTipoCambio = "Contado";
+        }
 
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
         //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
-        if (textoCodigo == "") {
-          M.toast({html: 'El campo Código se encuentra vacío.', classes: 'rounded'});
-        }else if (textoNombre == "") {
-          M.toast({html: 'El campo Nombre se encuentra vacío.', classes: 'rounded'});
-        }else if (textoModelo == "") {
-          M.toast({html: 'El campo Marca se encuentra vacío.', classes: 'rounded'});
-        }else if(textoDescripcion.length == ""){
-          M.toast({html: 'El campo Descripción se encuentra vacío.', classes: 'rounded'});
-        }else if(textoPrecio <= 0){
-          M.toast({html: 'El campo Precio no puede ser menor o igual a 0.', classes: 'rounded'});
-        }else if(textoUnidad == ""){
-          M.toast({html: 'El campo Unidad se encuentra vacío.', classes: 'rounded'});
-        }else if(textoCUnidad == ""){
-          M.toast({html: 'El campo Codigo Unidad se encuentra vacío.', classes: 'rounded'});
-        }else if(textoCFiscal == ""){
-          M.toast({html: 'El campo Codigo Fiscal se encuentra vacío.', classes: 'rounded'});
-        }else if(textoCategoria == 0){
-          M.toast({html: 'El campo de Categoria se encuentra vacío.', classes: 'rounded'});
+        if (textoProveedor == 0) {
+          M.toast({html: 'Seleccione un Proveedor.', classes: 'rounded'});
+        }else if (textoFactura == "") {
+          M.toast({html: 'El campo Factura se encuentra vacío.', classes: 'rounded'});
         }else{
           //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
           $.post("../php/control_compra.php", {
             //Cada valor se separa por una ,
               accion: 0,
-              valorCodigo: textoCodigo,
-              valorNombre: textoNombre,
-              valorModelo: textoModelo,
-              valorDescripcion: textoDescripcion,
-              valorPrecio: textoPrecio,
-              valorUnidad: textoUnidad,
-              valorCUnidad: textoCUnidad,
-              valorCFiscal: textoCFiscal,
-              valorCategoria: textoCategoria,
+              almacen: almacen,
+              valorProveedor: textoProveedor,
+              valorFactura: textoFactura,
+              valorTipoCambio: textoTipoCambio,
             }, function(mensaje) {
                 //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
                 $("#resultado_insert").html(mensaje);
             }); 
         }//FIN else CONDICIONES
       };//FIN function 
+
+      function cambiar_precio(id_articulo) {
+        var precio = $("input#precioCambio"+id_articulo).val();
+        // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
+        //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
+        if (precio == "" || precio < 0) {
+          M.toast({html: 'Coloque un Precio Fijo valido.', classes: 'rounded'});
+        }else{
+          //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+          $.post("../php/control_compra.php", {
+              //Cada valor se separa por una ,
+              accion: 9,
+              id_articulo: id_articulo,
+              precio: precio,
+            }, function(mensaje){
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+                $("#cambio").html(mensaje);
+          });//FIN post
+        }//FIN else
+      }
     </script>
   </head>
   <main>
   <body onload="tmp_articulos(<?php echo $user_id;?>,0)">
     <!-- DENTRO DE ESTE DIV VA TODO EL CONTENIDO Y HACE QUE SE VEA AL CENTRO DE LA PANTALLA.-->
-    <div class="container">
-      <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-      <div id="resultado_insert"></div>
+    <div class="container" >
       <!--    //////    TITULO    ///////   -->
       <div class="row" >
         <h3 class="hide-on-med-and-down">Registrar Compra</h3>
         <h5 class="hide-on-large-only">Registrar Compra</h5>
       </div>
       <div class="row" >
-       <div class="row">
+      <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+       <div class="row" id="resultado_insert">
         <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
         <form class="row col s12" name="formCompras">
             <!-- CAJA DE SELECCION DE PROVEEDORES -->
