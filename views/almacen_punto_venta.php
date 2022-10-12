@@ -54,14 +54,6 @@ if ($datos['almacen'] == 0) {
               $("#modal").html(mensaje);
         });//FIN post
       }//FIN function
-    //FUNCION QUE MANDA IMPRIMIR EL CATALOGO SEGUN EL ID DE CATEGORIA
-    function imprimir_catalogo(id){
-        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
-        var a = document.createElement("a");
-        a.href = "../php/imprimir_mi_almacen.php?id="+id;
-        a.target = "blank";
-        a.click();
-      }
   </script>
   <body onload="buscarAlmacen(<?php echo $id_almacen; ?>)">
     <div class="container">
@@ -75,7 +67,7 @@ if ($datos['almacen'] == 0) {
         <div class="col">
           <br>
           <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
-          <a onclick="imprimir_catalogo()" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR ARTÍCULOS</a>
+          <a href="../php/imprimir_mi_almacen.php" target="blank" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR ARTÍCULOS</a>
         </div>
         <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
         <div class="input-field col s12 m6 l6 right">
