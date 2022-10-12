@@ -162,11 +162,11 @@ switch ($Accion) {
                     <td>'.$compra['factura'].'</td>
                     <td>'.$id_proveedor.' - '.$proveedor['nombre'].'</td>
                     <td>'.$compra['tipo_cambio'].'</td>
-                    <td>'.$compra['total'].'</td>
+                    <td>$'.sprintf('%.2f', $compra['total']).'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td>'.$compra['fecha'].'</td>
-		            <td><form method="post" action="../views/editar_compra_pv.php"><input id="id" name="id" type="hidden" value="'.$compra['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
-		            <td><a onclick="borrar_compra('.$compra['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+		            <td><form method="post" action="../views/detalle_compra_pv.php"><input id="compra" name="compra" type="hidden" value="'.$compra['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
+		            <td><a onclick="borrar_compra_pv('.$compra['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
 
 			}//FIN while
@@ -190,28 +190,28 @@ switch ($Accion) {
     case 3:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 3 realiza:
 
-        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "almacenes_punto_venta.php" QUE NESECITAMOS PARA BORRAR
+        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "compras_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
     	//Obtenemos la informacion del Usuario
         $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
-        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR ALMACENES
-        if ($User['b_almacenes'] == 1) {
+        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR COMPRAS
+        if ($User['compras'] == 1) {
             #SELECCIONAMOS LA INFORMACION A BORRAR
-            $almacen = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_almacenes` WHERE id = $id"));
-            #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_almacenes` PARA NO PERDER INFORMACION
-            $sql = "INSERT INTO `pv_borrar_almacenes` (id_almacen, nombre, registro, borro, fecha_borro) 
-                    VALUES($id, '".$almacen['nombre']."', '".$almacen['usuario']."', '$id_user','$Fecha_hoy')";
+            $compra = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_compras` WHERE id = $id"));
+            #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_compras` PARA NO PERDER INFORMACION
+            $sql = "INSERT INTO `pv_borrar_compras` (id_compra, factura, id_proveedor, tipo_cambio, total, registro, borro, fecha_borro) 
+                    VALUES($id, '".$compra['factura']."', '".$compra['id_proveedor']."', '".$compra['tipo_cambio']."', '".$compra['total']."', '".$compra['usuario']."', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
-                //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_almacenes`
-                #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL ALMACEN DE `punto_venta_almacenes`
-                if(mysqli_query($conn, "DELETE FROM `punto_venta_almacenes` WHERE `punto_venta_almacenes`.`id` = $id")){
+                //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_compras`
+                #VERIFICAMOS QUE SE BORRE CORRECTAMENTE LA COMPRA DE `punto_venta_compras`
+                if(mysqli_query($conn, "DELETE FROM `punto_venta_compras` WHERE `punto_venta_compras`.`id` = $id")){
                 #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-                    echo '<script >M.toast({html:"Almacen borrado con exito.", classes: "rounded"})</script>';
-                    echo '<script>recargar_almacen_lista()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+                    echo '<script >M.toast({html:"Compra borrada con exito.", classes: "rounded"})</script>';
+                    echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
                 }else{
                 #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-                    echo '<script >M.toast({html:"Articulo borrado con exito.", classes: "rounded"})</script>';
+                    echo '<script >M.toast({html:"Hubo un error...", classes: "rounded"})</script>';
                 }
             } 
         }else{

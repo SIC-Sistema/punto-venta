@@ -11,6 +11,15 @@
     $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
     $id = $datos_user['almacen'];
     $datos_almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM punto_venta_almacenes WHERE id=$id"));
+    if ($datos_user['compras'] == 0) {
+      ?>
+      <script>    
+        M.toast({html: "Permiso denegado.", classes: "rounded"});
+        M.toast({html: "Contacta a un Administrador.", classes: "rounded"});
+        setTimeout("location.href='compras_punto_venta.php'", 1000);
+      </script>
+      <?php
+    }
     ?>
     <script>
       //FUINCION QUE AL SELECCIONAR UN PROOVEDOR MUESTRA SU INFORMACION
