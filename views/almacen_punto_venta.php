@@ -46,14 +46,14 @@ if ($datos['almacen'] == 0) {
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_almacen.php" PARA MOSTRAR EL MODAL
         $.post("modal_almacen.php", {
           //Cada valor se separa por una ,
-            id:id,
+            id: id,
           }, function(mensaje){
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_almacen.php"
               $("#modal").html(mensaje);
         });//FIN post
       }//FIN function
     //FUNCION QUE MANDA IMPRIMIR EL CATALOGO SEGUN EL ID DE CATEGORIA
-    function imprimir_catalogo(){
+    function imprimir_catalogo(id){
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
         var a = document.createElement("a");
         a.href = "../php/imprimir_mi_almacen.php?id="+id;

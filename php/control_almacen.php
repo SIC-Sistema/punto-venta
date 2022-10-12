@@ -168,7 +168,7 @@ switch ($Accion) {
                     <td>'.$articulo['descripcion'].'</td>
                     <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
                     <td>'.$almacen['cantidad'].' '.$articulo['unidad'].'</td>
-                    <td><a method="post" href="#modalAlmacen" class="modal-trigger"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></a></td>
+                    <td><a onclick="editarArticulosAlmacen('.$articulo['id'].')" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">edit</i></a></td>
                   </tr>';
             }//FIN while
         }//FIN else
@@ -216,7 +216,7 @@ switch ($Accion) {
                     ?>
                         <script>
                             // REDIRECCIONAMOS 
-                            setTimeout("location.href='../views/articulos_punto_venta.php'", 800);
+                            setTimeout("location.href='../views/almacen_punto_venta.php'", 800);
                         </script>
                 <?php
                 }
