@@ -8,10 +8,10 @@ date_default_timezone_set('America/Mexico_City');
 $id_user = $_SESSION['user_id'];// ID DEL USUARIO LOGEADO
 $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
 
-//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Para Insertar = 0, Consultar = 1, Actualizar = 2, Borar = 3, Buscar Mi Almacen = 4)
+//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 5 PARA VER QUE ACCION HACER (Para Insertar = 0, Consultar = 1, Actualizar = 2, Borrar = 3, Buscar Mi Almacen = 4, editar mi almacen = 5)
 $Accion = $conn->real_escape_string($_POST['accion']);
 
-//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Para Insertar = 0, Consultar = 1, Actualizar = 2, Borar = 3)
+//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Para Insertar = 0, Consultar = 1, Actualizar = 2, Borrar = 3, Buscar Mi Almacen = 4, editar mi almacen = 5)
 //echo "hola aqui estoy";
 switch ($Accion) {
     case 0:  ///////////////           IMPORTANTE               ///////////////
@@ -179,52 +179,31 @@ switch ($Accion) {
         // $Accion es igual a 5 realiza:
 
         //RECIBIMOS TODAS LAS VARIABLES DES DE EL ARCHIVO modal_almacen.php
-        $id = $_POST["id"];
-
-        // OBTENEMOS LA INFORMACION DEL USUARIO PARA OBTENER EL DATO DEL ALMACEN
-        $user_id = $_SESSION['user_id'];
-        $datacenter = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
-        $id_almacen = $datacenter['almacen'];// ID DEL ALMACEN ASIGNADO AL USUARIO LOGEADO
-        //SACAMOS LA INFORMACION DEL ALMACEN
-        $Almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto_venta_almacenes` WHERE nombre=$id_almacen"));
-    
-        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_mi_almacen_pv.php" QUE NESECITAMOS PARA ACTUALIZAR
-        // $id = $conn->real_escape_string($_POST['id']);
-        // $Precio = $conn->real_escape_string($_POST['valorPrecio']);
-        // $Cantidad_ = $conn->real_escape_string($_POST['valorCantidad']);
-        // $DesArticulo = $conn->real_escape_string($_POST['valorDescripcion_Articulo']);
-        // $DesCambio = $conn->real_escape_string($_POST['valorDescripcion_Cambio']);
-        $Precio = $_POST["precio"];
-        $Cantidad_ = $_POST["cantidad"];
-        $DesArticulo = $_POST["descripcion_articulo"];
-        $DesCambio = $_POST["descripcion_cambio"];
-
-
-        //SACAMOS LA INFORMACION DEL ARTICULO Y LO GURADAMOS EN UNA VARIABLE LLAMADA $Producto
-        $Producto = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto_venta_articulos` WHERE id=$id"));
+        $id_articulo = $conn->real_escape_string($_POST['id_articulo']);
+        $almacen = $conn->real_escape_string($_POST['almacen']);
+        $DesCambio = $conn->real_escape_string($_POST['descripcion_cambio']);
+        $Cantidad = $conn->real_escape_string($_POST['cantidadCambiar']);
 
         //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ALMACEN Y LA GUARDAMOS EN UNA VARIABLE
-        $sql1 = "UPDATE `punto_venta_articulos` SET precio = '$Precio', descripcion = '$DesArticulo'  WHERE id = '$id'";
-        $sql2 = "UPDATE `punto_venta_almacen_general` SET cantidad = '$Cantidad_', descripcion = '$DesArticulo'  WHERE id_articulo = '$id'";
-        $sql3 = "INSERT INTO `punto_venta_modificaciones_mi_almacen` (descripcion_cambio, producto, almacen, usuario, fecha) VALUES('$DesCambio','$Producto','$Almacen','$id_user','$Fecha_hoy')  WHERE producto = '$id'";
+        $sql_update = "UPDATE `punto_venta_almacen_general` SET cantidad = '$Cantidad' WHERE id_articulo = $id_articulo AND id_almacen = $almacen";        
         //VERIFICAMOS QUE LAS SENTECIAS SON EJECUTADAS CON EXITO!
-        if(mysqli_query($conn, $sql1)){
-            if(mysqli_query($conn, $sql2)){
-                if(mysqli_query($conn, $sql3)){
-                    echo '<script >M.toast({html:"Los datos se actualizarón con exito.", classes: "rounded"})</script>';	
-                    echo '<script>recargar_mi_almacen()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-                    ?>
-                        <script>
-                            // REDIRECCIONAMOS 
-                            setTimeout("location.href='../views/almacen_punto_venta.php'", 800);
-                        </script>
+        if(mysqli_query($conn, $sql_update)){
+            $sql_insert = "INSERT INTO `punto_venta_modificaciones_mi_almacen` (descripcion_cambio, producto, almacen, usuario, fecha) VALUES('$DesCambio',$id_articulo,$almacen,$id_user,'$Fecha_hoy')";
+            if(mysqli_query($conn, $sql_insert)){
+                echo 'Los datos se actualizarón con exito.';	
+                ?>
+                <script>
+                    // REDIRECCIONAMOS 
+                    setTimeout("location.href='../views/almacen_punto_venta.php'", 500);
+                </script>
                 <?php
-                }
-            }        
+            }else{
+                echo 'Ha ocurrido un error INSERT...';
+            }     
         }else{
-            echo '<script >M.toast({html:"Ha ocurrio un error con la inserción de datos...", classes: "rounded"})</script>';	
+            echo 'Ha ocurrio un error UPDATE...';	
         }//FIN else DE ERROR
-    break;
+        break;
 }// FIN switch
 
 mysqli_close($conn);

@@ -43,10 +43,12 @@ if ($datos['almacen'] == 0) {
     }//FIN function
     //FUNCION QUE ABRE EL MODAL PARA EDITAR LOS ARTICULOS.
     function editarArticulosAlmacen(id){
+        almacen = <?php echo $id_almacen; ?>;
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_almacen.php" PARA MOSTRAR EL MODAL
         $.post("modal_almacen.php", {
           //Cada valor se separa por una ,
             id: id,
+            almacen: almacen,
           }, function(mensaje){
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_almacen.php"
               $("#modal").html(mensaje);

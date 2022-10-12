@@ -242,7 +242,7 @@
                     $consulta = mysqli_query($conn,"SELECT * FROM punto_venta_proveedores");
                     //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
                     if (mysqli_num_rows($consulta) == 0) {
-                      echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';
+                      echo '<script>M.toast({html:"No se encontraron proveedores.", classes: "rounded"})</script>';
                     } else {
                       //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
                       while($proveedor_pv = mysqli_fetch_array($consulta)) {

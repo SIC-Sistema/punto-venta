@@ -104,7 +104,7 @@ if (isset($_POST['id']) == false) {
                 </li>
             </ul>		
     		</div>
-        <div class="row"><br>
+        <div class="row">
           <h3 class="hide-on-med-and-down">Permisos:</h3>
           <h5 class="hide-on-large-only">Permisos:</h5>
         </div>
@@ -193,7 +193,7 @@ if (isset($_POST['id']) == false) {
             </div>    
         </div>
           <!--Sub encabezado-->
-          <div class="row"><br>
+          <div class="row">
             <h3 class="hide-on-med-and-down">Asignar Almacen a Usuario:</h3>
             <h5 class="hide-on-large-only">Asignar Almacen a Usuario:</h5>
           </div>

@@ -213,7 +213,7 @@ switch ($Accion) {
                 ?>
                 <script>
                     // REDIRECCIONAMOS 
-                    setTimeout("location.href='../views/articulos_punto_venta.php'", 800);
+                    setTimeout("location.href='../views/articulos_punto_venta.php'", 500);
                 </script>
                 <?php
             }else{
