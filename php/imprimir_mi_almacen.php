@@ -53,7 +53,7 @@ $pdf=new PDF('P','mm','letter', true);
 $pdf->SetAutoPageBreak(true, 35);
 $pdf->AliasNbPages();
 $pdf->SetMargins(15, 35, 10);
-$pdf->setTitle(utf8_decode('SIC | CATALOGO '));// TITULO BARRA NAVEGACION
+$pdf->setTitle(utf8_decode('SIC | MI ALMACEN '));// TITULO BARRA NAVEGACION
 $pdf->AddPage('portrait', 'letter');
 
 $pdf->SetFont('Helvetica','B', 12);
@@ -64,7 +64,7 @@ $pdf->SetDrawColor(28, 98, 163);
 $pdf->SetTextColor(255, 255, 255);
 $pdf->SetY($pdf->GetY()-15);
 $pdf->SetX(120);
-$pdf->Cell(70,8,utf8_decode('Almacén '.$NombreAlmacen['nombre']),1,0,'C',1);
+$pdf->Cell(70,8,utf8_decode('Almacén: '.$NombreAlmacen['nombre']),1,0,'C',1);
 $pdf->SetY($pdf->GetY()+8);
 $pdf->SetX(120);
 $pdf->SetTextColor(0, 0, 0);
@@ -101,16 +101,16 @@ $pdf->SetFont('Helvetica', 'B', 13);
 $pdf->MultiCell(0,11,utf8_decode('Artículos del almacén: '.$NombreAlmacen['nombre']),0,'C',1);
 $pdf->SetY($pdf->GetY());
 $pdf->SetTextColor(0, 0, 0);
-$pdf->SetFont('Helvetica', 'B', 9);
+$pdf->SetFont('Helvetica', 'B', 12);
 $pdf->SetTextColor(0, 0, 0);
 $pdf->Cell(10,8,utf8_decode('N°'),1,0,'C');
-$pdf->Cell(50,8,utf8_decode('Código'),1,0,'C');
-$pdf->Cell(65,8,utf8_decode('Artículo'),1,0,'C');
-$pdf->Cell(66,8,utf8_decode('Descripción'),1,0,'C');
-// $pdf->Cell(65,8,utf8_decode('Descripción'),1,0,'C');
-// $pdf->Cell(22,8,utf8_decode('Precio'),1,0,'C');
+$pdf->Cell(46,8,utf8_decode('Código'),1,0,'C');
+$pdf->Cell(75,8,utf8_decode('Artículo'),1,0,'C');
+$pdf->Cell(30,8,utf8_decode('Precio'),1,0,'C');
+$pdf->Cell(30,8,utf8_decode('Existencia'),1,0,'C');
 
 ////   CONTENIDO DE LA TABLA    /////
+$pdf->SetFont('Helvetica', '', 9);
 $pdf->SetFillColor(240, 240, 240);
 $pdf->SetDrawColor(0, 0, 0);
 $pdf->SetLineWidth(0);
@@ -121,38 +121,28 @@ $aux = 1;
 //AQUÍ SE MUESTRA EL CONTENIDO DE LA TABLA ------->
 
 //VARIABLE $ArticulosAlmacen PARA TRAER TODO EL CONTENIDO DE LA TABLA DEL ALMACEN DEL USUARIO
-$articulo = mysqli_query($conn,"SELECT `punto_venta_articulos`.`codigo`,`punto_venta_articulos`.`nombre`,`punto_venta_articulos`.`descripcion`,`punto_venta_almacen_general`.`id_articulo` FROM `punto_venta_articulos` INNER JOIN `punto_venta_almacen_general` ON `punto_venta_articulos`.`id` = `punto_venta_almacen_general`.`id_articulo` WHERE id_almacen=$id_almacen");
+$articulo = mysqli_query($conn,"SELECT * FROM `punto_venta_articulos` INNER JOIN `punto_venta_almacen_general` ON `punto_venta_articulos`.`id` = `punto_venta_almacen_general`.`id_articulo` WHERE id_almacen=$id_almacen");
 
 // SOLO RECORRE LOS ARTICULOS DE ESA CATEGORIA $id
 while($ArticulosAlmacen = mysqli_fetch_array($articulo)){ 
 
-    ///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
-    $ContNombre = ceil(strlen($ArticulosAlmacen['nombre'])/17);
-    $ContDescripcion = ceil(strlen($ArticulosAlmacen['descripcion'])/36);
-
-    $masN = ((strlen($ArticulosAlmacen['nombre'])>16 AND strlen($ArticulosAlmacen['nombre'])<=21) OR (strlen($ArticulosAlmacen['nombre'])>32 AND strlen($ArticulosAlmacen['nombre'])<38) OR (strlen($ArticulosAlmacen['nombre'])>47 AND strlen($ArticulosAlmacen['nombre'])<54)) ?  '         ':'';
-    $masD = ((strlen($ArticulosAlmacen['descripcion'])>35 AND strlen($ArticulosAlmacen['descripcion'])<=48) OR (strlen($ArticulosAlmacen['descripcion'])>70 AND strlen($ArticulosAlmacen['descripcion'])<85) OR (strlen($ArticulosAlmacen['descripcion'])>106 AND strlen($ArticulosAlmacen['descripcion'])<120)) ?  '                ':'';
-    
-    //LE DECIMOS CUANTAS FILAS AFECTA A LOS DEMAS
-    $AgregaG = 4;
-    $AgregaN = 5-$ContNombre;
-    $AgregaD = 5-$ContDescripcion;
-
     $pdf->SetX(15);
     $pdf->SetFont('Helvetica', '', 9);
-    $pdf->MultiCell(10,8,utf8_decode("\n".$aux.str_repeat("\n", $AgregaG).' '),1,'C',0);
-    $pdf->SetY($pdf->GetY()-48);
+    $pdf->MultiCell(10,8,utf8_decode($aux),1,'C',0);
+    $pdf->SetY($pdf->GetY()-8);
     $pdf->SetX(25);
-    $pdf->MultiCell(50,8,utf8_decode("\n".$ArticulosAlmacen['codigo'].str_repeat("\n", $AgregaG).' '),1,'C',0);
-    $pdf->SetY($pdf->GetY()-48);
-    $pdf->SetX(75);
-    $pdf->MultiCell(65,8,utf8_decode("\n".$ArticulosAlmacen['nombre'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',0);
-    $pdf->SetY($pdf->GetY()-48);
-    $pdf->SetX(140);
-    $pdf->MultiCell(66,8,utf8_decode("\n".$ArticulosAlmacen['descripcion'].$masD.str_repeat("\n", $AgregaD).' '),1,'C',0);
+    $pdf->MultiCell(46,8,utf8_decode($ArticulosAlmacen['codigo']),1,'C',0);
+    $pdf->SetY($pdf->GetY()-8);
+    $pdf->SetX(71);
+    $pdf->MultiCell(75,8,utf8_decode($ArticulosAlmacen['nombre']),1,'C',0);
+    $pdf->SetY($pdf->GetY()-8);
+    $pdf->SetX(146);
+    $pdf->MultiCell(30,8,utf8_decode('$'.sprintf('%.2f', $ArticulosAlmacen['precio'])),1,'C',0);    
+    $pdf->SetY($pdf->GetY()-8);
+    $pdf->SetX(176);
+    $pdf->MultiCell(30,8,utf8_decode($ArticulosAlmacen['cantidad'].' '.$ArticulosAlmacen['unidad']),1,'C',0);
     $aux ++;
 }//FIN WHILE CATALOGO
-    // $pdf->SetFont('Helvetica', '', 8.5);
 
 //Aquí escribimos lo que deseamos mostrar... (PRINT)
 $pdf->Output();
