@@ -61,6 +61,7 @@ switch ($Accion) {
                         if (mysqli_query($conn, $sql)) {
                             // VERIFICAMOS SI EL ARTICULO YA ESTA EN ALMACEN Y SOLO MODIFICAMOS LA CANTIDAD +
                             if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'"))>0) {
+
                                 mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad+$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");
                             }else{
                                 // SI NO REGISTRAMOS EL ARTICULO Y CANTIDAD
@@ -206,8 +207,22 @@ switch ($Accion) {
                 //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_compras`
                 #VERIFICAMOS QUE SE BORRE CORRECTAMENTE LA COMPRA DE `punto_venta_compras`
                 if(mysqli_query($conn, "DELETE FROM `punto_venta_compras` WHERE `punto_venta_compras`.`id` = $id")){
-                #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+                    #SI ES ELIMINADO MANDAR MSJ CON ALERTA
                     echo '<script >M.toast({html:"Compra borrada con exito.", classes: "rounded"})</script>';
+
+                    #HAY QUE RECORRER LOS ARTICULOS DE DETALLE PARA ELIMINAR LA CANTIDAD DEL ALMACEN DE CADA UNO
+                    $sql_art =  mysqli_query($conn,"SELECT * FROM punto_venta_detalle_compra WHERE id_compra=$id");
+                    if (mysqli_num_rows($sql_art) <= 0) {
+                      echo '<script>M.toast({html:"No se encontraron articulos en la compra.", classes: "rounded"})</script>';
+                    }else{
+                      $almacen = $User['almacen']; //ID DE ALMACEN
+                      while($detalle = mysqli_fetch_array($sql_art)){
+                        $cantidad = $detalle['cantidad'];
+                        $id_articulo = $detalle['id_articulo'];
+                        mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad-$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");                        
+                      }//FIN while
+                    }// FIN else
+
                     echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
                 }else{
                 #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
