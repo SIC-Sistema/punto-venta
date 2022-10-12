@@ -77,7 +77,7 @@ if (isset($_POST['compra']) == false) {
               if (mysqli_num_rows($sql_art) <= 0) {
                 echo "<h5> NO SE ENCONTRARON ARTICULOS</h5>";
               }else{
-               while($detalle = mysqli_fetch_array($sql_art)){
+                while($detalle = mysqli_fetch_array($sql_art)){
                   $id_articulo = $detalle['id_articulo'];
                   $articulo = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_articulos WHERE id=$id_articulo"));
                   ?>
@@ -85,7 +85,7 @@ if (isset($_POST['compra']) == false) {
                       <td><?php echo $detalle['id']; ?></td>
                       <td><?php echo $articulo['codigo']; ?></td>
                       <td><?php echo $articulo['nombre']; ?></td>
-                      <td><?php echo $detalle['cantidad']; ?></td>
+                      <td><?php echo $detalle['cantidad'].' '.$articulo['unidad']; ?></td>
                       <td>$<?php echo sprintf('%.2f', $detalle['precio_compra_u']); ?></td>
                       <td>$<?php echo sprintf('%.2f', $detalle['importe']); ?></td>
                     </tr>
