@@ -46,15 +46,6 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 					<li><a href = "almacenes_punto_venta.php" class="indigo-text"><i class="material-icons">assignment_turned_in</i>Almacenes</a></li>    
 					<li><a href = "almacen_punto_venta.php" class="indigo-text"><i class="material-icons">list</i>Mi Almacen</a></li>
 					<li><a href = "compras_punto_venta.php" class="indigo-text"><i class="material-icons">add_shopping_cart</i>Compras</a></li>
-					<li><a href class="indigo-text"><i class="material-icons">add_circle</i>Item 3</a></li>
-					<li><a href = "clientes_punto_venta.php" class="indigo-text"><i class="material-icons">people</i>Clientes </a></li>
-				    <li><a href class="indigo-text"><i class="material-icons">list</i>Item 4 <span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']?></span></a></li>
-				    <li><a class='dropdown-btn1 black-text' data-target='sub-dropdown4'><i class="material-icons left">assignment_ind</i> Item 11 <i class="material-icons right">chevron_right</i></a></li>
-					<ul id='sub-dropdown4' class='dropdown-content'>
-				    	<li><a href class="indigo-text"><i class="material-icons">assignment_late</i>Pendientes </a></li>   
-				    	<li><a href class="indigo-text"><i class="material-icons">assignment_turned_in</i>Listas </a></li>
-				    </ul>	
-					 
  				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i><b>Ventas</b> <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown5' class='dropdown-content'>
@@ -121,10 +112,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 		      			  <ul>
 							<li><a href = "almacenes_punto_venta.php"><i class="material-icons">assignment_turned_in</i>Almacenes</a></li>
 							<li><a href = "almacen_punto_venta.php"><i class="material-icons">list</i>Mi Almacen</a></li>
-							<li><a href = "compras_punto_venta.php"><i class="material-icons">add_shopping_cart</i>Compras</a></li>
-
-			      			<li><a href="dispositivos.php"><i class="material-icons">phonelink</i>Item 2</a></li>
-				    		<li><a href="ver_almacen.php"><i class="material-icons">dashboard</i>Item 3<span class="new badge pink" data-badge-caption=""><?php echo $almacen['count(*)'];?></span> </a></li> 			 
+							<li><a href = "compras_punto_venta.php"><i class="material-icons">add_shopping_cart</i>Compras</a></li>	 
 					      </ul>
 					    </span>
 		      		</div>    			
