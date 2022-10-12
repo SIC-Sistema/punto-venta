@@ -67,6 +67,8 @@ if ($datos['almacen'] == 0) {
         <h2 class="hide-on-med-and-down">Almacen: <?php echo $id_almacen.'. '.$almacen['nombre']; ?></h2>
         <h4 class="hide-on-large-only">Almacen: <?php echo $id_almacen.'. '.$almacen['nombre']; ?></h4>
       </div>
+      <!-- CREAMOS UN DIV EL CUAL TENGA id = "modal"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+      <div id="modal"></div>
       <form class="row col s12 m6 l6">
         <div class="col">
           <br>
