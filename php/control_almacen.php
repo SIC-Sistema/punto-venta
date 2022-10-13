@@ -1,7 +1,7 @@
 <?php
 //ARCHIVO QUE CONTIENE LA VARIABLE CON LA CONEXION A LA BASE DE DATOS
 include('../php/conexion.php');
-//ARCHIVO QUE CONDICIONA QUE TENGAMOS ACCESO A ESTE ARCHIVO SOLO SI HAY SESSION INICIADA Y NOS PREMITE TIMAR LA INFORMACION DE ESTA
+//ARCHIVO QUE CONDICIONA QUE TENGAMOS ACCESO A ESTE ARCHIVO SOLO SI HAY SESSION INICIADA Y NOS PREMITE TOMAR LA INFORMACION DE ESTA
 include('is_logged.php');
 //DEFINIMOS LA ZONA  HORARIA
 date_default_timezone_set('America/Mexico_City');
@@ -82,7 +82,7 @@ switch ($Accion) {
     case 2:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 2 realiza:
 
-        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_almacen.php" QUE NESECITAMOS PARA ACTUALIZAR
+        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_almacen_pv.php" QUE NESECITAMOS PARA ACTUALIZAR
     	$id = $conn->real_escape_string($_POST['id']);
         $Nombre = $conn->real_escape_string($_POST['valorNombre']);    
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
@@ -102,6 +102,7 @@ switch ($Accion) {
         break;
     case 3:
         // $Accion es igual a 3 realiza:
+    
         //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "almacenes_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
     	//Obtenemos la informacion del Usuario

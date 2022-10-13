@@ -23,7 +23,8 @@
               $("#ComprasALL").html(mensaje);
         });//FIN post
       }//FIN function
-      //FUNCION QUE BORRA LOS Compras (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+
+      //FUNCION QUE BORRA LOS COMPRAS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
       function borrar_compra_pv(id){
         var answer = confirm("Deseas eliminar el compra N°"+id+"?");
         if (answer) {

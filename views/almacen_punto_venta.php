@@ -10,7 +10,7 @@ if ($datos['almacen'] == 0) {
   <script>    
     M.toast({html: "No tienes un almacen asignado.", classes: "rounded"});
     M.toast({html: "Comunicate con un ADMINISTRADOR.", classes: "rounded"});
-    setTimeout("location.href='home.php'", 2500);
+    setTimeout("location.href='home.php'", 2000);
   </script>
   <?php
 }else{
@@ -41,7 +41,8 @@ if ($datos['almacen'] == 0) {
             $("#Almacen").html(mensaje);
       });//FIN post
     }//FIN function
-    //FUNCION QUE ABRE EL MODAL PARA EDITAR LOS ARTICULOS.
+
+    //FUNCION QUE ABRE EL MODAL PARA EDITAR LA CANTIDAD DEL ARTICULO SELECCIONADO.
     function editarArticulosAlmacen(id){
         almacen = <?php echo $id_almacen; ?>;
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_almacen.php" PARA MOSTRAR EL MODAL

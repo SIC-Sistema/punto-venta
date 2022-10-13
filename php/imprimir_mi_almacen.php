@@ -1,7 +1,7 @@
 <?php
 //ARCHIVO QUE DETECTA QUE PODAMOS USAR ESTE ARCHIVO SOLO SI HAY ALGUNA SESSION ACTIVA O INICIADA
 include("is_logged.php");
-// INCLUIMOS EL ARCHIVO CON LA CONEXXIONA LA BD PARA HACER CONSULTAS
+// INCLUIMOS EL ARCHIVO CON LA CONEXION A LA BD PARA HACER CONSULTAS
 include('../php/conexion.php');
 //SE INCLUYE EL ARCHIVO QUE CONTIENEN LAS LIBRERIAS FPDF PARA CREAR ARCHIVOS PDF
 include("../fpdf/fpdf.php");
@@ -21,30 +21,30 @@ class PDF extends FPDF{
 
    //Pie de pagina 
    function footer(){
-	   $this->SetFont('Helvetica','', 10);
-	   $this->SetFillColor(28, 98, 163);
+		$this->SetFont('Helvetica','', 10);
+		$this->SetFillColor(28, 98, 163);
 		$this->SetDrawColor(28, 98, 163);
 		$this->SetTextColor(255, 255, 255);
-	   $this->SetY(-35);
+		$this->SetY(-35);
 		$this->SetX(0);
-	   $this->SetFont('Helvetica', 'B', 13);
+	 	$this->SetFont('Helvetica', 'B', 13);
 		$this->MultiCell(216,10,utf8_decode('    Siguenos en:                                                                                              Estamos ubicados en:'),0,'C',1);
 		$this->SetX(0);
-	   $this->MultiCell(15,15,utf8_decode(' '."\n".' '),1,'C',1);
-	   $this->SetY(-25);
+	   	$this->MultiCell(15,15,utf8_decode(' '."\n".' '),1,'C',1);
+	   	$this->SetY(-25);
 		$this->SetX(15);
-	   $this->SetFont('Helvetica', '', 10);
+	   	$this->SetFont('Helvetica', '', 10);
 		$this->Image('../img/icon-facebook.png', 5, 253, 9, 9, 'png'); /// LOGO FACEBOOK
 		$this->Image('../img/icon-tiktok.png', 5, 261, 9, 9, 'png'); /// LOGO TIKTOK
 		$this->Image('../img/icon-pagina.png', 5, 269, 9, 9, 'png'); /// LOGO PAGINA
-	   $this->MultiCell(145,8,utf8_decode('Servicios Integrales De Computacion Sic'."\n".'sic.serviciosintegrales'."\n".'www.sicsom.com/ventas'."\n".' '),1,'L',1);
-	   $this->SetY(-25);
-	   $this->SetX(160);
-	   $this->MultiCell(56,6,utf8_decode('Av. Hidalgo No. 508 C. P. 99100, Sombrerete, Zac.'."\n".' '),1,'L',1);
-	   $this->SetY(-10);
-	   $this->SetX(160);
-	   $this->AliasNbPages('tpagina');
-	   $this->Cell(56,10,utf8_decode($this->PageNo().'/tpagina'),1,0,'R',1);
+	   	$this->MultiCell(145,8,utf8_decode('Servicios Integrales De Computacion Sic'."\n".'sic.serviciosintegrales'."\n".'www.sicsom.com/ventas'."\n".' '),1,'L',1);
+	   	$this->SetY(-25);
+	   	$this->SetX(160);
+	   	$this->MultiCell(56,6,utf8_decode('Av. Hidalgo No. 508 C. P. 99100, Sombrerete, Zac.'."\n".' '),1,'L',1);
+	   	$this->SetY(-10);
+	   	$this->SetX(160);
+	   	$this->AliasNbPages('tpagina');
+	   	$this->Cell(56,10,utf8_decode($this->PageNo().'/tpagina'),1,0,'R',1);
    }
 }
 
@@ -88,8 +88,6 @@ $pdf->MultiCell(0,5,utf8_decode('Internet, Telefonía, Asesoría, Implementació
 $pdf->SetY($pdf->GetY());
 $pdf->SetFont('Helvetica', 'B', 12);
 $pdf->MultiCell(0,8,utf8_decode('GABRIEL VALLES REYES                                                                         RFC: VARG7511217E5'),1,'C',1);
-
-
 
 ////   TITULO ANTES DE TABLA  ///////
 $pdf->SetTextColor(28, 98, 163);

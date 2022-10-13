@@ -18,7 +18,7 @@ if (isset($_POST['compra']) == false) {
       include('fredyNav.php');
       $id_compra = $_POST['compra'];// POR EL METODO POST RECIBIMOS EL ID DE LA COMPRA
       $id = $_SESSION['user_id'];//  RECIBIMOS EL ID DEL USUARIO LOGEADO
-      //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL USUARIO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos
+      //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL USUARIO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos_user
       $datos_user = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM users WHERE user_id=$id"));
       if ($datos_user['compras'] == 0) {
         ?>

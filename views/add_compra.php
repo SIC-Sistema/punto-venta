@@ -6,7 +6,7 @@
     include('fredyNav.php');
     //ARCHIVO QUE RESTRINGE A QUE SOLO ALGUNOS USUARIOS PUEDAN ACCEDER
     include('../php/cobrador.php');
-    //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL USUARIO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos
+    //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL USUARIO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos_user
     $user_id = $_SESSION['user_id'];
     $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
     $id = $datos_user['almacen'];
@@ -193,6 +193,7 @@
         }//FIN else CONDICIONES
       };//FIN function 
 
+      //SI EL SISTEMA DETECTA DIFERENCIA DE PRECIOS CON ESTA FUNCION SE CAMBIA SI EL USUARIO LO DESEA
       function cambiar_precio(id_articulo) {
         var precio = $("input#precioCambio"+id_articulo).val();
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
@@ -248,7 +249,7 @@
                       while($proveedor_pv = mysqli_fetch_array($consulta)) {
                       //Output
                       ?>                      
-                      <option value="<?php echo $proveedor_pv['id'];?>"><?php echo $proveedor_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>-->
+                      <option value="<?php echo $proveedor_pv['id'];?>"><?php echo $proveedor_pv['nombre'];?></option>-->
                       <?php
                     }//FIN while
                   }//FIN else
