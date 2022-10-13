@@ -489,7 +489,7 @@ switch ($Accion) {
         #VERIFICAMOS QUE SE BORRE CORRECTAMENTE TODOS LAS ARTICULOS QUE REGITRO EL USUARIO EN `tmp_pv_detalle_compra`
         if(mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_compra` WHERE `usuario` = $id_usuario")){
             #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-            echo '<script >M.toast({html:"Articulos borrados con exito.", classes: "rounded"})</script>';
+            echo '<script >M.toast({html:"Si hay articulos en la lsita fueron borrados con exito.", classes: "rounded"})</script>';
             echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         }else{
             #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
