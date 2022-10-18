@@ -76,7 +76,7 @@ switch ($Accion) {
                                 <td><?php echo $articulo['nombre'] ?></td>
                                 <td><?php echo $articulo['descripcion'] ?></td>
                                 <td><?php echo $articulo['precio'] ?></td>
-                                <td><a onclick="tmp_articulos(<?php echo $id_user ?>, 1,<?php echo $articulo['id'] ?>);" class="waves-effect waves-light btn-small indigo right">Agregar</a></td>
+                                <td><a onclick="agregar_articulo(<?php echo $id_user ?>, 1,<?php echo $articulo['id'] ?>);" class="waves-effect waves-light btn-small indigo right">Agregar</a></td>
                             </tr>
                             <?php
                         }//FIN WHILE
