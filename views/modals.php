@@ -34,22 +34,22 @@
 <div id="modal_addArticulo" class="modal"><br>
   <div class="modal-content">
     <div class="row">
-        <h6 class="col s12 m5 l5">.</h6>
-        <!--    //////    INPUT DE EL BUSCADOR    ///////   -->
-        <form class="col s12 m7 l7">
-          <div class="row">
-            <div class="input-field col s12">
-              <i class="material-icons prefix">search</i>
-              <input id="busquedaArticulo" name="busquedaArticulo" type="text" class="validate" autocomplete="off" onKeyUp="buscar_articulos();" autofocus="true" required>
-              <label for="busquedaArticulo">Buscar Artículo(Código, Nombre, Descripcion)</label>
-            </div>
+      <h6 class="col s12 m5 l5">.</h6>
+      <!--    //////    INPUT DE EL BUSCADOR    ///////   -->
+      <form class="col s12 m7 l7">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">search</i>
+            <input id="busquedaArticulo" name="busquedaArticulo" type="text" class="validate" autocomplete="off" onKeyUp="buscar_articulos();" autofocus="true" required>
+            <label for="busquedaArticulo">Buscar Artículo(Código, Nombre, Descripcion)</label>
           </div>
-        </form>
-        <div id="tablaArticulo"></div>
+        </div>
+      </form>
+      <div id="tablaArticulo"></div>
     </div>
   </div>
   <div class="modal-footer">
-      <a href="#" class="modal-action modal-close waves-effect waves-green red btn-small">Cerrar<i class="material-icons left">close</i></a>
+    <a href="#" class="modal-action modal-close waves-effect waves-green red btn-small">Cerrar<i class="material-icons left">close</i></a>
   </div><br>
 </div>
 <!--Cierre modal AGREGAR ARTICULOS COMPRA IMPORTANTE! -->

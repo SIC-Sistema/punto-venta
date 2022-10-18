@@ -49,7 +49,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
  				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i><b>Ventas</b> <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown5' class='dropdown-content'>
-					<li><a href class="indigo-text"><i class="material-icons">settings_input_antenna</i>Item 1 </a></li>   
+					<li><a href = "cotizacion_nueva_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
 				    <li><a href class="indigo-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
 				    <li><a href class="indigo-text"><i class="material-icons">business</i>Item 4 </a></li>
 				    <li><a href class="indigo-text"><i class="material-icons">router</i>Item 4 </a></li>
@@ -126,7 +126,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 		      		<div class="collapsible-body  indigo lighten-5">
 		      			<span>
 		      			  <ul>
-		      				<li><a href="../views/form_instalacion.php"><i class="material-icons">add</i>Item 1</a></li>
+		      				<li><a href="../views/cotizacion_nueva_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
 					 		<li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
 							<li><a href="form_orden.php"><i class="material-icons">add_circle</i>Item 3</a></li>
 					 		<li><a href="clientes.php"><i class="material-icons">people</i>Clientes </a></li>
