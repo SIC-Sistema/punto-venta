@@ -26,6 +26,9 @@
   function home() {
     setTimeout("location.href='home.php'", 1000);
   }
+  function recargar_cotizaciones(){
+    setTimeout("location.href='cotizacion_nueva_punto_venta.php'", 800);
+  }
 </script>
 <!--Termina Script Buscar clientes-->
 

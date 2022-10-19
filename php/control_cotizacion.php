@@ -71,11 +71,18 @@ switch ($Accion) {
                     if(mysqli_num_rows($consulta)>0){
                         while($articulo = mysqli_fetch_array($consulta)){
                             ?>
+                            <!-- Output -->
+                            <?php $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
                             <tr>
                                 <td><?php echo $articulo['codigo'] ?></td>
+                                <?php echo $img ?>
                                 <td><?php echo $articulo['nombre'] ?></td>
                                 <td><?php echo $articulo['descripcion'] ?></td>
+                                <td><?php echo $articulo['modelo'] ?></td>
+                                <td><?php echo $articulo['unidad'] ?></td>
                                 <td><?php echo $articulo['precio'] ?></td>
+                                <td><?php echo $articulo['codigo_unidad'] ?></td>
+                                <td><?php echo $articulo['codigo_fiscal'] ?></td>
                                 <td><a onclick="agregar_articulo(<?php echo $id_user ?>, 1,<?php echo $articulo['id'] ?>);" class="waves-effect waves-light btn-small indigo right">Agregar</a></td>
                             </tr>
                             <?php
@@ -189,37 +196,23 @@ switch ($Accion) {
         <?php
         break;
 
-    case 3:///////////////           IMPORTANTE               ///////////////
-        // $Accion es igual a 3 realiza:
+    case 3:
+        ///////////////           IMPORTANTE               //////////////
+        //$Accion es igual a 3 realizar:
 
-        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "articulos_punto_venta.php" QUE NESECITAMOS PARA BORRAR
+        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "cotizacion_nueva_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
-    	//Obtenemos la informacion del Usuario
-        $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
-        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR ARTICULOS
-        if ($User['b_articulos'] == 1) {
-            #SELECCIONAMOS LA INFORMACION A BORRAR
-            $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id = $id"));
-            #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_articulos` PARA NO PERDER INFORMACION
-            $sql = "INSERT INTO `pv_borrar_articulos` (id_articulo, codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, imagen, registro, borro, fecha_borro) 
-                VALUES($id, '".$articulo['codigo']."', '".$articulo['nombre']."', '".$articulo['descripcion']."', '".$articulo['precio']."', '".$articulo['unidad']."', '".$articulo['codigo_fiscal']."', '".$articulo['codigo_unidad']."', '".$articulo['modelo']."', '".$articulo['categoria']."', '".$articulo['imagen']."', '".$articulo['usuario']."', '$id_user','$Fecha_hoy')";
-            //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-            if(mysqli_query($conn, $sql)){
-                //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `pv_borrar_proveedor`
-                #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL ARTICULO DE `punto_venta_articulos`
-                if(mysqli_query($conn, "DELETE FROM `punto_venta_articulos` WHERE `punto_venta_articulos`.`id` = $id")){
-                #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-                    echo '<script >M.toast({html:"Articulo borrado con exito.", classes: "rounded"})</script>';
-                    echo '<script>recargar_articulo()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-                }else{
-                #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-                    echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
-                }
-            }
+        //Obtenemos la informacion del Usuario
+        
+        #VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL ARTICULO DE TMP `tmp_pv_detalle_cotizacion`
+        if(mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_cotizacion` WHERE `tmp_pv_detalle_cotizacion`.`id_articulo` = $id")){
+            #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+            echo '<script >M.toast({html:"Articulo borrado con exito.", classes: "rounded"})</script>';
+            echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         }else{
-            echo '<script >M.toast({html:"Permiso denegado.", classes: "rounded"});
-            M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
-        }   
+            #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
+            echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+        }
         break;
     case 4:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 4 realiza:
