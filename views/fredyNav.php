@@ -5,12 +5,6 @@ include('../php/is_logged.php');
 include('../php/conexion.php');
 #GENERAMOS UNA FECHA DEL DIA EN CURSO REFERENTE A LA ZONA HORARIA
 $Hoy = date('Y-m-d');
-$instalaciones = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM clientes WHERE instalacion IS NULL"));
-$reportes = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM reportes WHERE ((fecha_visita = '$Hoy'  AND atender_visita = 0) OR (fecha_visita < '$Hoy' AND atender_visita = 0 AND visita = 1) OR atendido != 1 OR atendido IS NULL) AND id_cliente < 10000"));
-$reportesEsp = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM reportes WHERE ((fecha_visita = '$Hoy'  AND atender_visita = 0) OR (fecha_visita < '$Hoy' AND atender_visita = 0 AND visita = 1) OR atendido != 1 OR atendido IS NULL) AND id_cliente > 10000 AND descripcion LIKE 'Reporte Especial:%'"));
-$Mantenimiento = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*) FROM reportes WHERE ((fecha_visita = '$Hoy'  AND atender_visita = 0) OR (fecha_visita < '$Hoy' AND atender_visita = 0 AND visita = 1) OR atendido != 1 OR atendido IS NULL) AND id_cliente > 10000 AND descripcion LIKE 'Mantenimiento:%'"));
-$listos = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositivos WHERE estatus IN ('Listo (En Taller)','Listo (No Reparado)', 'Listo') AND fecha > '2019-01-01'"));
-$almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositivos WHERE estatus = 'Almacen'"));
 ?>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,7 +35,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 				    <li><a href = "articulos_punto_venta.php" class="indigo-text"><i class="material-icons">dashboard</i>Articulos </a></li>
 					<li><a href = "categorias_punto_venta.php" class="indigo-text"><i class="material-icons">view_list</i>Categorias </a></li>   			 
  				 </ul>
-				<li><a class='dropdown-button indigo-text' data-target='dropdown2'><i class="material-icons left">library_add</i><b>Compras</b><span class=" new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)']+$reportes['count(*)']+$reportesEsp['count(*)']+$Mantenimiento['count(*)'];?></span><i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a class='dropdown-button indigo-text' data-target='dropdown2'><i class="material-icons left">library_add</i><b>Compras</b><span class=" new badge pink" data-badge-caption="">7</span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>
 					<li><a href = "almacenes_punto_venta.php" class="indigo-text"><i class="material-icons">assignment_turned_in</i>Almacenes</a></li>    
 					<li><a href = "almacen_punto_venta.php" class="indigo-text"><i class="material-icons">list</i>Mi Almacen</a></li>
@@ -50,10 +44,9 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
  				<li><a class='dropdown-button indigo-text' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i><b>Ventas</b> <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown5' class='dropdown-content'>
 					<li><a href = "cotizacion_nueva_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
+					<li><a href = 'add_venta.php' target="blank" class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>  
+					<li><a href = "cotizacion_nueva_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
 				    <li><a href class="indigo-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
-				    <li><a href class="indigo-text"><i class="material-icons">business</i>Item 4 </a></li>
-				    <li><a href class="indigo-text"><i class="material-icons">router</i>Item 4 </a></li>
-				    <li><a href class="indigo-text"><i class="material-icons">satellite</i>Item 5 </a></li>
 				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown4'><b><?php echo $_SESSION['user_name'];?> </b><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown4' class='dropdown-content'>
@@ -96,7 +89,7 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 						    <li><a href = "clientes_punto_venta.php"><i class="material-icons">people</i>Clientes </a></li>
 							<li><a href = "usuarios.php"><i class="material-icons">perm_identity</i>Usuarios </a></li>
 						    <li><a href = "articulos_punto_venta.php"><i class="material-icons">dashboard</i>Articulos </a></li>
-							<li><a href = "categorias_punto_venta.php"><i class="material-icons">view_list</i>Categorias </a></li>  			 
+							<li><a href = "categorias_punto_venta.php"><i class="material-icons">view_list</i>Categorias </a></li> 			 
 					      </ul>
 					    </span>
 		      		</div>    			
@@ -125,14 +118,10 @@ $almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT count(*)FROM dispositiv
 	    			<div class="collapsible-header"><i class="material-icons">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></div>
 		      		<div class="collapsible-body  indigo lighten-5">
 		      			<span>
-		      			  <ul>
-		      				<li><a href="../views/cotizacion_nueva_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
+		      			  <ul>		      				
+							<li><a href = 'add_venta.php' target="blank" class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>
+		      				<li><a href="cotizacion_nueva_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
 					 		<li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
-							<li><a href="form_orden.php"><i class="material-icons">add_circle</i>Item 3</a></li>
-					 		<li><a href="clientes.php"><i class="material-icons">people</i>Clientes </a></li>
-				    		<li><a href="stock.php" class="indigo-text"> <i class="material-icons">assignment_ind</i>Item 4 </a></li>
-			      			<li><a href="../views/instalaciones.php"><i class="material-icons">list</i>Item 5 <span class="new badge pink" data-badge-caption=""><?php echo $instalaciones['count(*)'];?></span></a></li>
-						    <li><a href="reportes.php"><i class="material-icons">perm_scan_wifi</i>Item 6<span class=" new badge pink" data-badge-caption=""><?php echo $reportes['count(*)'];?></span></a></li>
 					      </ul>
 					    </span>
 		      		</div>    			

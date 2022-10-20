@@ -29,7 +29,6 @@ if (isset($_POST['compra']) == false) {
         </script>
         <?php
       }
-
       $Compra = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_compras WHERE id=$id_compra"));
       ?>
     </head>
