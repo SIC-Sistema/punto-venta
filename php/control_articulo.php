@@ -29,7 +29,7 @@ switch ($Accion) {
         $Categoria = $conn->real_escape_string($_POST['valorCategoria']);    
 
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
-		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo' OR codigo_fiscal='$CFiscal'"))>0){
+		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo'"))>0){
             echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
         }else{
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
@@ -118,7 +118,7 @@ switch ($Accion) {
         $Categoria = $conn->real_escape_string($_POST['valorCategoria']);  
 
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
-        if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE (codigo='$codigo' OR codigo_fiscal='$CFiscal') AND id != $id"))>0){
+        if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo' AND id != $id"))>0){
             echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
         }else{
             //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ARTICULO Y LA GUARDAMOS EN UNA VARIABLE
