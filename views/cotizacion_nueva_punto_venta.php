@@ -1,16 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <?php
+<html>
+  <head>
+  	<title>SIC | Registrar Cotización</title>
+    <?php 
     //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
     include('fredyNav.php');
+    //ARCHIVO QUE RESTRINGE A QUE SOLO ALGUNOS USUARIOS PUEDAN ACCEDER
+    include('../php/cobrador.php');
+    //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL USUARIO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos_user
+    $user_id = $_SESSION['user_id'];
+    $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
+    $id = $datos_user['almacen'];
+    $datos_almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM punto_venta_almacenes WHERE id=$id"));
+    if ($id == 0) {
+      ?>
+      <script>    
+        M.toast({html: "Permiso denegado, no tiene almacen asignado", classes: "rounded"});
+        M.toast({html: "Contacta a un Administrador.", classes: "rounded"});
+        setTimeout("location.href='cotizacion_punto_venta.php'", 1000);
+      </script>
+      <?php
+    }
     ?>
-    <title>SIC | Nueva Cotización Punto Venta</title>
     <script>
+        //FUINCION QUE AL SELECCIONAR UN CLIENTE MUESTRA SU INFORMACION
+        function showContent() {
+            element = document.getElementById("infoCliente");
+            var textoCliente = $("select#cliente").val();
+            if (textoCliente != 0) {
+                element.style.display='block';
+            } else {
+                element.style.display='none';
+            }  
+
+            //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
+            $.post("../php/control_cotizacion.php", {
+                //Cada valor se separa por una ,
+                accion: 2,
+                cliente: textoCliente,
+            }, function(mensaje) {
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_cotizacion.php"
+                $("#resultado_info").html(mensaje);
+            });  
+        };
+
+      function tmp_articulos(id, insert,id_art=0){
+        if (insert) {
+          //PEDIMOS VARIABLES Y CONDICIONES PARA INSERTAR ARTICULO A TMP
+          M.toast({html: 'Insertar articulo N° '+id_art, classes: 'rounded'});
+          //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+          $.post("../php/control_cotizacion.php", {
+            //Cada valor se separa por una ,
+              accion: 4,
+              insert: insert,
+              id: id,
+              id_art: id_art,
+            }, function(mensaje) {
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+                $("#articulosCompra").html(mensaje);
+            }); 
+        }else{
+          //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+          $.post("../php/control_cotizacion.php", {
+            //Cada valor se separa por una ,
+              accion: 4,
+              insert: insert,
+              id: id,
+            }, function(mensaje) {
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+                $("#articulosCompra").html(mensaje);
+            }); 
+        }//FIN ELSE insert
+      }// FIN function
+
+      //FUNCION QUE BORRA LOS ARTICULOS TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+      function borrar_lista_articulo(id){
+        var answer = confirm("Deseas eliminar el artículo N°"+id+" de la lista ?");
+        if (answer) {
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+          $.post("../php/control_cotizacion.php", {
+            //Cada valor se separa por una ,
+            accion: 7,
+            id: id,
+          }, function(mensaje) {
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+            $("#articulosCompra").html(mensaje);
+          }); //FIN post
+        }//FIN IF
+      };//FIN function
+
+      //FUNCION QUE BORRA TODOS LOS ARTICULOS DE TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+      function borrar_lista_all(usuario){
+        var answer = confirm("Deseas cancelar la compra?");
+        if (answer) {
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+          $.post("../php/control_compra.php", {
+            //Cada valor se separa por una ,
+            accion: 8,
+            usuario: usuario,
+          }, function(mensaje) {
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+            $("#articulosCompra").html(mensaje);
+          }); //FIN post
+        }//FIN IF
+      };//FIN function
+
+      //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+      function buscar_articulos(){
+        
+        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+        var texto = $("input#busquedaArticulo").val();
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
+        $.post("../php/control_cotizacion.php", {
+            //Cada valor se separa por una ,
+            accion: 6,
+            texto: texto,
+          }, function(mensaje){
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_cotizacion.php"
+              $("#tablaArticulo").html(mensaje);
+        });//FIN post
+      }//FIN function
+
+      //FUNCION QUE MODIFICARA LOS VALORES DE LOS TOTALES
+      function totales(id_art, id_usuario){
+        //RECIBIMOS LOS VALORES DE LOS INPUTS AFECTADOS
+        var CantidadA_Aux = $("input#cantidadA"+id_art).val();
+        var PrecioC_Aux = $("input#precio_compra"+id_art).val();
+        var Total_Aux = $("input#totalCompra").val();        
+        var Importe_Aux = $("input#importe"+id_art).val();
+        var CantidadA = parseFloat(CantidadA_Aux);
+        var PrecioC = parseFloat(PrecioC_Aux);
+        var Importe = parseFloat(Importe_Aux); 
+        var Total = parseFloat(Total_Aux);
+
+        //MODIFICAMOS LOS VALPORES DE LOS INPUTS EN CUANTO CAMBIE ALGUN VALOR
+        document.getElementById("importe"+id_art).value = (PrecioC*CantidadA).toFixed(2);          
+        document.getElementById("subtotal").value =((Total+((PrecioC*CantidadA)-Importe))-((Total+((PrecioC*CantidadA)-Importe))*0.16)).toFixed(2);
+        document.getElementById("impuesto").value =((Total+((PrecioC*CantidadA)-Importe))*0.16).toFixed(2);
+        document.getElementById("totalCompra").value =(Total+((PrecioC*CantidadA)-Importe)).toFixed(2);
+
+        //REALIZAREMOS LOS CAMBIOS EN LA BASE DE DATOS
+        //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+        $.post("../php/control_compra.php", {
+            //Cada valor se separa por una ,
+            accion: 5,
+            valorIdArt: id_art,
+            valorIdUs: id_usuario,
+            valorCantidadA: CantidadA,
+            valorPrecioU: PrecioC,
+          }, function(mensaje){
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+              $("#resultado_insert").html(mensaje);
+        });//FIN post
+      }
+
       //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
       function insert_compra() {
+        almacen = <?php echo $datos_user['almacen']; ?>;
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-        var textoCotizacion = $("input#cotizacion").val();//ej:LA VARIABLE "textoCotizacion" GUARDAREMOS LA INFORMACION QUE ESTE EN EL SELECT QUE TENGA EL id = "cotizacion"
+        var textoCotizacion = $("input#cotizacion").val();//ej:LA VARIABLE "textoFactura" GUARDAREMOS LA INFORMACION QUE ESTE EN EL SELECT QUE TENGA EL id = "factura"
         var textoCliente = $("select#cliente").val();
 
         if(document.getElementById('cambio').checked==true){
@@ -21,19 +172,19 @@
 
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
         //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
-        if (textoCliente == '') {
+        if (textoCliente == 0) {
           M.toast({html: 'Seleccione un Cliente.', classes: 'rounded'});
-        }else if (textoFactura == "") {
-          M.toast({html: 'El campo número de Cotizacion se encuentra vacío.', classes: 'rounded'});
+        }else if (textoCotizacion == "") {
+          M.toast({html: 'El campo Cotización se encuentra vacío.', classes: 'rounded'});
         }else{
           //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
-          $.post("../php/control_compra.php", {
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
+          $.post("../php/control_cotizacion.php", {
             //Cada valor se separa por una ,
               accion: 0,
               almacen: almacen,
-              valorProveedor: textoProveedor,
-              valorFactura: textoFactura,
+              valorCliente: textoCliente,
+              valorCotizacion: textoCotizacion,
               valorTipoCambio: textoTipoCambio,
             }, function(mensaje) {
                 //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
@@ -41,144 +192,97 @@
             }); 
         }//FIN else CONDICIONES
       };//FIN function 
-      //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
-      function buscar_articulos(){
-        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
-        var texto = $("input#busqueda").val();
-        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
-        $.post("../php/control_cotizacion.php", {
-          //Cada valor se separa por una ,
-            texto: texto,
-            accion: 1,
-          }, function(mensaje){
-              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_articulo.php"
-              $("#articulosALL").html(mensaje);
-        });//FIN post
-      }//FIN function
 
-      //FUNCION QUE MANDA IMPRIMIR EL CATALOGO SEGUN EL ID DE CATEGORIA
-      function imprimir_catalogo(){
-        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
-        var id = $("select#categoria").val();
-        if (id == '') {
-          M.toast({html: 'Seleccione una categoria.', classes: 'rounded'});
+      //SI EL SISTEMA DETECTA DIFERENCIA DE PRECIOS CON ESTA FUNCION SE CAMBIA SI EL USUARIO LO DESEA
+      function cambiar_precio(id_articulo) {
+        var precio = $("input#precioCambio"+id_articulo).val();
+        // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
+        //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
+        if (precio == "" || precio < 0) {
+          M.toast({html: 'Coloque un Precio Fijo valido.', classes: 'rounded'});
         }else{
-          var a = document.createElement("a");
-          a.href = "../php/imprimir_catalogo.php?id="+id;
-          a.target = "blank";
-          a.click();
-        } 
-      }
-
-      function agregar_articulo(id, insert,id_art=0){
-        if (insert) {
-            //PEDIMOS VARIABLES Y CONDICIONES PARA INSERTAR ARTICULO A TMP
-            M.toast({html: 'Insertar articulo N° '+id_art, classes: 'rounded'});
-            //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
-            $.post("../php/control_cotizacion.php", {
-            //Cada valor se separa por una ,
-                accion: 2,
-                insert: insert,
-                id: id,
-                id_art: id_art,
-            }, function(mensaje) {
-                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_articulo.php"
-                $("#listaArticulos").html(mensaje);
-            });
-        }else{
-            //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
-            $.post("../php/control_cotizacion.php", {
-                //Cada valor se separa por una ,
-                accion: 2,
-                insert: insert,
-                id: id,
-            }, function(mensaje) {
+          //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+          $.post("../php/control_compra.php", {
+              //Cada valor se separa por una ,
+              accion: 9,
+              id_articulo: id_articulo,
+              precio: precio,
+            }, function(mensaje){
                 //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
-                $("#listaArticulos").html(mensaje);
-            });
-        }//FIN ELSE insert
-      }// FIN function
-
-      //FUNCION QUE BORRA LOS ARTICULOS TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
-      function borrar_lista_articulo(id){
-        var answer = confirm("¿Deseas eliminar el artículo N°"+id+" de la lista ?");
-        if (answer) {
-            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
-            $.post("../php/control_cotizacion.php", {
-                //Cada valor se separa por una ,
-                 accion: 3,
-                id: id,
-          }, function(mensaje) {
-            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
-            $("#borrarArticulo").html(mensaje);
-          }); //FIN post
-        }//FIN IF
-      };//FIN function
-
+                $("#cambio").html(mensaje);
+          });//FIN post
+        }//FIN else
+      }
     </script>
-</head>
-<main>
-    <body onload="buscar_articulos();">
-        <div class="container"><br><br>
-            <!--    //////    TITULO    ///////   -->
-            <h3 class="hide-on-med-and-down col s12 m6 l6">Nueva Cotización</h3>
-            <h5 class="hide-on-large-only col s12 m6 l6">Nueva Cotización</h5>
-            <!-- CREAMOS UN DIV EL CUAL TENGA id = "modal"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-            <div id="modal"></div>
-            <div class="row">
-                <!--    //////    INPUT DE EL BUSCADOR    ///////   -->
-                <form class="col s12 m6 l6">
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <i class="material-icons prefix">search</i>
-                            <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_articulos();">
-                            <label for="busqueda">Buscar(Código, Nombre, Descrpición, Código Fiscal)</label>
-                        </div>
-                    </div>
-                </form>
-                <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
-                <a onclick="imprimir_catalogo()" class="waves-effect waves-light btn pink left"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
-                <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR COTIZACIÓN    ///////   -->
-                <a href="cotizacion_nueva_punto_venta.php" class="waves-effect waves-light btn pink left right">Detalles Cotización<i class="material-icons prefix left">format_list_bulleted</i></a>
+  </head>
+  <main>
+  <body onload="tmp_articulos(<?php echo $user_id;?>,0)">
+    <!-- DENTRO DE ESTE DIV VA TODO EL CONTENIDO Y HACE QUE SE VEA AL CENTRO DE LA PANTALLA.-->
+    <div class="container" >
+      <!--    //////    TITULO    ///////   -->
+      <div class="row" >
+        <h3 class="hide-on-med-and-down">Registrar Cotización</h3>
+        <h5 class="hide-on-large-only">Registrar Cotización</h5>
+      </div>
+      <div class="row" >
+      <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+      <div class="row" id="resultado_insert">
+      <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
+      <form class="row col s12" name="formCotizacion">
+        <!-- CAJA DE SELECCION DE CLIENTES -->
+        <hr>
+        <div class="row">
+            <div class="input-field col s12 m3 l3">
+                <i class="material-icons prefix">people</i>
+                <select id="cliente" name="cliente" class="validate" onchange="javascript:showContent()">
+                  <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
+                  <option value="0" select>Seleccione un cliente</option>
+                  <?php 
+                    // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+                    $consulta = mysqli_query($conn,"SELECT * FROM `punto-venta_clientes`");
+                    //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+                    if (mysqli_num_rows($consulta) == 0) {
+                      echo '<script>M.toast({html:"No se encontraron clientes.", classes: "rounded"})</script>';
+                    } else {
+                      //RECORREMOS UNO A UNO LOS CLIENTES CON EL WHILE
+                      while($cliente_pv = mysqli_fetch_array($consulta)) {
+                      //Output
+                      ?>                      
+                      <option value="<?php echo $cliente_pv['id'];?>"><?php echo $cliente_pv['nombre'];?></option>-->
+                      <?php
+                    }//FIN while
+                  }//FIN else
+                  ?>
+                </select>
+              </div> 
+              <div id="infoCliente" class="col s12 m9 l9" style="display: none;"><br>
+                <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_info"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+                <div id="resultado_info"></div>
+              </div>
             </div>
-            <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS ARTICULO    ///////   -->
-            <div class="row">
-                <table class="bordered highlight responsive-table">
-                    <thead>
-                        <tr>
-                        <th>Código</th>
-                        <th>Imagen</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Marca</th>
-                        <th>Precio</th>
-                        <th>Unidad</th>
-                        <th>C. Unidad</th>
-                        <th>C. Fiscal</th>
-                        <th>Añadir</th>
-                        </tr>
-                    </thead>
-                    <!-- DENTRO DEL tbody COLOCAMOS id = "articulosALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_articulos) -->
-                    <tbody id="articulosALL">
-                    </tbody>
-                </table>
-            </div><br><br>
-        </div>
-        <!-- NUEVO CONTENEDOR EN TEORIA -->
-        <div class="container">
-            <div class="row">
-                <!--    //////    TITULO    ///////   -->
-                <h3 class="hide-on-med-and-down col s12 m6 l6">Lista de Artículos</h3>
-                <h5 class="hide-on-large-only col s12 m6 l6">Lista de Artículos</h5>
+            <hr>
+            <div  class="row">
+              <div class="col s12 m6 l6">
+                <h5 class="input-field col s4"><b>N° Cotización</b></h5>
+                <div class="input-field col s7">
+                  <i class="material-icons prefix">tab</i>
+                  <input id="cotizacion" type="text" class="validate" data-length="50" required>
+                  <label for="cotizacion">(ej: 13436)</label>
+                </div> 
+              </div>
+              <div class="col s12 m6 l6">
+                <h4>Almacen N° <?php echo $datos_user['almacen'];?> - <?php echo $datos_almacen['nombre'];?></h4>
+              </div>
             </div>
-            <!-- CREAMOS UN DIV EL CUAL TENGA id = "borrarArticulo"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-            <div id="borrarArticulo"></div>
-            <!-- CREAMOS UN DIV EL CUAL TENGA id = "listaArticulos"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-            <div id="listaArticulos">
+            <hr>            
+            <a href="#modal_addArticulo" class="waves-effect waves-light btn-small modal-trigger pink right">Agregar Artículo<i class="material-icons left">add</i></a><br><br>
+            <!-- CREAMOS UN DIV EL CUAL TENGA id = "articulosCompra"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+            <div class="row" id="articulosCompra">
             </div>
-        </div>
-    </body>
-</main>
+        </form>
+      </div> 
+    </div><br>
+  </body>
+  </main>
 </html>
