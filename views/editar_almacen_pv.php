@@ -56,25 +56,26 @@ if (isset($_POST['id']) == false) {
         <h5 class="hide-on-large-only">Editar Almacen N°<?php echo $id; ?></h5>
       </div>
       <div class="row" >
-       <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_update"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-       <div id="resultado_update"></div>
-       <div class="row">
-        <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
-        <form class="row col s12">
-          <!-- DIV QUE SEPARA A DOBLE COLUMNA PARTE IZQ.-->
-          <div class="col s12 m6 l6">
-            <br>    
-            <div class="input-field">
-              <i class="material-icons prefix">edit</i>
-              <input id="nombre" type="text" class="validate" data-length="30" required value="<?php echo $datos['nombre']; ?>">
-              <label for="nombre">Nombre:</label>
-            </div>      
-          </div>
-        </form>
-        <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
-        <a onclick="update_almacen(<?php echo $id; ?>);" class="waves-effect waves-light btn pink right"><i class="material-icons right">save</i>Guardar</a>
-      </div> 
-    </div><br>
+        <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_update"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+        <div id="resultado_update"></div>
+        <div class="row">
+          <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
+          <form class="row col s12">
+            <!-- DIV QUE SEPARA A DOBLE COLUMNA PARTE IZQ.-->
+            <div class="col s12 m6 l6">
+              <br>    
+              <div class="input-field">
+                <i class="material-icons prefix">edit</i>
+                <input id="nombre" type="text" class="validate" data-length="30" required value="<?php echo $datos['nombre']; ?>">
+                <label for="nombre">Nombre:</label>
+              </div>      
+            </div>
+          </form>
+          <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
+          <a onclick="update_almacen(<?php echo $id; ?>);" class="waves-effect waves-light btn pink right"><i class="material-icons right">save</i>Guardar</a>
+        </div> 
+      </div><br>
+    </div>
   </body>
   </main>
   </html>

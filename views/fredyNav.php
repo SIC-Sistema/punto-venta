@@ -23,6 +23,8 @@ $Hoy = date('Y-m-d');
 	<nav class="indigo lighten-5">
 		<div class="nav-wrapper container">
 			<a  class="brand-logo" href="home.php"><img  class="responsive-img" style="width: 60px; height: 58px;" src="../img/LogoSIC.png"></a>
+			<!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_venta"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+        	<div class="row" id="resultado_venta">
 			<a href="#" data-target="menu-responsive" class="sidenav-trigger">
 				<i class="material-icons">menu</i>
 			</a>
@@ -42,9 +44,12 @@ $Hoy = date('Y-m-d');
 					<li><a href = "compras_punto_venta.php" class="indigo-text"><i class="material-icons">add_shopping_cart</i>Compras</a></li>
  				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i><b>Ventas</b> <i class="material-icons right">arrow_drop_down</i></a></li>
-				<ul id='dropdown5' class='dropdown-content'>  
-					<li><a href = 'add_venta.php' target="blank" class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>  
-					<li><a href = "cotizacion_nueva_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>  
+				<ul id='dropdown5' class='dropdown-content'>
+					<li><a href = "cotizacion_nueva_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
+					<li><a onclick = 'nueva_venta()' class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>  
+					<li><a href = "cotizacion_nueva_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
+				    <li><a href class="indigo-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
+
 				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown4'><b><?php echo $_SESSION['user_name'];?> </b><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown4' class='dropdown-content'>
@@ -116,9 +121,10 @@ $Hoy = date('Y-m-d');
 	    			<div class="collapsible-header"><i class="material-icons">local_grocery_store</i>Ventas <i class="material-icons right">arrow_drop_down</i></div>
 		      		<div class="collapsible-body  indigo lighten-5">
 		      			<span>
-		      			  <ul>		      				
-							<li><a href = 'add_venta.php' target="blank" class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>
-		      				<li><a href="cotizacion_nueva_punto_venta.php"><i class="material-icons">local_atm</i>Cotizaciones</a></li>
+		      			  <ul>		     				
+							<li><a onclick = 'nueva_venta()' class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>
+		      				<li><a href="cotizacion_nueva_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
+					 		<li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
 					      </ul>
 					    </span>
 		      		</div>    			
@@ -133,6 +139,16 @@ $Hoy = date('Y-m-d');
 	<!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="js/materialize.min.js"></script>
 	<script>
+		function nueva_venta(){
+			//SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+	        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+	        $.post("dos_ventas.php", {
+	          //Cada valor se separa por una ,
+	          }, function(mensaje) {
+	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+	            $("#resultado_venta").html(mensaje);
+	        });
+		}
     	$(document).ready(function() {	    
 	 	$('.dropdown-button').dropdown({
 	      	  inDuration: 500,
