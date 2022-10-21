@@ -24,7 +24,7 @@ switch ($Accion) {
 
         //VERIFICAMOS QUE NO HALLA UNA COMPRA CON LOS MISMOS DATOS
 		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_cotizaciones` WHERE cotizacion='$Cotizacion' "))>0){
-            echo '<script >M.toast({html:"Ya se encuentra una Cotización con el mismo numero de Cotización.", classes: "rounded"})</script>';
+            echo '<script >M.toast({html:"Ya se encuentra una Cotización con el mismo número de Cotización.", classes: "rounded"})</script>';
             echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         }else{
             $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS Total FROM tmp_pv_detalle_cotizacion WHERE usuario = $id_user"));
@@ -37,8 +37,8 @@ switch ($Accion) {
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"La cotizacion se registró exitosamente.", classes: "rounded"})</script>';
                 #SELECCIONAMOS EL ULTIMO CORTE CREADO
-                $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id) AS id FROM punto_venta_compras WHERE usuario=$id_user"));           
-                $compra = $ultimo['id'];//TOMAMOS EL ID DEL ULTIMO CORTE
+                $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id) AS id FROM `punto_venta_cotizaciones` WHERE usuario=$id_user"));           
+                $venta = $ultimo['id'];//TOMAMOS EL ID DEL ULTIMO CORTE
 
                 //REGISTRAMOS LOS ARTICULOS EN tmp_pv_detalle_cotizacion
                 //REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
@@ -53,65 +53,58 @@ switch ($Accion) {
                         $cantidad = $detalle_articulo['cantidad'];
                         $precio_venta_u = $detalle_articulo['precio_venta_u'];
                         $importe = $detalle_articulo['importe'];
-                        // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_compra
-                        $sql = "INSERT INTO `punto_venta_detalle_compra` (id_compra, id_articulo, cantidad, precio_compra_u, importe) VALUES($compra, $id_articulo, '$cantidad', '$precio_compra_u','$importe')";
+                        // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_cotizacion
+                        $sql = "INSERT INTO `punto_venta_detalle_cotizacion` (id_venta, id_articulo, cantidad, precio_venta_u, importe) VALUES($venta, $id_articulo, '$cantidad', '$precio_venta_u','$importe')";
 
                         // VERIFICAMOS SI SE HIZO LA INSERCION
                         if (mysqli_query($conn, $sql)) {
-                            // VERIFICAMOS SI EL ARTICULO YA ESTA EN ALMACEN Y SOLO MODIFICAMOS LA CANTIDAD +
-                            if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'"))>0) {
-
-                                mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad+$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");
-                            }else{
-                                // SI NO REGISTRAMOS EL ARTICULO Y CANTIDAD
-                                mysqli_query($conn, "INSERT INTO `punto_venta_almacen_general` (id_articulo, cantidad, id_almacen, modifico, fecha_modifico) VALUES ($id_articulo, $cantidad, $almacen, $id_user, '$Fecha_hoy')");
-                            }                            
-
+                            
                             // HAY QUE CREAR UN LISTADO DE ARTICULOS QUE CAMBIARON EL PRECION CON DIFERENCIA DEL 50% DE LA UTILIDAD Y PREGUNTAR MODAL SI CAMBIAR EL PRECIO (CAMBIAR EN ARTICULOS)
                             $CincuentaP = (20/2)/100; //($utilidad/2)/100 porcentaje
                             // SELECCIONAMOS EL PRECIO DEL ARTICULO EN TURNO
                             $articulo =  mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM punto_venta_articulos WHERE id=$id_articulo")); 
                             $UtilidadCincuenta = $articulo['precio']*$CincuentaP;//LIMITE PARA LA DIFERENCIA
-                            $Diferencia = abs($articulo['precio']-$precio_compra_u); //DIFERENCIA DE PRECIOS
+                            $Diferencia = abs($articulo['precio']-$precio_venta_u); //DIFERENCIA DE PRECIOS
                             //COMPARAMOS PRECIOS
                             if ($Diferencia >= $UtilidadCincuenta) {
-                                $LISTA .= '<tr><td>'.$articulo['codigo'].'</td><td>'.$articulo['nombre'].'</td><td>$'.sprintf('%.2f', $articulo['precio']).'</td><td>$'.sprintf('%.2f', $precio_compra_u).'</td><td><div class = "col s1"><br>$</div> <input id="precioCambio'.$id_articulo.'" type="number" class="validate col s10"></td><td><a onclick="cambiar_precio('.$id_articulo.')" class="btn-small indigo waves-effect waves-light">Cambiar</a></td></tr>';
+                                $LISTA .= '<tr><td>'.$articulo['codigo'].'</td><td>'.$articulo['nombre'].'</td><td>$'.sprintf('%.2f', $articulo['precio']).'</td><td>$'.sprintf('%.2f', $precio_venta_u).'</td><td><div class = "col s1"><br>$</div> <input id="precioCambio'.$id_articulo.'" type="number" class="validate col s10"></td><td><a onclick="cambiar_precio('.$id_articulo.')" class="btn-small indigo waves-effect waves-light">Cambiar</a></td></tr>';
                             }         
 
-                            // SI SE INSERTO BORRAMOS EL ARTICULO DE tmp_pv_detalle_compra
-                            mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_compra` WHERE `tmp_pv_detalle_compra`.`id_articulo` = $id_articulo");
-                        }//FIN IF                      
-                    }//FIN WHILE
+                            // SI SE INSERTO BORRAMOS EL ARTICULO DE tmp_pv_detalle_cotizacion
+                            mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_cotizacion` WHERE `tmp_pv_detalle_cotizacion`.`id_articulo` = $id_articulo");
+                        }//FIN IF                   
+                    }//FIN WHILE 
                     // SI LA LISTA NO ESTA VACIA MOSTRAMOS LA VISTA:
                     if ($LISTA != '') {                    
-                    ?>
-                    <div class="row">
-                          <div class="row"><br><br><hr>
-                            <h4 class="red-text center">¡ADVERTENCIA!</h4><br>
-                            <h5 class="blue-text">Articulos que se tomaron a consideracion para cambio de precio:</h5>
-                          </div>
-                          <div id="cambio"></div>
-                          <form class="row">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Nombre</th>
-                                        <th>Precio Actual</th>
-                                        <th>Precio Compra</th>
-                                        <th>Precio Fijado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php echo $LISTA; ?>
-                                </tbody>
-                            </table><br><br><br>
-                            <a onclick="recargar_compra()" class="btn waves-effect waves-light pink right">Aceptar y Continuar<i class="material-icons right">done</i></a>
-                          </form>
-                    </div><hr>
-                    <?php }else{
+                        ?>
+                        <div class="row">
+                            <div class="row"><br><br><hr>
+                                <h4 class="red-text center">¡ADVERTENCIA!</h4><br>
+                                <h5 class="blue-text">Articulos que se tomaron a consideracion para cambio de precio:</h5>
+                            </div>
+                            <div id="cambio"></div>
+                            <form class="row">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Nombre</th>
+                                            <th>Precio Actual</th>
+                                            <th>Precio Venta</th>
+                                            <th>Precio Fijado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php echo $LISTA; ?>
+                                    </tbody>
+                                </table><br><br><br>
+                                <a onclick="recargar_cotizaciones()" class="btn waves-effect waves-light pink right">Aceptar y Continuar<i class="material-icons right">done</i></a>
+                            </form>
+                        </div><hr>
+                        <?php 
+                    }else{
                         //SI NO HAY NADA POR CAMBIAR SOLO REDIRECCIONAMOS
-                        echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+                        echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
                     }
                 }else{
                     echo '<script >M.toast({html:"No se encontraron articulos por agregar.", classes: "rounded"})</script>';  
@@ -124,14 +117,14 @@ switch ($Accion) {
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
 
-        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "compras_punto_venta.php"
+        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "cotizaciones_punto_venta.php"
         $Texto = $conn->real_escape_string($_POST['texto']);
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
-			//MOSTRARA LOS ALMACENES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
-			$sql = "SELECT * FROM `punto_venta_compras`  WHERE  factura LIKE '$Texto%' OR id LIKE '$Texto%' OR id_proveedor LIKE '$Texto%' LIMIT 30";	
+			//MOSTRARA LOS PRODUCTOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
+			$sql = "SELECT * FROM `punto_venta_cotizaciones`  WHERE  cotizacion LIKE '$Texto%' OR id LIKE '$Texto%' OR id_cliente LIKE '$Texto%' LIMIT 30";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
-			$sql = "SELECT * FROM `punto_venta_compras` LIMIT 30";
+			$sql = "SELECT * FROM `punto_venta_cotizaciones` LIMIT 30";
 		}//FIN else $Texto VACIO O NO
 
         // REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
@@ -140,28 +133,28 @@ switch ($Accion) {
 
 		//VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
 		if (mysqli_num_rows($consulta) == 0) {
-				echo '<script>M.toast({html:"No se encontraron compras.", classes: "rounded"})</script>';
+				echo '<script>M.toast({html:"No se encontraron cotizaciones.", classes: "rounded"})</script>';
         } else {
             //SI NO ESTA EN == 0 SI TIENE INFORMACION
             //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
             //RECORREMOS UNO A UNO LAS COMPRAS CON EL WHILE
-            while($compra = mysqli_fetch_array($consulta)) {
-                $id_user = $compra['usuario'];// ID DEL USUARIO
-                $id_proveedor = $compra['id_proveedor']; //ID DEL PROVEEDOR
+            while($cotizacion = mysqli_fetch_array($consulta)) {
+                $id_user = $cotizacion['usuario'];// ID DEL USUARIO
+                $id_cliente = $cotizacion['id_cliente']; //ID DEL CLIENTE
                 $user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
-				$proveedor = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_proveedores` WHERE id=$id_proveedor"));
+				$cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id=$id_cliente"));
 				//Output
                 $contenido .= '			
 		          <tr>
-		            <td>'.$compra['id'].'</td>
-                    <td>'.$compra['factura'].'</td>
-                    <td>'.$id_proveedor.' - '.$proveedor['nombre'].'</td>
-                    <td>'.$compra['tipo_cambio'].'</td>
-                    <td>$'.sprintf('%.2f', $compra['total']).'</td>
+		            <td>'.$cotizacion['id'].'</td>
+                    <td>'.$cotizacion['cotizacion'].'</td>
+                    <td>'.$id_cliente.' - '.$cliente['nombre'].'</td>
+                    <td>'.$cotizacion['tipo_cambio'].'</td>
+                    <td>$'.sprintf('%.2f', $cotizacion['total']).'</td>
 		            <td>'.$user['firstname'].'</td>
-		            <td>'.$compra['fecha'].'</td>
-		            <td><form method="post" action="../views/detalle_compra_pv.php"><input id="compra" name="compra" type="hidden" value="'.$compra['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
-		            <td><a onclick="borrar_compra_pv('.$compra['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+		            <td>'.$cotizacion['fecha'].'</td>
+		            <td><form method="post" action="../views/detalle_compra_pv.php"><input id="compra" name="compra" type="hidden" value="'.$cotizacion['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
+		            <td><a onclick="borrar_compra_pv('.$cotizacion['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
 
 			}//FIN while
@@ -185,45 +178,32 @@ switch ($Accion) {
     case 3:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 3 realiza:
 
-        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "compras_punto_venta.php" QUE NESECITAMOS PARA BORRAR
+        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "cotizaciones_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
     	//Obtenemos la informacion del Usuario
         $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
-        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR COMPRAS
-        if ($User['compras'] == 1) {
+        //SE VERIFICA SI EL USUARIO LOGEADO TIENE ALGÚN ALMACEN ASIGNADO PARA PODER BORRAR
+        if ($User['almacen'] > 0) {
             #SELECCIONAMOS LA INFORMACION A BORRAR
-            $compra = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_compras` WHERE id = $id"));
-            #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_compras` PARA NO PERDER INFORMACION
-            $sql = "INSERT INTO `pv_borrar_compras` (id_compra, factura, id_proveedor, tipo_cambio, total, registro, borro, fecha_borro) 
-                    VALUES($id, '".$compra['factura']."', '".$compra['id_proveedor']."', '".$compra['tipo_cambio']."', '".$compra['total']."', '".$compra['usuario']."', '$id_user','$Fecha_hoy')";
+            $cotizacion = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_cotizaciones` WHERE id = $id"));
+            #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_cotizaciones` PARA NO PERDER INFORMACION
+            $sql = "INSERT INTO `pv_borrar_cotizaciones` (id_venta, cotizacion, id_cliente, tipo_cambio, total, registro, borro, fecha_borro) 
+                    VALUES($id, '".$cotizacion['cotizacion']."', '".$cotizacion['id_cliente']."', '".$cotizacion['tipo_cambio']."', '".$cotizacion['total']."', '".$cotizacion['usuario']."', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
-                //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_compras`
-                #VERIFICAMOS QUE SE BORRE CORRECTAMENTE LA COMPRA DE `punto_venta_compras`
-                if(mysqli_query($conn, "DELETE FROM `punto_venta_compras` WHERE `punto_venta_compras`.`id` = $id")){
+                //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_cotizaciones`
+                #VERIFICAMOS QUE SE BORRE CORRECTAMENTE LA COMPRA DE `punto_venta_cotizaciones`
+                if(mysqli_query($conn, "DELETE FROM `punto_venta_cotizaciones` WHERE `punto_venta_cotizaciones`.`id` = $id")){
                     #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-                    echo '<script >M.toast({html:"Compra borrada con exito.", classes: "rounded"})</script>';
-
-                    #HAY QUE RECORRER LOS ARTICULOS DE DETALLE PARA ELIMINAR LA CANTIDAD DEL ALMACEN DE CADA UNO
-                    $sql_art =  mysqli_query($conn,"SELECT * FROM punto_venta_detalle_compra WHERE id_compra=$id");
-                    if (mysqli_num_rows($sql_art) <= 0) {
-                      echo '<script>M.toast({html:"No se encontraron articulos en la compra.", classes: "rounded"})</script>';
-                    }else{
-                      $almacen = $User['almacen']; //ID DE ALMACEN
-                      while($detalle = mysqli_fetch_array($sql_art)){
-                        $cantidad = $detalle['cantidad'];// CANTIDAD QUE HAY QUE RESTAR
-                        $id_articulo = $detalle['id_articulo'];//ID DE ARTICULO EN TURNO
-                        mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad-$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");                        
-                      }//FIN while
-                    }// FIN else
-                    echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+                    echo '<script >M.toast({html:"Cotizacion borrada con exito.", classes: "rounded"})</script>';
+                    echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
                 }else{
                     #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
                     echo '<script >M.toast({html:"Hubo un error...", classes: "rounded"})</script>';
                 }
             } 
         }else{
-            echo '<script >M.toast({html:"Permiso denegado.", classes: "rounded"});
+            echo '<script >M.toast({html:"Permiso denegado nececitas un almacen para poder borrar.", classes: "rounded"});
             M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
         }   
         break;

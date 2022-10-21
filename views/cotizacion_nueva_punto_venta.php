@@ -16,7 +16,7 @@
       <script>    
         M.toast({html: "Permiso denegado, no tiene almacen asignado", classes: "rounded"});
         M.toast({html: "Contacta a un Administrador.", classes: "rounded"});
-        setTimeout("location.href='cotizacion_punto_venta.php'", 1000);
+        setTimeout("location.href='cotizaciones_punto_venta.php'", 1000);
       </script>
       <?php
     }
@@ -202,8 +202,8 @@
           M.toast({html: 'Coloque un Precio Fijo valido.', classes: 'rounded'});
         }else{
           //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
-          $.post("../php/control_compra.php", {
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
+          $.post("../php/control_cotizacion.php", {
               //Cada valor se separa por una ,
               accion: 9,
               id_articulo: id_articulo,
