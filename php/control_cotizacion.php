@@ -153,7 +153,7 @@ switch ($Accion) {
                     <td>$'.sprintf('%.2f', $cotizacion['total']).'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td>'.$cotizacion['fecha'].'</td>
-		            <td><form method="post" action="../views/detalle_compra_pv.php"><input id="compra" name="compra" type="hidden" value="'.$cotizacion['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
+		            <td><form method="post" action="../views/detalle_cotizacion_pv.php"><input id="cotizacion" name="cotizacion" type="hidden" value="'.$cotizacion['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
 		            <td><a onclick="borrar_compra_pv('.$cotizacion['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
 
@@ -486,11 +486,11 @@ switch ($Accion) {
     case 8:///////////////           IMPORTANTE               //////////////
 
         $id_usuario = $conn->real_escape_string($_POST['usuario']);
-        #VERIFICAMOS QUE SE BORRE CORRECTAMENTE TODOS LAS ARTICULOS QUE REGITRO EL USUARIO EN `tmp_pv_detalle_compra`
-        if(mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_compra` WHERE `usuario` = $id_usuario")){
+        #VERIFICAMOS QUE SE BORRE CORRECTAMENTE TODOS LAS ARTICULOS QUE REGITRO EL USUARIO EN `tmp_pv_detalle_cotizacion`
+        if(mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_cotizacion` WHERE `usuario` = $id_usuario")){
             #SI ES ELIMINADO MANDAR MSJ CON ALERTA
             echo '<script >M.toast({html:"Si hay articulos en la lsita fueron borrados con exito.", classes: "rounded"})</script>';
-            echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+            echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         }else{
             #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
             echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";

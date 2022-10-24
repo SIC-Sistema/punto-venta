@@ -121,7 +121,7 @@ $Hoy = date('Y-m-d');
 		      		<div class="collapsible-body  indigo lighten-5">
 		      			<span>
 		      			  <ul>		     				
-							<li><a onclick = 'nueva_venta()' class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>
+							<li><a onclick = 'nueva_venta()'><i class="material-icons">monetization_on</i>Nueva Venta</a></li>
 		      				<li><a href="cotizaciones_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
 					 		<li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
 					      </ul>

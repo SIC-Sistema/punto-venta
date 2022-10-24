@@ -9,7 +9,7 @@
     //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL USUARIO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos_user
     $user_id = $_SESSION['user_id'];
     $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
-    $id = $datos_user['almacen'];
+    $id = $datos_user['ventas'];
     $datos_almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM punto_venta_almacenes WHERE id=$id"));
     if ($id == 0) {
       ?>
@@ -93,10 +93,10 @@
 
       //FUNCION QUE BORRA TODOS LOS ARTICULOS DE TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
       function borrar_lista_all(usuario){
-        var answer = confirm("Deseas cancelar la compra?");
+        var answer = confirm("Deseas cancelar la cotizacion?");
         if (answer) {
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
-          $.post("../php/control_compra.php", {
+          $.post("../php/control_cotizacion.php", {
             //Cada valor se separa por una ,
             accion: 8,
             usuario: usuario,
@@ -175,7 +175,7 @@
         if (textoCliente == 0) {
           M.toast({html: 'Seleccione un Cliente.', classes: 'rounded'});
         }else if (textoCotizacion == "") {
-          M.toast({html: 'El campo Cotización se encuentra vacío.', classes: 'rounded'});
+          M.toast({html: 'El campo Código Cotización se encuentra vacío.', classes: 'rounded'});
         }else{
           //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
@@ -264,7 +264,7 @@
             <hr>
             <div  class="row">
               <div class="col s12 m6 l6">
-                <h5 class="input-field col s4"><b>N° Cotización</b></h5>
+                <h5 class="input-field col s4"><b>Código Cotización</b></h5>
                 <div class="input-field col s7">
                   <i class="material-icons prefix">tab</i>
                   <input id="cotizacion" type="text" class="validate" data-length="50" required>

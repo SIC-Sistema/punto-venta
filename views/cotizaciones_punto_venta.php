@@ -10,7 +10,7 @@
     <title>SIC | Cotizaciones Punto Venta</title>
     <script>
       //FUNCION QUE HACE LA BUSQUEDA DE Compras (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
-      function buscar_compras(){
+      function buscar_cotizaciones(){
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
         var texto = $("input#busqueda").val();
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion"
@@ -42,7 +42,7 @@
     </script>
   </head>
   <main>
-  <body onload="buscar_compras();">
+  <body onload="buscar_cotizaciones();">
     <div class="container"><br><br>
       <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR COMPRA    ///////   -->
       <a href="cotizacion_nueva_punto_venta.php" class="waves-effect waves-light btn pink left right">REGISTRAR COTIZACION<i class="material-icons prefix left">add</i></a>
@@ -57,8 +57,8 @@
           <div class="row">
             <div class="input-field col s12">
               <i class="material-icons prefix">search</i>
-              <input id="busqueda" name="busqueda" type="text" onkeyup="buscar_compras();">
-              <label for="busqueda">Buscar(N° Compra, N° Proveedor, N° Factura)</label>
+              <input id="busqueda" name="busqueda" type="text" onkeyup="buscar_cotizaciones();">
+              <label for="busqueda">Buscar(N° Cotización, Código Cotización, N° Cliente)</label>
             </div>
           </div>
         </form>
@@ -69,8 +69,8 @@
           <thead>
             <tr>
               <th>N°</th>
-              <th>N° Factura</th>
-              <th>Proveedor</th>
+              <th>Código Cotización</th>
+              <th>N° Cliente</th>
               <th>Tipo Cambio</th>
               <th>Total</th>
               <th>Registro</th>
