@@ -32,6 +32,20 @@ if (isset($_POST['cotizacion']) == false) {
       $Cotizacion = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_cotizaciones WHERE id=$id_cotizacion"));
       ?>
     </head>
+    <script>
+        //FUNCION QUE ABRE EL MODAL PARA EDITAR LA CANTIDAD DEL ARTICULO SELECCIONADO.
+        function editarCotizacion(id){
+            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_almacen.php" PARA MOSTRAR EL MODAL
+            $.post("modal_editar_cotizacion.php", {
+                //Cada valor se separa por una ,
+                id: id,
+                // almacen: almacen,
+            }, function(mensaje){
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_almacen.php"
+                $("#modal").html(mensaje);
+            });//FIN post
+        }//FIN function
+    </script>
     <body>
       <!-- DENTRO DE ESTE DIV VA TODO EL CONTENIDO Y HACE QUE SE VEA AL CENTRO DE LA PANTALLA.-->
     	<div class="container">
@@ -58,6 +72,8 @@ if (isset($_POST['cotizacion']) == false) {
           <h3 class="hide-on-med-and-down">Detalles:</h3>
           <h5 class="hide-on-large-only">Detalles:</h5>
         </div>
+        <!-- CREAMOS UN DIV EL CUAL TENGA id = "modal"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+        <div id="modal"></div>
         <div class="row">
           <table>
             <thead>
@@ -73,6 +89,7 @@ if (isset($_POST['cotizacion']) == false) {
                 <th>Unidad</th>
                 <th>Precio Venta</th>
                 <th>Importe</th>
+                <th>Editar</th>
               </tr>
             </thead>
             <tbody>
@@ -99,6 +116,7 @@ if (isset($_POST['cotizacion']) == false) {
                       <td><?php echo $detalle['cantidad'].' '.$articulo['unidad']; ?></td>
                       <td>$<?php echo sprintf('%.2f', $detalle['precio_venta_u']); ?></td>
                       <td>$<?php echo sprintf('%.2f', $detalle['importe']); ?></td>
+                      <td><a onclick="editarCotizacion(<?php echo $articulo['id'] ?>);" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">edit</i></a></td>
                     </tr>
                   <?php
                 }//FIN while
