@@ -26,22 +26,22 @@
                 <hr>
                 <h6 class="center"><b>Número de Artículos <?php echo $consulta['num'];?> </b></h6><br>
                 <h6 class="indigo-text"><b>Formas de pago:</b></h6>
-                <b>Efectivo</b><br>
-                <b>A Credito</b><br>
-                <b>A Banco</b><br>
-                <hr>
+                <b class="col s5">Efectivo</b><div class="col s7"><input type="number" id="efectivo" value="0.00"></div>
+                <b class="col s5">A Credito</b><div class="col s7"><input type="number" id="credito" value="0.00"></div>
+                <b class="col s5">A Banco</b><div class="col s7"><input type="number" id="banco" value="0.00"></div>
+                <br><br><br><br><br><br><br><hr>
             </div>
             <div class="col s12 m7">
-                <font face="times new roman">
+                <font face="courier new">
                 <hr>
                 <h6 class="indigo-text center"><b>Total a pagar:</b></h6>
                 <hr>
-                <h3 class="indigo-text center" ><b>$<?php echo sprintf('%.2f', $consulta['suma']);?> </b></h3>
+                <h2 class="indigo-text center" ><b>$<?php echo sprintf('%.2f', $consulta['suma']);?> </b></h2>
                 <hr>
                 <hr>
                 <h6 class="green-text center"><b>Cambio:</b></h6>
                 <hr>
-                <h3 class="green-text center" ><b>$<?php echo sprintf('%.2f', $consulta['suma']);?> </b></h3>
+                <h2 class="green-text center" ><b>$<?php echo sprintf('%.2f', $consulta['suma']);?> </b></h2>
                 </font>
                 <hr>
             </div>
