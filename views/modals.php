@@ -5,6 +5,9 @@
   function recargar_compra() {
     setTimeout("location.href='compras_punto_venta.php'", 800);
   }
+  function recargar_venta() {
+    setTimeout("location.href='ventas_punto_venta.php'", 800);
+  }
   function recargar_proveedores() {
     setTimeout("location.href='proveedores_punto_venta.php'", 800);
   }

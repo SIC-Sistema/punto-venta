@@ -8,7 +8,8 @@ date_default_timezone_set('America/Mexico_City');
 $id_user = $_SESSION['user_id'];// ID DEL USUARIO LOGEADO
 $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
 $num = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM punto_venta_ventas WHERE usuario = $id_user AND estatus = 0"));
-if ($num>1) {
+if ($num>1
+) {
     echo '<script >M.toast({html:"Solo se pueden tener 2 Ventas en proceso.", classes: "rounded"})</script>';
     echo '<script >M.toast({html:"Pausa o termina una venta para poder abrir una nueva.", classes: "rounded"})</script>';
 }else{
@@ -22,7 +23,22 @@ if ($num>1) {
 
         //redireccionar
         if ($num == 1) {
-            // target _blank
+            ?>
+            <script>
+              var a = document.createElement("a");
+                a.target = "_blank";
+                a.href = "../views/add_venta.php?id="+<?php echo $Venta; ?>;
+                a.click();
+            </script>
+            <?php   
+        }else{
+            ?>
+            <script>
+              var a = document.createElement("a");
+                a.href = "../views/add_venta.php?id="+<?php echo $Venta; ?>;
+                a.click();
+            </script>
+            <?php   
         }
     }
 }

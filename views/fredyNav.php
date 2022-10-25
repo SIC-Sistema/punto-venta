@@ -24,7 +24,7 @@ $Hoy = date('Y-m-d');
 		<div class="nav-wrapper container">
 			<a  class="brand-logo" href="home.php"><img  class="responsive-img" style="width: 60px; height: 58px;" src="../img/LogoSIC.png"></a>
 			<!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_venta"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-        	<div class="row" id="resultado_venta">
+        	<div  id="resultado_venta"></div>
 			<a href="#" data-target="menu-responsive" class="sidenav-trigger">
 				<i class="material-icons">menu</i>
 			</a>

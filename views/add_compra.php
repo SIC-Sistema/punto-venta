@@ -157,7 +157,7 @@
         });//FIN post
       }
 
-      //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
+      //FUNCION QUE HACE LA INSERCION DE LA VENTA (SE ACTIVA AL PRECIONAR UN BOTON)
       function insert_compra() {
         almacen = <?php echo $datos_user['almacen']; ?>;
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
@@ -226,8 +226,8 @@
         <h5 class="hide-on-large-only">Registrar Compra</h5>
       </div>
       <div class="row" >
-      <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-       <div class="row" id="resultado_insert">
+        <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+        <div class="row" id="resultado_insert">
         <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
         <form class="row col s12" name="formCompras">
             <!-- CAJA DE SELECCION DE PROVEEDORES -->
