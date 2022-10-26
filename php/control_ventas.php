@@ -7,6 +7,7 @@ include('is_logged.php');
 date_default_timezone_set('America/Mexico_City');
 $id_user = $_SESSION['user_id'];// ID DEL USUARIO LOGEADO
 $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
+$Hora = date('H:i:s');
 $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$id_user"));
 $almacen = $datos_user['almacen'];
 
@@ -20,109 +21,59 @@ switch ($Accion) {
     case 0:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 0 realiza:
 
-        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA INSERTAR
-        $Proveedor = $conn->real_escape_string($_POST['valorProveedor']);   
-        $Factura = $conn->real_escape_string($_POST['valorFactura']);   
-        $TipoCambio = $conn->real_escape_string($_POST['valorTipoCambio']); 
+        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA ACTUALIOZAR LA INFO DE LA VENTA
+        $id_venta = $conn->real_escape_string($_POST['id_venta']);   
+        $cliente = $conn->real_escape_string($_POST['cliente']);   
+        $tipo_cambio = $conn->real_escape_string($_POST['tipo_cambio']);  
+        $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS Total FROM `tmp_pv_detalle_venta` WHERE usuario = $id_user AND id_venta = $id_venta"));
+        $Total = $sql_total['Total']; 
 
-        //VERIFICAMOS QUE NO HALLA UNA COMPRA CON LOS MISMOS DATOS
-		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_compras` WHERE factura='$Factura' "))>0){
-            echo '<script >M.toast({html:"Ya se encuentra una compra con el mismo numero de Factura.", classes: "rounded"})</script>';
-            echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+        $sql = "UPDATE `punto_venta_ventas` SET id_cliente = '$cliente', fecha= '$Fecha_hoy', hora = '$Hora', tipo_cambio = '$tipo_cambio', total = '$Total', usuario = '$id_user', estatus = 2  WHERE id = $id_venta";
+
+		//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+        if(mysqli_query($conn, $sql)){
+            echo '<script >M.toast({html:"La venta se termino exitosamente.", classes: "rounded"})</script>';
+            //REGISTRAMOS LOS ARTICULOS EN punto_venta_detalle_venta
+            //REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+            $consulta = mysqli_query($conn, "SELECT * FROM `tmp_pv_detalle_venta` WHERE usuario = $id_user AND id_venta = $id_venta"); 
+            //VERIFICAMOS SI HAY ARTICULOS POR AGREGAR
+            if(mysqli_num_rows($consulta)>0){
+                //RECORREMOS CON UN WHILE UNO POR UNO LOS ARTICULOS
+                while($detalle_articulo = mysqli_fetch_array($consulta)){
+                    $id_articulo = $detalle_articulo['id_articulo'];
+                    $cantidad = $detalle_articulo['cantidad'];
+                    $precio_venta = $detalle_articulo['precio_venta'];
+                    $importe = $detalle_articulo['importe'];
+                    // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_venta
+                    $sql = "INSERT INTO `punto_venta_detalle_venta` (id_venta, id_producto, cantidad, precio_venta, importe) VALUES($id_venta, $id_articulo, '$cantidad', '$precio_venta','$importe')";
+
+                    // VERIFICAMOS SI SE HIZO LA INSERCION
+                    if (mysqli_query($conn, $sql)) {
+                        // VERIFICAMOS SI EL ARTICULO YA ESTA EN ALMACEN Y SOLO MODIFICAMOS LA CANTIDAD -
+                        if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'"))>0) {
+                            mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad-$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");
+                        }//FIN if esta en ALMACEN
+                        // SI SE INSERTO BORRAMOS EL ARTICULO DE tmp_pv_detalle_venta
+                        mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_venta` WHERE `tmp_pv_detalle_venta`.`id_articulo` = $id_articulo AND id_venta = $id_venta");
+                    }//FIN if insert              
+                }//FIN while
+                $descripcion = 'Venta N°'.$id_venta;
+
+                if ($tipo_cambio == 'Credito') {
+                    // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
+                }
+                $cliente = ($cliente == 0)? $cliente: $cliente+100000;
+                #--- CREAMOS EL SQL PARA LA INSERCION ---
+                $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
+                #--- SE INSERTA EL PAGO -----------
+                if(mysqli_query($conn, $sql)){
+                    echo '<script>M.toast({html:"El pago se dió de alta satisfcatoriamente.", classes: "rounded"})</script>';
+                 }// FIN if pago
+            }//FIN if consulta
+            echo '<script>recargar_venta();</script>';
         }else{
-            $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS Total FROM tmp_pv_detalle_venta WHERE usuario = $id_user"));
-            $Total = $sql_total['Total'];
-
-            // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-            $sql = "INSERT INTO `punto_venta_compras` (factura, id_proveedor, total, tipo_cambio, usuario, fecha) 
-               VALUES('$Factura', '$Proveedor', '$Total', '$TipoCambio','$id_user','$Fecha_hoy')";
-            //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-			if(mysqli_query($conn, $sql)){
-				echo '<script >M.toast({html:"La compra se registró exitosamente.", classes: "rounded"})</script>';
-                #SELECCIONAMOS EL ULTIMO CORTE CREADO
-                $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id) AS id FROM punto_venta_compras WHERE usuario=$id_user"));           
-                $compra = $ultimo['id'];//TOMAMOS EL ID DEL ULTIMO CORTE
-
-                //REGISTRAMOS LOS ARTICULOS EN punto_venta_detalle_compra
-                //REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-                $consulta = mysqli_query($conn, "SELECT * FROM tmp_pv_detalle_venta WHERE usuario = $id_user"); 
-                //VERIFICAMOS SI HAY ARTICULOS POR AGREGAR
-                if(mysqli_num_rows($consulta)>0){
-                    $LISTA = '';
-                    $almacen = $conn->real_escape_string($_POST['almacen']); //ID DE ALMACEN
-                    //RECORREMOS CON UN WHILE UNO POR UNO LOS ARTICULOS
-                    while($detalle_articulo = mysqli_fetch_array($consulta)){
-                        $id_articulo = $detalle_articulo['id_articulo'];
-                        $cantidad = $detalle_articulo['cantidad'];
-                        $precio_compra_u = $detalle_articulo['precio_compra_u'];
-                        $importe = $detalle_articulo['importe'];
-                        // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_compra
-                        $sql = "INSERT INTO `punto_venta_detalle_compra` (id_compra, id_articulo, cantidad, precio_compra_u, importe) VALUES($compra, $id_articulo, '$cantidad', '$precio_compra_u','$importe')";
-
-                        // VERIFICAMOS SI SE HIZO LA INSERCION
-                        if (mysqli_query($conn, $sql)) {
-                            // VERIFICAMOS SI EL ARTICULO YA ESTA EN ALMACEN Y SOLO MODIFICAMOS LA CANTIDAD +
-                            if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'"))>0) {
-
-                                mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad+$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");
-                            }else{
-                                // SI NO REGISTRAMOS EL ARTICULO Y CANTIDAD
-                                mysqli_query($conn, "INSERT INTO `punto_venta_almacen_general` (id_articulo, cantidad, id_almacen, modifico, fecha_modifico) VALUES ($id_articulo, $cantidad, $almacen, $id_user, '$Fecha_hoy')");
-                            }                            
-
-                            // HAY QUE CREAR UN LISTADO DE ARTICULOS QUE CAMBIARON EL PRECION CON DIFERENCIA DEL 50% DE LA UTILIDAD Y PREGUNTAR MODAL SI CAMBIAR EL PRECIO (CAMBIAR EN ARTICULOS)
-                            $CincuentaP = (20/2)/100; //($utilidad/2)/100 porcentaje
-                            // SELECCIONAMOS EL PRECIO DEL ARTICULO EN TURNO
-                            $articulo =  mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM punto_venta_articulos WHERE id=$id_articulo")); 
-                            $UtilidadCincuenta = $articulo['precio']*$CincuentaP;//LIMITE PARA LA DIFERENCIA
-                            $Diferencia = abs($articulo['precio']-$precio_compra_u); //DIFERENCIA DE PRECIOS
-                            //COMPARAMOS PRECIOS
-                            if ($Diferencia >= $UtilidadCincuenta) {
-                                $LISTA .= '<tr><td>'.$articulo['codigo'].'</td><td>'.$articulo['nombre'].'</td><td>$'.sprintf('%.2f', $articulo['precio']).'</td><td>$'.sprintf('%.2f', $precio_compra_u).'</td><td><div class = "col s1"><br>$</div> <input id="precioCambio'.$id_articulo.'" type="number" class="validate col s10"></td><td><a onclick="cambiar_precio('.$id_articulo.')" class="btn-small indigo waves-effect waves-light">Cambiar</a></td></tr>';
-                            }         
-
-                            // SI SE INSERTO BORRAMOS EL ARTICULO DE tmp_pv_detalle_venta
-                            mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_venta` WHERE `tmp_pv_detalle_venta`.`id_articulo` = $id_articulo");
-                        }//FIN IF                      
-                    }//FIN WHILE
-                    // SI LA LISTA NO ESTA VACIA MOSTRAMOS LA VISTA:
-                    if ($LISTA != '') {                    
-                    ?>
-                    <div class="row">
-                          <div class="row"><br><br><hr>
-                            <h4 class="red-text center">¡ADVERTENCIA!</h4><br>
-                            <h5 class="blue-text">Articulos que se tomaron a consideracion para cambio de precio:</h5>
-                          </div>
-                          <div id="cambio"></div>
-                          <form class="row">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Nombre</th>
-                                        <th>Precio Actual</th>
-                                        <th>Precio Compra</th>
-                                        <th>Precio Fijado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php echo $LISTA; ?>
-                                </tbody>
-                            </table><br><br><br>
-                            <a onclick="recargar_compra()" class="btn waves-effect waves-light pink right">Aceptar y Continuar<i class="material-icons right">done</i></a>
-                          </form>
-                    </div><hr>
-                    <?php }else{
-                        //SI NO HAY NADA POR CAMBIAR SOLO REDIRECCIONAMOS
-                        echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-                    }
-                }else{
-                    echo '<script >M.toast({html:"No se encontraron articulos por agregar.", classes: "rounded"})</script>';  
-                }//FIN ELSE
-			}else{
-                echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';   
-            }//FIN else DE ERROR            
-        }// FIN else DE BUSCAR CATEGORIA IGUAL
+            echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';            
+        }// FIN else error
         break;
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
@@ -320,7 +271,7 @@ switch ($Accion) {
                     <h5 class="right"><b>Número de Artículos:  <?php echo $aux;?> </b></h5><br><br><br><br>
                     <a onclick="borrar_lista_all()" class="waves-effect waves-light btn-large indigo lighten-5 red-text right"><b>Cancelar<i class="material-icons left">remove_shopping_cart</i></b></a>
                     <a class="right white-text"> <br>_ _ _ _</a>
-                    <a onclick="insert_venta()" class="waves-effect waves-light btn-large indigo lighten-5 teal-text right"><b>Cobrar<i class="material-icons left">add_shopping_cart</i></b></a>
+                    <a onclick="modal_venta()" class="waves-effect waves-light btn-large indigo lighten-5 teal-text right"><b>Cobrar<i class="material-icons left">local_atm</i></b></a>
                 </div>
                 <div class="hide-on-small-only col s2"><br></div>
                 <div class="col s6 m4 row">
@@ -371,7 +322,6 @@ switch ($Accion) {
         if (!$consulta) {
             $consulta['codigo'] =''; $consulta['nombre'] =''; $consulta['precio'] = 0; $consulta['id'] = '';
         } 
-
         $config = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_config"));
         $utilidad = $config['utilidad'];
         $precio_compra = $consulta['precio'];
@@ -481,7 +431,7 @@ switch ($Accion) {
                     <h5 class="right"><b>Número de Artículos:  <?php echo $aux;?> </b></h5><br><br><br><br>
                     <a onclick="borrar_lista_all()" class="waves-effect waves-light btn-large indigo lighten-5 red-text right"><b>Cancelar<i class="material-icons left">remove_shopping_cart</i></b></a>
                     <a class="right white-text"> <br>_ _ _ _</a>
-                    <a onclick="insert_venta()" class="waves-effect waves-light btn-large indigo lighten-5 teal-text right"><b>Cobrar<i class="material-icons left">add_shopping_cart</i></b></a>
+                    <a onclick="modal_venta()" class="waves-effect waves-light btn-large indigo lighten-5 teal-text right"><b>Cobrar<i class="material-icons left">add_shopping_cart</i></b></a>
                 </div>
                 <div class="hide-on-small-only col s2"><br></div>
                 <div class="col s6 m4 l4 row">

@@ -149,25 +149,71 @@ if (isset($_GET['id']) == false) {
         }//FIN IF
       };//FIN function
 
-      function insert_venta() {
+      function modal_venta() {
       	var exist = $("input#mayor_exist").val();
       	if (exist) {
-          	M.toast({html: '! NO SE PUEDE REALIZAR LA VENTA ¡', classes: 'rounded'});
-          	M.toast({html: 'Alguno de los articulos superan su existencia', classes: 'rounded'});
+          M.toast({html: '! NO SE PUEDE REALIZAR LA VENTA ¡', classes: 'rounded'});
+          M.toast({html: 'Alguno de los articulos superan su existencia', classes: 'rounded'});
       	}else{
       		//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_almacen.php" PARA MOSTRAR EL MODAL
 	        $.post("modal_venta.php", {
 	          //Cada valor se separa por una ,
-	            id: 1,
-	            almacen: 1,
 	            id_venta: <?php echo $Venta; ?>,
 	          }, function(mensaje){
 	              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_almacen.php"
 	              $("#modal").html(mensaje);
 	        });//FIN post
-	      	}
-
+	      }//FIN else
       }
+
+      //FUNCION Calcula el Cambio
+      function cambio(){
+        //RECIBIMOS LOS VALORES DE LOS INPUTS AFECTADOS
+        var total = $("input#total").val();
+        var efectivo = $("input#efectivoV").val();
+        var credito = $("input#creditoV").val();
+        var banco = $("input#bancoV").val(); 
+        var Efectivo = parseFloat(efectivo);
+        var Credito = parseFloat(credito);
+        var Banco = parseFloat(banco);
+        var Total = parseFloat(total);
+        document.getElementById("cambio").value ='$'+((-1)*(Total-Efectivo-Banco-Credito)).toFixed(2);
+      }// FIN function
+
+      function insert_venta(){
+      	var efectivo = $("input#efectivoV").val();
+        var credito = $("input#creditoV").val();
+        var banco = $("input#bancoV").val(); 
+        var cliente = $("select#cliente").val(); 
+
+        if (efectivo > 0) {
+        	tipo_cambio = 'Efectivo';
+        	cantidadPago = efectivo;
+        }else if (credito > 0) {
+        	tipo_cambio = 'Credito';
+        	cantidadPago = credito;
+        }else if (banco > 0) {
+        	tipo_cambio = 'Banco';
+        	cantidadPago = banco;
+        }
+
+        if (efectivo == 0 && credito== 0 && banco== 0) {
+          M.toast({html: 'Ingrese una forma de pago.', classes: 'rounded'});
+        }else{
+        	//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+          $.post("../php/control_ventas.php", {
+            //Cada valor se separa por una ,
+            accion: 0,
+            cliente: cliente,
+            tipo_cambio: tipo_cambio,
+            cantidadPago: cantidadPago,
+	          id_venta: <?php echo $Venta; ?>,
+          }, function(mensaje) {
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+            $("#tablaArticuloVenta").html(mensaje);
+          }); //FIN post
+        }
+      }// FIN function
 	    </script>
     </head>
     <body  onload="tmp_articulos(0)">

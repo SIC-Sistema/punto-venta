@@ -131,7 +131,7 @@
         var Total_Aux = $("input#totalCompra").val();        
         var Importe_Aux = $("input#importe"+id_art).val();
         var CantidadA = parseFloat(CantidadA_Aux);
-        var PrecioC = parseFloat(PrecioC_Aux);
+        var PrecioC = parseFloat(PrecioC_Aux); 
         var Importe = parseFloat(Importe_Aux); 
         var Total = parseFloat(Total_Aux);
 
@@ -161,7 +161,7 @@
       function insert_compra() {
         almacen = <?php echo $datos_user['almacen']; ?>;
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-        var textoFactura = $("input#factura").val();//ej:LA VARIABLE "textoFactura" GUARDAREMOS LA INFORMACION QUE ESTE EN EL SELECT QUE TENGA EL id = "codigo"
+        var textoFactura = $("input#factura").val();//ej:LA VARIABLE "textoFactura" GUARDAREMOS LA INFORMACION QUE ESTE EN EL SELECT QUE TENGA EL id = "factura"
         var textoProveedor = $("select#proveedor").val();
 
         if(document.getElementById('cambio').checked==true){
