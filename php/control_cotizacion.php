@@ -324,9 +324,9 @@ switch ($Accion) {
         $sql = "UPDATE `tmp_pv_detalle_cotizacion` SET cantidad = '$CantidadA', precio_venta_u = '$PrecioU', importe= '$Importe' WHERE id_articulo = $id_articulo AND usuario = $id_usuario";
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
         if(mysqli_query($conn, $sql)){
-            #echo '<script >M.toast({html:"Las cantidades se actualizaron con exito.", classes: "rounded"})</script>';    
+            echo '<script >M.toast({html:"Las cantidades se actualizaron con exito.", classes: "rounded"})</script>';    
         }else{
-            #echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>'; 
+            echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>'; 
         }//FIN else DE ERROR
         break;
     case 6:///////////////           IMPORTANTE               ///////////////
@@ -519,52 +519,63 @@ switch ($Accion) {
         if($informacion_usuario ='Administrador'){
 
             //RECIBIMOS TODAS LAS VARIABLES DES DE EL ARCHIVO modal_almacen.php
-            $id_articulo = $conn->real_escape_string($_POST['id_articulo']);
-            // $almacen = $conn->real_escape_string($_POST['almacen']);
+            $id_cotizacion = $conn->real_escape_string($_POST['id_cotizacion']);
             $DesCambio = $conn->real_escape_string($_POST['descripcion_cambio']);
             $Cantidad = $conn->real_escape_string($_POST['cantidadCambiar']);
             $Precio = $conn->real_escape_string($_POST['precioCambiar']);
 
+
+            //DECLARAMOS LAS VARIABLES QUE NECECITAMOS
+
+            //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_detalle_cotizacion` Y ASIGNAMOS EL ARRAY A UNA VARIABLE $cotizacion
+            $detalle_cotizacion = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id=$id_cotizacion LIMIT 1"));
+            //CON LA VARIABLE $id_articulo DECIMOS NOS TRAEMOS LA INFORMACION DEL ID DEL ARTICULO PARA SER UTILIZADA 
+            $id_articulo=$detalle_cotizacion['id_articulo'];
+            $id_detalle=$detalle_cotizacion['id'];
+
             //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ALMACEN Y LA GUARDAMOS EN UNA VARIABLE
             $sql_update1 = "UPDATE `punto_venta_articulos` SET precio = '$Precio' WHERE id = $id_articulo";
-            $sql_update2 = "UPDATE `punto_venta_detalle_cotizacion` SET cantidad = '$Cantidad' WHERE id_articulo = $id_articulo";
-        
-            //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ALMACEN Y LA GUARDAMOS EN UNA VARIABLE
-            // $id_venta = "SELECT id_venta FROM `punto_venta_detalle_cotizacion` WHERE id_articulo = $id_articulo LIMIT 1";
-
-            //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ALMACEN Y LA GUARDAMOS EN UNA VARIABLE
-            // $Codigo_cotizacion = "SELECT cotizacion FROM `punto_venta_cotizaciones` WHERE id = $id_venta";
+            $up_1 = "UPDATE `punto_venta_detalle_cotizacion` SET precio_venta_u = '$Precio' WHERE id = $id_detalle";
+            $sql_update2 = "UPDATE `punto_venta_detalle_cotizacion` SET cantidad = '$Cantidad' WHERE id = $id_detalle";
+            // $sql_update_importe = "UPDATE `punto_venta_detalle_cotizacion` SET importe = ('$Cantidad'*'$Precio')WHERE id_articulo = $id_articulo";
 
             //VERIFICAMOS QUE LAS SENTECIAS SON EJECUTADAS CON EXITO!
-            if(mysqli_query($conn, $sql_update1)){
-                if(mysqli_query($conn, $sql_update2)){
-                    $sql_insert = "INSERT INTO `punto_venta_modificaciones_cotizacion` (descripcion_cambio, producto, codigo_cotizacion, usuario, fecha) VALUES('$DesCambio',$id_articulo,10,$id_user,'$Fecha_hoy')";
-                    if(mysqli_query($conn, $sql_insert)){
-                        echo 'Los datos se actualizarón con exito.';
-                        ?>
-                        <script>
-                            // REDIRECCIONAMOS 
-                            setTimeout("location.href='../views/cotizaciones_punto_venta.php'", 500);
-                        </script>
-                        <?php
+            if(mysqli_query($conn, $up_1)){
+                if(mysqli_query($conn, $sql_update1)){
+                    if(mysqli_query($conn, $sql_update2)){
+                        $sql_insert = "INSERT INTO `punto_venta_modificaciones_cotizacion` (descripcion_cambio, producto, codigo_cotizacion, usuario, fecha) VALUES('$DesCambio',$id_articulo,10,$id_user,'$Fecha_hoy')";
+                        if(mysqli_query($conn, $sql_insert)){
+                            echo 'Los datos se actualizarón con exito.';
+                            ?>
+                            <script>
+                                // REDIRECCIONAMOS 
+                                setTimeout("location.href='../views/cotizaciones_punto_venta.php'", 500);
+                            </script>
+                            <?php
+                        }else{
+                            echo 'Ha ocurrido un error en el INSERT...';
+                        }
+                    
                     }else{
-                        echo 'Ha ocurrido un error en el INSERT...';
-                    }
+                        echo 'Ha ocurrio un error UPDATE2...';
+                    }             
                 }else{
-                    echo 'Ha ocurrio un error UPDATE2...';
-                }             
+                    echo 'Ha ocurrio un error UPDATE1...';	
+                }//FIN else DE ERROR
             }else{
-                echo 'Ha ocurrio un error UPDATE1...';	
-            }//FIN else DE ERROR
-        }else{
-            echo '<script >M.toast({html:"Solo los Administradores pueden editar...", classes: "rounded"})</script>';
-            ?>
-            <script>
-                // REDIRECCIONAMOS 
-                setTimeout("location.href='../views/cotizaciones_punto_venta.php'", 500);
-            </script>
-            <?php
-        }
+                echo '<script >M.toast({html:"Solo los Administradores pueden editar...", classes: "rounded"})</script>';
+                ?>
+                <script>
+                    // REDIRECCIONAMOS 
+                    setTimeout("location.href='../views/cotizaciones_punto_venta.php'", 500);
+                </script>
+                <?php
+            }
+                
+            }else{
+                echo 'Ha ocurrido un error en el INSERT precio en detalle...';
+            }
+            
     break;
 }// FIN switch
 mysqli_close($conn);

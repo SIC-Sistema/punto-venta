@@ -1,7 +1,7 @@
 <?php
   //ARCHIVO QUE CONTIENE LA VARIABLE CON LA CONEXION A LA BASE DE DATOS
   include('../php/conexion.php');
-  // POR EL METODO POST ¿RECIBIMOS EL ID DEL ARTICULO DESDE EL ARCHIVO views/detalle_cotizacion_pv.php
+  // POR EL METODO POST RECIBIMOS EL ID DEL ARTICULO DESDE EL ARCHIVO views/detalle_cotizacion_pv.php
   $id = $conn->real_escape_string($_POST['id']);
   //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_detalle_cotizacion` Y ASIGNAMOS EL ARRAY A UNA VARIABLE $cotizacion
   $cotizacion = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id=$id LIMIT 1"));
@@ -9,7 +9,7 @@
   $id_articulo=$cotizacion['id_articulo'];
 
   //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_articulos Y ASIGNAMOS EL ARRAY A UNA VARIABLE $articulo
-  $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id= $id_articulob"));
+  $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id= $id_articulo"));
   //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_detalle_cotizacion` Y ASIGNAMOS EL ARRAY A UNA VARIABLE $detalle
   $detalle = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id=$id"));
   
@@ -55,8 +55,8 @@
                     <input id="descripcion_cambio" name="descripcion_cambio" type="text" class="validate" data-length="200" required>
                     <label for="descripcion_cambio">¿Cuál es el motivo del cambio?:</label>
                 </div>
-                <!-- PARA DIRIGIR HACIA CONTROL ALMACEN CON EL VALOR >>|10|<< -->
-                <input id="id_articulo" name="id_articulo" type="hidden" value="<?php echo $id ?>">
+                <!-- PARA DIRIGIR HACIA CONTROL COTIZACION CON EL VALOR >>|10|<< -->
+                <input id="id_cotizacion" name="id_cotizacion" type="hidden" value="<?php echo $id ?>">
                 <!-- <input id="almacen" name="almacen" type="hidden" value="<?php /* echo $id_almacen  */?>"> -->
                 <input id="accion" name="accion" type="hidden" value="10">
             </div><br><br>
