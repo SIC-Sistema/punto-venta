@@ -1,15 +1,17 @@
 <?php
   //ARCHIVO QUE CONTIENE LA VARIABLE CON LA CONEXION A LA BASE DE DATOS
   include('../php/conexion.php');
-  // POR EL METODO POST ¿RECIBIMOS EL ID DEL ARTICULO DESDE EL ARCHIVO views/almacen_punto_venta.php
+  // POR EL METODO POST ¿RECIBIMOS EL ID DEL ARTICULO DESDE EL ARCHIVO views/detalle_cotizacion_pv.php
   $id = $conn->real_escape_string($_POST['id']);
-  //$id_almacen = $conn->real_escape_string($_POST['almacen']);
-  //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_articulos` Y ASIGNAMOS EL ARRAY A UNA VARIABLE $articulo
-  $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id=$id"));
-  //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_almacen_general` Y ASIGNAMOS EL ARRAY A UNA VARIABLE $almacen
-  //$almacen = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo=$id AND id_almacen = $id_almacen"));
+  //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_detalle_cotizacion` Y ASIGNAMOS EL ARRAY A UNA VARIABLE $cotizacion
+  $cotizacion = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id=$id LIMIT 1"));
+  //CON LA VARIABLE $id_articulo DECIMOS NOS TRAEMOS LA INFORMACION DEL ID DEL ARTICULO PARA SER UTILIZADA 
+  $id_articulo=$cotizacion['id_articulo'];
+
+  //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_articulos Y ASIGNAMOS EL ARRAY A UNA VARIABLE $articulo
+  $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id= $id_articulob"));
   //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL ARTICULO EN LA BD `punto_venta_detalle_cotizacion` Y ASIGNAMOS EL ARRAY A UNA VARIABLE $detalle
-  $detalle = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id_articulo=$id"));
+  $detalle = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id=$id"));
   
 ?>
 <script>

@@ -25,6 +25,7 @@ if (isset($_POST['cotizacion']) == false) {
         <script>    
           M.toast({html: "Permiso denegado.", classes: "rounded"});
           M.toast({html: "Contacta a un Administrador.", classes: "rounded"});
+          M.toast({html: "No tiene el permiso de Ventas.", classes: "rounded"});
           setTimeout("location.href='cotizaciones_punto_venta.php'", 1000);
         </script>
         <?php
@@ -100,6 +101,7 @@ if (isset($_POST['cotizacion']) == false) {
               }else{
                 while($detalle = mysqli_fetch_array($sql_art)){
                   $id_articulo = $detalle['id_articulo'];
+                  $id_detalle_cotizacion=$detalle['id'];
                   $articulo = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_articulos WHERE id=$id_articulo"));
                   ?>
                   <!-- Output -->
@@ -116,7 +118,7 @@ if (isset($_POST['cotizacion']) == false) {
                       <td><?php echo $detalle['cantidad'].' '.$articulo['unidad']; ?></td>
                       <td>$<?php echo sprintf('%.2f', $detalle['precio_venta_u']); ?></td>
                       <td>$<?php echo sprintf('%.2f', $detalle['importe']); ?></td>
-                      <td><a onclick="editarCotizacion(<?php echo $articulo['id'] ?>);" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">edit</i></a></td>
+                      <td><a onclick="editarCotizacion(<?php echo $detalle['id']?>);" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">edit</i></a></td>
                     </tr>
                   <?php
                 }//FIN while

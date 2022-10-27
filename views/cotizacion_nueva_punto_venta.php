@@ -10,8 +10,9 @@
     $user_id = $_SESSION['user_id'];
     $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$user_id"));
     $id = $datos_user['ventas'];
+    $id_alamcen = $datos_user['almacen'];
     $datos_almacen = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM punto_venta_almacenes WHERE id=$id"));
-    if ($id == 0) {
+    if ($id_alamcen == 0) {
       ?>
       <script>    
         M.toast({html: "Permiso denegado, no tiene almacen asignado", classes: "rounded"});
@@ -144,7 +145,7 @@
         //REALIZAREMOS LOS CAMBIOS EN LA BASE DE DATOS
         //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
-        $.post("../php/control_compra.php", {
+        $.post("../php/control_cotizacion.php", {
             //Cada valor se separa por una ,
             accion: 5,
             valorIdArt: id_art,
