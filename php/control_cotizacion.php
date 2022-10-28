@@ -518,7 +518,7 @@ switch ($Accion) {
 
         if($informacion_usuario ='Administrador'){
 
-            //RECIBIMOS TODAS LAS VARIABLES DES DE EL ARCHIVO modal_almacen.php
+            //RECIBIMOS TODAS LAS VARIABLES DES DE EL ARCHIVO detalle_cotizacion.php
             $id_cotizacion = $conn->real_escape_string($_POST['id_cotizacion']);
             $DesCambio = $conn->real_escape_string($_POST['descripcion_cambio']);
             $Cantidad = $conn->real_escape_string($_POST['cantidadCambiar']);
@@ -535,7 +535,7 @@ switch ($Accion) {
 
             //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ALMACEN Y LA GUARDAMOS EN UNA VARIABLE
             $sql_update1 = "UPDATE `punto_venta_articulos` SET precio = '$Precio' WHERE id = $id_articulo";
-            $up_1 = "UPDATE `punto_venta_detalle_cotizacion` SET precio_venta_u = '$Precio' WHERE id = $id_detalle";
+            $up_1 = "UPDATE `punto_venta_detalle_cotizacion` SET precio_venta_u = $Precio WHERE id = $id_detalle AND id_articulo = $id_articulo";
             $sql_update2 = "UPDATE `punto_venta_detalle_cotizacion` SET cantidad = '$Cantidad' WHERE id = $id_detalle";
             // $sql_update_importe = "UPDATE `punto_venta_detalle_cotizacion` SET importe = ('$Cantidad'*'$Precio')WHERE id_articulo = $id_articulo";
 
