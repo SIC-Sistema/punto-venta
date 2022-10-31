@@ -46,6 +46,7 @@ $Hoy = date('Y-m-d');
  				<li><a class='dropdown-button indigo-text' data-target='dropdown5'><i class="material-icons left">local_grocery_store</i><b>Ventas</b> <i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown5' class='dropdown-content'>   
 					<li><a onclick = 'nueva_venta()' class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>  
+					<li><a href="ventas_punto_venta.php" class="indigo-text"><i class="material-icons">local_grocery_store</i>Ventas</a></li>  
 					<li><a href = "cotizaciones_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
 				    <li><a href class="indigo-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
 
@@ -122,6 +123,7 @@ $Hoy = date('Y-m-d');
 		      			<span>
 		      			  <ul>		     				
 							<li><a onclick = 'nueva_venta()'><i class="material-icons">monetization_on</i>Nueva Venta</a></li>
+							<li><a href="ventas_punto_venta.php"><i class="material-icons">local_grocery_store</i>Ventas</a></li> 
 		      				<li><a href="cotizaciones_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
 					 		<li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
 					      </ul>

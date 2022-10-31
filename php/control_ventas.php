@@ -12,10 +12,10 @@ $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE u
 $almacen = $datos_user['almacen'];
 
 
-//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar compra = 3, Consulta Articulos TMP = 4, Actualizar Cant. o Costo = 5, buscararticulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
+//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar compra = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 $Accion = $conn->real_escape_string($_POST['accion']);
 
-//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar compra = 3, Consulta Articulos TMP = 4, Actualizar Cant. o Costo = 5, buscararticulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
+//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar compra = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 //echo "hola aqui estoy";
 switch ($Accion) {
     case 0:  ///////////////           IMPORTANTE               ///////////////
@@ -67,6 +67,15 @@ switch ($Accion) {
                 $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
                 #--- SE INSERTA EL PAGO -----------
                 if(mysqli_query($conn, $sql)){
+                    $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
+                    ?>
+                    <script>
+                        var a = document.createElement("a");
+                          a.href = "../php/ticket_venta.php?p="+<?php echo $cantidadPago; ?>+"&v="+<?php echo $id_venta; ?>;
+                          a.target = "blank";
+                          a.click();
+                    </script>
+                    <?php
                     echo '<script>M.toast({html:"El pago se dió de alta satisfcatoriamente.", classes: "rounded"})</script>';
                  }// FIN if pago
             }//FIN if consulta
@@ -186,7 +195,7 @@ switch ($Accion) {
     case 4:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 4 realiza:
 
-        //CON POST RECIBIMOS UN ID DEL MODAL O AL INICIAR EL DOCUMENTO "add_compra.php"
+        //CON POST RECIBIMOS UN ID DEL MODAL O AL INICIAR EL DOCUMENTO "add_venta.php"
         $insert = $conn->real_escape_string($_POST['insert']);
         $id_venta = $conn->real_escape_string($_POST['id_venta']);
 
@@ -286,22 +295,19 @@ switch ($Accion) {
         <?php
         break;
     case 5:///////////////           IMPORTANTE               ///////////////
-        // $Accion es igual a 6 realiza:
+        // $Accion es igual a 5 realiza:
 
-        sleep(1);// HACE UNA PAUSA DE 1 segundo para hace el cambio
-        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA CAMBIAR LAS CANTIDADES
-        $id_articulo = $conn->real_escape_string($_POST['valorIdArt']);
-        $id_usuario = $conn->real_escape_string($_POST['valorIdUs']);
-        $CantidadA = $conn->real_escape_string($_POST['valorCantidadA']);
-        $PrecioU = $conn->real_escape_string($_POST['valorPrecioU']);
-        $Importe = $CantidadA*$PrecioU;
-        //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DE LOS ARTICULOS Y LA GUARDAMOS EN UNA VARIABLE
-        $sql = "UPDATE `tmp_pv_detalle_venta` SET cantidad = '$CantidadA', precio_compra_u = '$PrecioU', importe= '$Importe' WHERE id_articulo = $id_articulo AND usuario = $id_usuario";
+        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA ACTUALIOZAR LA INFO DE LA VENTA
+        $id_venta = $conn->real_escape_string($_POST['id_venta']);  
+
+        $sql = "UPDATE `punto_venta_ventas` SET estatus = 1  WHERE id = $id_venta";
+
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
         if(mysqli_query($conn, $sql)){
-            #echo '<script >M.toast({html:"Las cantidades se actualizaron con exito.", classes: "rounded"})</script>';    
+            echo '<script >M.toast({html:"La venta se pauso exitosamente.", classes: "rounded"})</script>';
+            echo '<script>recargar_venta();</script>';
         }else{
-            #echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>'; 
+            echo '<script >M.toast({html:"Ocurrio un error.", classes: "rounded"})</script>';
         }//FIN else DE ERROR
         break;
     case 6:///////////////           IMPORTANTE               ///////////////
@@ -462,18 +468,109 @@ switch ($Accion) {
         }
         break;
     case 9:///////////////           IMPORTANTE               //////////////
+        // $Accion es igual a 9 realiza:
+//CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "almacen_punto_venta.php"
+        $Texto = $conn->real_escape_string($_POST['texto']);
+        //RECIBE UN ID IMPORTANTE
 
-        $id_articulo = $conn->real_escape_string($_POST['id_articulo']);
-        $precio = $conn->real_escape_string($_POST['precio']);
+        //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+        if ($Texto != "") {
+            //MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...... Codigo, Nombre, Descripcion
+            $sql = "SELECT * FROM `punto_venta_ventas` WHERE estatus = 2 AND (id = '$Texto' OR id_cliente = '$Texto' OR fecha LIKE '$Texto%')";   
+        }else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE 
+            $sql = "SELECT * FROM `punto_venta_ventas` WHERE estatus = 2 LIMIT 50";
+        }//FIN else $Texto VACIO O NO
 
-        //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL PRECIO DEL ARTICULO (EN CATALOGO) Y LA GUARDAMOS EN UNA VARIABLE
-        $sql = "UPDATE `punto_venta_articulos` SET precio = '$precio' WHERE id = $id_articulo";
-        //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-        if(mysqli_query($conn, $sql)){
-            echo '<script >M.toast({html:"El precio fue actualizado a: $'.sprintf('%.2f', $precio).'", classes: "rounded"})</script>';    
-        }else{
-            echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>'; 
-        }//FIN else DE ERROR
+        // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+        $consulta = mysqli_query($conn, $sql);      
+        $contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
+
+        //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+        if (mysqli_num_rows($consulta) == 0) {
+                echo '<script>M.toast({html:"No se encontraron ventas.", classes: "rounded"})</script>';
+        } else {
+            //SI NO ESTA EN == 0 SI TIENE INFORMACION
+            //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
+            //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
+            while($venta = mysqli_fetch_array($consulta)) {
+                $id_cliente = $venta['id_cliente'];
+                if ($id_cliente == 0) {
+                    $cliente['nombre'] = 'Venta Publico';
+                }else{
+                    $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM  `punto-venta_clientes` WHERE id=$id_cliente"));
+                }
+                $id_usuario = $venta['usuario'];
+                $user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM users WHERE user_id = $id_usuario"));
+                $estatus = ($venta['estatus'] == 2)? '<span class="new badge black" data-badge-caption="Terminada"></span>':'';
+                //Output
+                $contenido .= '         
+                  <tr>
+                    <td>'.$venta['id'].'</td>
+                    <td>'.$cliente['nombre'].'</td>                    
+                    <td>'.$venta['fecha'].' '.$venta['hora'].'</td>
+                    <td>'.$venta['tipo_cambio'].'</td>
+                    <td><b>$'.sprintf('%.2f', $venta['total']).'</b></td>
+                    <td>'.$user['firstname'].'</td>
+                    <td>'.$estatus.'</td>
+                    <td><form method="post" action="../views/detalles_venta_pv.php"><input id="venta" name="venta" type="hidden" value="'.$venta['id'].'"><br><button class="btn-small waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
+                    <td><a onclick="borrar_venta('.$venta['id'].')" class="btn-small red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+                  </tr>';
+            }//FIN while
+        }//FIN else
+        echo $contenido;// MOSTRAMOS LA INFORMACION HTML
+        break;
+    case 10:///////////////           IMPORTANTE               //////////////
+        // $Accion es igual a 10 realiza:
+
+        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "almacen_punto_venta.php"
+        $Texto = $conn->real_escape_string($_POST['texto']);
+        //RECIBE UN ID IMPORTANTE
+
+        //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+        if ($Texto != "") {
+            //MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...... Codigo, Nombre, Descripcion
+            $sql = "SELECT * FROM `punto_venta_ventas` WHERE estatus !=2 AND (id = '$Texto' OR id_cliente = '$Texto' OR fecha LIKE '$Texto%')";   
+        }else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE 
+            $sql = "SELECT * FROM `punto_venta_ventas` WHERE estatus != 2 LIMIT 50";
+        }//FIN else $Texto VACIO O NO
+
+        // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+        $consulta = mysqli_query($conn, $sql);      
+        $contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
+
+        //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+        if (mysqli_num_rows($consulta) == 0) {
+                echo '<script>M.toast({html:"No se encontraron ventas.", classes: "rounded"})</script>';
+        } else {
+            //SI NO ESTA EN == 0 SI TIENE INFORMACION
+            //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
+            //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
+            while($venta = mysqli_fetch_array($consulta)) {
+                $id_cliente = $venta['id_cliente'];
+                if ($id_cliente == 0) {
+                    $cliente['nombre'] = 'Venta Publico';
+                }else{
+                    $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM  `punto-venta_clientes` WHERE id=$id_cliente"));
+                }
+                $id_usuario = $venta['usuario'];
+                $user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM users WHERE user_id = $id_usuario"));
+                $estatus = ($venta['estatus'] == 1)? '<span class="new badge blue" data-badge-caption="Pausada"></span>': '<span class="new badge green" data-badge-caption="En Proceso"></span>';
+                //Output
+                $contenido .= '         
+                  <tr>
+                    <td>'.$venta['id'].'</td>
+                    <td>'.$cliente['nombre'].'</td>                    
+                    <td>'.$venta['fecha'].' '.$venta['hora'].'</td>
+                    <td>'.$venta['tipo_cambio'].'</td>
+                    <td>$'.sprintf('%.2f', $venta['total']).'</td>
+                    <td>'.$user['firstname'].'</td>
+                    <td>'.$estatus.'</td>
+                    <td><a href = "add_venta.php?id='.$venta['id'].'" class="btn-small waves-effect waves-light pink"><i class="material-icons">visibility</i></a></td>
+                    <td><a onclick="borrar_lista_all('.$venta['id'].')" class="btn-small red darken-1 waves-effect waves-light"><i class="material-icons">remove_shopping_cart</i></a></td>
+                  </tr>';
+            }//FIN while
+        }//FIN else
+        echo $contenido;// MOSTRAMOS LA INFORMACION HTML
         break;
 }// FIN switch
 mysqli_close($conn);
