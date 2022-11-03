@@ -12,10 +12,10 @@ $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE u
 $almacen = $datos_user['almacen'];
 
 
-//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar compra = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
+//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar Venta = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 $Accion = $conn->real_escape_string($_POST['accion']);
 
-//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar compra = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
+//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar Venta = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 //echo "hola aqui estoy";
 switch ($Accion) {
     case 0:  ///////////////           IMPORTANTE               ///////////////
@@ -87,49 +87,6 @@ switch ($Accion) {
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
 
-        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "compras_punto_venta.php"
-        $Texto = $conn->real_escape_string($_POST['texto']);
-        //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
-		if ($Texto != "") {
-			//MOSTRARA LOS ALMACENES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
-			$sql = "SELECT * FROM `punto_venta_compras`  WHERE  factura LIKE '$Texto%' OR id LIKE '$Texto%' OR id_proveedor LIKE '$Texto%' LIMIT 30";	
-		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
-			$sql = "SELECT * FROM `punto_venta_compras` LIMIT 30";
-		}//FIN else $Texto VACIO O NO
-
-        // REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-		$consulta = mysqli_query($conn, $sql);		
-		$contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
-
-		//VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
-		if (mysqli_num_rows($consulta) == 0) {
-				echo '<script>M.toast({html:"No se encontraron compras.", classes: "rounded"})</script>';
-        } else {
-            //SI NO ESTA EN == 0 SI TIENE INFORMACION
-            //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
-            //RECORREMOS UNO A UNO LAS COMPRAS CON EL WHILE
-            while($compra = mysqli_fetch_array($consulta)) {
-                $id_user = $compra['usuario'];// ID DEL USUARIO
-                $id_proveedor = $compra['id_proveedor']; //ID DEL PROVEEDOR
-                $user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
-				$proveedor = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_proveedores` WHERE id=$id_proveedor"));
-				//Output
-                $contenido .= '			
-		          <tr>
-		            <td>'.$compra['id'].'</td>
-                    <td>'.$compra['factura'].'</td>
-                    <td>'.$id_proveedor.' - '.$proveedor['nombre'].'</td>
-                    <td>'.$compra['tipo_cambio'].'</td>
-                    <td>$'.sprintf('%.2f', $compra['total']).'</td>
-		            <td>'.$user['firstname'].'</td>
-		            <td>'.$compra['fecha'].'</td>
-		            <td><form method="post" action="../views/detalle_compra_pv.php"><input id="compra" name="compra" type="hidden" value="'.$compra['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
-		            <td><a onclick="borrar_compra_pv('.$compra['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
-		          </tr>';
-
-			}//FIN while
-        }//FIN else
-        echo $contenido;// MOSTRAMOS LA INFORMACION HTML
         break;
     case 2:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 2 realiza:
@@ -154,34 +111,34 @@ switch ($Accion) {
         $id = $conn->real_escape_string($_POST['id']);
     	//Obtenemos la informacion del Usuario
         $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
-        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR COMPRAS
-        if ($User['compras'] == 1) {
+        //SE VERIFICA SI EL USUARIO LOGEADO TIENE PERMISO DE BORRAR ventas
+        if ($User['ventas'] == 1) {
             #SELECCIONAMOS LA INFORMACION A BORRAR
-            $compra = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_compras` WHERE id = $id"));
+            $venta = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_ventas` WHERE id = $id"));
             #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_compras` PARA NO PERDER INFORMACION
-            $sql = "INSERT INTO `pv_borrar_compras` (id_compra, factura, id_proveedor, tipo_cambio, total, registro, borro, fecha_borro) 
-                    VALUES($id, '".$compra['factura']."', '".$compra['id_proveedor']."', '".$compra['tipo_cambio']."', '".$compra['total']."', '".$compra['usuario']."', '$id_user','$Fecha_hoy')";
+            $sql = "INSERT INTO `pv_borrar_ventas` (id_venta, id_cliente, fecha, hora, tipo_cambio, total, registro, borro, fecha_borro) 
+                    VALUES($id, '".$venta['id_cliente']."', '".$venta['fecha']."', '".$venta['hora']."', '".$venta['tipo_cambio']."', '".$venta['total']."', '".$venta['usuario']."', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
-                //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_compras`
-                #VERIFICAMOS QUE SE BORRE CORRECTAMENTE LA COMPRA DE `punto_venta_compras`
-                if(mysqli_query($conn, "DELETE FROM `punto_venta_compras` WHERE `punto_venta_compras`.`id` = $id")){
+                //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_ventas`
+                #VERIFICAMOS QUE SE BORRE CORRECTAMENTE LA COMPRA DE `punto_venta_ventas`
+                if(mysqli_query($conn, "DELETE FROM `punto_venta_ventas` WHERE `punto_venta_ventas`.`id` = $id")){
                     #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-                    echo '<script >M.toast({html:"Compra borrada con exito.", classes: "rounded"})</script>';
+                    echo '<script >M.toast({html:"Venta borrada con exito.", classes: "rounded"})</script>';
 
                     #HAY QUE RECORRER LOS ARTICULOS DE DETALLE PARA ELIMINAR LA CANTIDAD DEL ALMACEN DE CADA UNO
-                    $sql_art =  mysqli_query($conn,"SELECT * FROM punto_venta_detalle_compra WHERE id_compra=$id");
+                    $sql_art =  mysqli_query($conn,"SELECT * FROM punto_venta_detalle_venta WHERE id_venta=$id");
                     if (mysqli_num_rows($sql_art) <= 0) {
-                      echo '<script>M.toast({html:"No se encontraron articulos en la compra.", classes: "rounded"})</script>';
+                      echo '<script>M.toast({html:"No se encontraron articulos en la venta.", classes: "rounded"})</script>';
                     }else{
                       $almacen = $User['almacen']; //ID DE ALMACEN
                       while($detalle = mysqli_fetch_array($sql_art)){
                         $cantidad = $detalle['cantidad'];// CANTIDAD QUE HAY QUE RESTAR
-                        $id_articulo = $detalle['id_articulo'];//ID DE ARTICULO EN TURNO
-                        mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad-$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");                        
+                        $id_articulo = $detalle['id_producto'];//ID DE ARTICULO EN TURNO
+                        mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad+$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");            
                       }//FIN while
                     }// FIN else
-                    echo '<script>recargar_compra()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+                    echo '<script>recargar_venta()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
                 }else{
                     #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
                     echo '<script >M.toast({html:"Hubo un error...", classes: "rounded"})</script>';
@@ -469,7 +426,7 @@ switch ($Accion) {
         break;
     case 9:///////////////           IMPORTANTE               //////////////
         // $Accion es igual a 9 realiza:
-//CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "almacen_punto_venta.php"
+        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "almacen_punto_venta.php"
         $Texto = $conn->real_escape_string($_POST['texto']);
         //RECIBE UN ID IMPORTANTE
 
@@ -513,7 +470,8 @@ switch ($Accion) {
                     <td>'.$user['firstname'].'</td>
                     <td>'.$estatus.'</td>
                     <td><form method="post" action="../views/detalles_venta_pv.php"><input id="venta" name="venta" type="hidden" value="'.$venta['id'].'"><br><button class="btn-small waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
-                    <td><a onclick="borrar_venta('.$venta['id'].')" class="btn-small red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+                    <td><a onclick="facturar('.$venta['id'].')" class="btn-small blue darken-1 waves-effect waves-light"><i class="material-icons">note</i></a></td>
+                    <td><a onclick="borrar_venta_pv('.$venta['id'].')" class="btn-small red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
                   </tr>';
             }//FIN while
         }//FIN else

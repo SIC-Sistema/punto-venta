@@ -42,17 +42,22 @@ if (isset($_POST['compra']) == false) {
     		</div>
         <!--   //// INFORMACION DEL USUARIO  //// --->
     		<div class="row">
-    			<ul class="collection col s12 m8">
+            <ul class="collection col s12 m9">
                 <li class="collection-item avatar">
                   <img src="../img/lista.png" alt="" class="circle">
-                  <span class="title"><b>N°: </b><?php echo $id_compra; ?></span>
-                  <p><b>N° Factura: </b><?php echo $Compra['factura']; ?><br>
-                     <b>N° Proveedor: </b><?php echo $Compra['id_proveedor']; ?><br>
-                     <b>Tipo Cambio: </b><?php echo $Compra['tipo_cambio']; ?><br><br>
-                     <b><b>TOTAL: </b> $<?php echo sprintf('%.2f', $Compra['total']); ?></b><br>
-                  </p>
+                  <span class="title"><b>N° COMPRA: <?php echo $id_compra; ?></b></span><br><br>
+                  <p class="row col s12"><b>
+                    <div class="col s12 m6">
+                      <div class="col s12"><b class="indigo-text">N° FACTURA: </b><?php echo $Compra['factura']; ?></div>
+                      <div class="col s12"><b class="indigo-text">N° PROVEEDOR: </b><?php echo $Compra['id_proveedor']; ?></div>       
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="col s12"><b class="indigo-text">TIPO CAMBIO</b><?php echo $Compra['tipo_cambio']; ?></div>      
+                      <div class="col s12"><b class="indigo-text">TOTAL: </b><?php echo '$'.sprintf('%.2f', $Compra['total']);?></div>         
+                    </div>
+                  </b></p><br><br><br><br>
                 </li>
-            </ul>		
+            </ul>  	
     		</div>
         <div class="row">
           <h3 class="hide-on-med-and-down">Detalles:</h3>

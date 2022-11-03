@@ -8,6 +8,22 @@
   $Fecha_hoy = date('Y-m-d');
   ?>
   <script>
+    //FUNCION QUE BORRA LOS COMPRAS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+      function borrar_venta_pv(id){
+        var answer = confirm("Deseas eliminar el venta N°"+id+"?");
+        if (answer) {
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+          $.post("../php/control_ventas.php", {
+              //Cada valor se separa por una ,
+              id: id,
+              accion: 3,
+            }, function(mensaje) {
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+              $("#cancelar").html(mensaje);
+            }); //FIN post
+        }//FIN IF
+      };//FIN function
+
     //FUNCION QUE BORRA TODOS LOS ARTICULOS DE TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
     function borrar_lista_all(venta){
       var answer = confirm("Deseas cancelar la venta "+venta+"?");
@@ -23,6 +39,7 @@
         }); //FIN post
       }//FIN IF
     };//FIN function
+    
     //FUNCION QUE HACE LA BUSQUEDA DE ALMACENES (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
     function buscarVentasR(){
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
@@ -91,6 +108,7 @@
                   <th>Usuario</th>
                   <th>Estatus</th>
                   <th>Detalles</th>
+                  <th>Facturar</th>
                   <th>Borrar</th>
                 </tr>
               </thead>
