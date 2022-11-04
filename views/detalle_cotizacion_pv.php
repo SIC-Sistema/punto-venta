@@ -16,7 +16,7 @@ if (isset($_POST['cotizacion']) == false) {
       <?php
       //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
       include('fredyNav.php');
-      $id_cotizacion = $_POST['cotizacion'];// POR EL METODO POST RECIBIMOS EL ID DE LA COTIZACIÓN
+      $id_cotizacion = $_POST['cotizacion'];// POR EL METODO POST RECIBIMOS EL ID DE LA COTIZACIÓN DEL ARCHIVO cotizacion_nueva_punto_venta.php
       $id = $_SESSION['user_id'];//  RECIBIMOS EL ID DEL USUARIO LOGEADO
       //REALIZAMOS LA CONSULTA PARA SACAR LA INFORMACION DEL USUARIO Y ASIGNAMOS EL ARRAY A UNA VARIABLE $datos_user
       $datos_user = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM users WHERE user_id=$id"));
@@ -30,6 +30,7 @@ if (isset($_POST['cotizacion']) == false) {
         </script>
         <?php
       }
+      echo $id_cotizacion;
       $Cotizacion = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_cotizaciones WHERE id=$id_cotizacion"));
       ?>
     </head>
@@ -46,6 +47,21 @@ if (isset($_POST['cotizacion']) == false) {
                 $("#modal").html(mensaje);
             });//FIN post
         }//FIN function
+
+      //FUNCION QUE MANDA IMPRIMIR EL CATALOGO SEGUN EL ID DE CATEGORIA
+      $id_cotizacion = $_POST['cotizacion'];// POR EL METODO POST RECIBIMOS EL ID DE LA COTIZACIÓN DEL ARCHIVO cotizacion_nueva_punto_venta.php
+      function imprimir_catalogo(){
+       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+       var id = $id_cotizacion
+       if (id == '') {
+        M.toast({html: 'Seleccione una categoria.', classes: 'rounded'});
+       }else{
+        var a = document.createElement("a");
+        a.href = "../php/imprimir_cotizacion.php?id="+id;
+        a.target = "blank";
+        a.click();
+      } 
+    }
     </script>
     <body>
       <!-- DENTRO DE ESTE DIV VA TODO EL CONTENIDO Y HACE QUE SE VEA AL CENTRO DE LA PANTALLA.-->
@@ -73,6 +89,8 @@ if (isset($_POST['cotizacion']) == false) {
           <h3 class="hide-on-med-and-down">Detalles:</h3>
           <h5 class="hide-on-large-only">Detalles:</h5>
         </div>
+        <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
+        <a onclick="imprimir_catalogo()" class="waves-effect waves-light btn pink center"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
         <!-- CREAMOS UN DIV EL CUAL TENGA id = "modal"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
         <div id="modal"></div>
         <div class="row">
