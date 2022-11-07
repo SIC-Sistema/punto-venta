@@ -16,30 +16,30 @@ class PDF extends FPDF{
 
    //Pie de pagina 
    function footer(){
-	   $this->SetFont('Helvetica','', 10);
-	   $this->SetFillColor(28, 98, 163);
-		$this->SetDrawColor(28, 98, 163);
-		$this->SetTextColor(255, 255, 255);
-	   $this->SetY(-35);
+	    $this->SetFont('Helvetica','', 10);
+	    $this->SetFillColor(28, 98, 163);
+	    $this->SetDrawColor(28, 98, 163);
+	    $this->SetTextColor(255, 255, 255);
+	    $this->SetY(-35);
 		$this->SetX(0);
-	   $this->SetFont('Helvetica', 'B', 13);
+	    $this->SetFont('Helvetica', 'B', 13);
 		$this->MultiCell(216,10,utf8_decode('    Siguenos en:                                                                                              Estamos ubicados en:'),0,'C',1);
 		$this->SetX(0);
-	   $this->MultiCell(15,15,utf8_decode(' '."\n".' '),1,'C',1);
-	   $this->SetY(-25);
+	    $this->MultiCell(15,15,utf8_decode(' '."\n".' '),1,'C',1);
+	    $this->SetY(-25);
 		$this->SetX(15);
-	   $this->SetFont('Helvetica', '', 10);
+	    $this->SetFont('Helvetica', '', 10);
 		$this->Image('../img/icon-facebook.png', 5, 253, 9, 9, 'png'); /// LOGO FACEBOOK
 		$this->Image('../img/icon-tiktok.png', 5, 261, 9, 9, 'png'); /// LOGO TIKTOK
 		$this->Image('../img/icon-pagina.png', 5, 269, 9, 9, 'png'); /// LOGO PAGINA
-	   $this->MultiCell(145,8,utf8_decode('Servicios Integrales De Computacion Sic'."\n".'sic.serviciosintegrales'."\n".'www.sicsom.com/ventas'."\n".' '),1,'L',1);
-	   $this->SetY(-25);
-	   $this->SetX(160);
-	   $this->MultiCell(56,6,utf8_decode('Av. Hidalgo No. 508 C. P. 99100, Sombrerete, Zac.'."\n".' '),1,'L',1);
-	   $this->SetY(-10);
-	   $this->SetX(160);
-	   $this->AliasNbPages('tpagina');
-	   $this->Cell(56,10,utf8_decode($this->PageNo().'/tpagina'),1,0,'R',1);
+	    $this->MultiCell(145,8,utf8_decode('Servicios Integrales De Computacion Sic'."\n".'sic.serviciosintegrales'."\n".'www.sicsom.com/ventas'."\n".' '),1,'L',1);
+	    $this->SetY(-25);
+	    $this->SetX(160);
+	    $this->MultiCell(56,6,utf8_decode('Av. Hidalgo No. 508 C. P. 99100, Sombrerete, Zac.'."\n".' '),1,'L',1);
+	    $this->SetY(-10);
+	    $this->SetX(160);
+	    $this->AliasNbPages('tpagina');
+	    $this->Cell(56,10,utf8_decode($this->PageNo().'/tpagina'),1,0,'R',1);
    }
 }
 
@@ -89,94 +89,6 @@ $pdf->MultiCell(0,8,utf8_decode('GABRIEL VALLES REYES                           
 ////   TITULO ANTES DE TABLA  ///////
 $pdf->SetTextColor(28, 98, 163);
 $pdf->SetY($pdf->GetY()+10);
-
-
-////   TABLA A MOSTRAR    //////
-// SELECCIONAMOS LOS ARTICULOS DE LA CATEGORIA EN TURNO
-$cotizacion = mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id_venta = $id");
-//VERIFICAMOS QUEW TENGA ARTICULOS PARA PODER MOSTRARLA
-if (mysqli_num_rows($cotizacion)>0) {
-	$pdf->SetFillColor(28, 98, 163);
-	$pdf->SetDrawColor(28, 98, 163);
-	$pdf->SetTextColor(255, 255, 255);
-	$pdf->SetY($pdf->GetY());
-	$pdf->SetTextColor(0, 0, 0);
-	$pdf->SetFont('Helvetica', 'B', 9);
-	$pdf->SetTextColor(0, 0, 0);
-	$pdf->Cell(8,8,utf8_decode('N°'),1,0,'C');
-	$pdf->Cell(25,8,utf8_decode('Código'),1,0,'C');
-	$pdf->Cell(35,8,utf8_decode('Producto'),1,0,'C');
-	$pdf->Cell(36,8,utf8_decode('Imagen'),1,0,'C');
-	$pdf->Cell(65,8,utf8_decode('Descripción'),1,0,'C');
-	$pdf->Cell(22,8,utf8_decode('Precio'),1,0,'C');
-
-    ////   CONTENIDO DE LA TABLA    /////
-	$pdf->SetFillColor(240, 240, 240);
-	$pdf->SetDrawColor(0, 0, 0);
-	$pdf->SetLineWidth(0);
-	$pdf->Ln();
-	$aux = 1;
-			
-	while($articulos_cotizacion = mysqli_fetch_array($cotizacion)){ 
-
-		///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
-		$ContNombre = ceil(strlen($articulos_cotizacion['nombre'])/17);
-		$ContDescripcion = ceil(strlen($articulos_cotizacion['descripcion'])/36);
-
-		$masN = ((strlen($articulos_cotizacion['nombre'])>16 AND strlen($articulos_cotizacion['nombre'])<=20) OR (strlen($articulos_cotizacion['nombre'])>32 AND strlen($articulos_cotizacion['nombre'])<38) OR (strlen($articulos_cotizacion['nombre'])>47 AND strlen($articulos_cotizacion['nombre'])<54)) ?  '         ':'';
-		$masD = ((strlen($articulos_cotizacion['descripcion'])>35 AND strlen($articulos_cotizacion['descripcion'])<=50) OR (strlen($articulos_cotizacion['descripcion'])>70 AND strlen($articulos_cotizacion['descripcion'])<85) OR (strlen($articulos_cotizacion['descripcion'])>106 AND strlen($articulos_cotizacion['descripcion'])<120)) ?  '                 ':'';
-				
-		//LE DECIMOS CUANTAS FILAS AFECTA A LOS DEMAS
-		$AgregaG = 4;
-		$AgregaN = 5-$ContNombre;
-		$AgregaD = 6-$ContDescripcion;
-
-		$pdf->SetX(15);
-		$pdf->SetFont('Helvetica', '', 9);
-		$pdf->MultiCell(8,6,utf8_decode("\n".$aux.str_repeat("\n", $AgregaG).' '),1,'C',1);
-		$pdf->SetY($pdf->GetY()-36);
-		$pdf->SetX(23);
-		$pdf->MultiCell(25,6,utf8_decode("\n".$articulos_cotizacion['codigo'].str_repeat("\n", $AgregaG).' '),1,'C',1);
-		$pdf->SetY($pdf->GetY()-36);
-		$pdf->SetX(48);
-		$pdf->MultiCell(35,6,utf8_decode("\n".$articulos_cotizacion['nombre'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',1);
-		$pdf->SetY($pdf->GetY()-36);
-		$pdf->SetX(83);
-		$pdf->MultiCell(36,6,utf8_decode(str_repeat("\n", 5).' '),1,'C',1);
-		if ($articulos_cotizacion['imagen'] != '') {
-			$pdf->Image('../Imagenes/Catalogo/'.$articulos_cotizacion['imagen'], 84, $pdf->GetY()-34, 34, 32, 'jpg'); /// LOGO SIC
-		}
-		$pdf->SetY($pdf->GetY()-36);
-		$pdf->SetX(119);
-		$pdf->SetFont('Helvetica', '', 8.5);
-		$pdf->MultiCell(65,6,utf8_decode($articulos_cotizacion['descripcion'].$masD.str_repeat("\n", $AgregaD).' '),1,'C',1);
-		$pdf->SetY($pdf->GetY()-36);
-		$pdf->SetX(184);
-		$pdf->SetFont('Helvetica', 'B', 9);
-		$pdf->MultiCell(22,6,utf8_decode("\n".'$'.sprintf('%.2f', $articulos_cotizacion['precio']).str_repeat("\n", $AgregaG).' '),1,'R',1);
-		$aux ++;
-	}//FIN WHILE CATALOGO
-}//FIN IF si hay articulos
-
-$pdf->SetTextColor(255, 255, 255);
-$pdf->SetY($pdf->GetY());
-$pdf->SetTextColor(0, 0, 0);
-$pdf->SetFont('Helvetica', 'B', 9);
-$pdf->SetTextColor(0, 0, 0);
-$pdf->Cell(8,8,utf8_decode('N°'),1,0,'C');
-$pdf->Cell(25,8,utf8_decode('Código'),1,0,'C');
-$pdf->Cell(35,8,utf8_decode('Producto'),1,0,'C');
-$pdf->Cell(36,8,utf8_decode('Imagen'),1,0,'C');
-$pdf->Cell(65,8,utf8_decode('Descripción'),1,0,'C');
-$pdf->Cell(22,8,utf8_decode('Precio'),1,0,'C');
-
-////   CONTENIDO DE LA TABLA    /////
-$pdf->SetFillColor(240, 240, 240);
-$pdf->SetDrawColor(0, 0, 0);
-$pdf->SetLineWidth(0);
-$pdf->Ln();
-$aux = 1;
-
 //Aquí escribimos lo que deseamos mostrar... (PRINT)
 $pdf->Output();
 ?>
