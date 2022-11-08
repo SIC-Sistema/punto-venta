@@ -57,7 +57,7 @@ if (isset($_POST['cotizacion']) == false) {
         M.toast({html: 'Cotizacion no valida.', classes: 'rounded'});
        }else{
         var a = document.createElement("a");
-        a.href = "../php/imprimir_cotizacion.php?id=";
+        a.href = "../php/imprimir_cotizacion.php?id";
         a.target = "blank";
         a.click();
       } 

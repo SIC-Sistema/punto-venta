@@ -48,7 +48,7 @@ $pdf=new PDF('P','mm','letter', true);
 $pdf->SetAutoPageBreak(true, 35);
 $pdf->AliasNbPages();
 $pdf->SetMargins(15, 35, 10);
-$pdf->setTitle(utf8_decode('SIC | CATALOGO '));// TITULO BARRA NAVEGACION
+$pdf->setTitle(utf8_decode('SIC | COTIZACION'));// TITULO BARRA NAVEGACION
 $pdf->AddPage('portrait', 'letter');
 
 $pdf->SetFont('Helvetica','B', 12);
@@ -89,6 +89,37 @@ $pdf->MultiCell(0,8,utf8_decode('GABRIEL VALLES REYES                           
 ////   TITULO ANTES DE TABLA  ///////
 $pdf->SetTextColor(28, 98, 163);
 $pdf->SetY($pdf->GetY()+10);
+
+
+////   TABLA A MOSTRAR    //////
+$sql_art =  mysqli_query($conn,"SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id_venta=$id_cotizacion");
+    if (mysqli_num_rows($sql_art) <= 0) {
+        echo "<h5> NO SE ENCONTRARON ARTICULOS</h5>";
+    }else{
+        while($detalle = mysqli_fetch_array($sql_art)){
+            $id_articulo = $detalle['id_articulo'];
+            $id_detalle_cotizacion=$detalle['id'];
+            $articulo = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_articulos WHERE id=$id_articulo"));
+            ?>
+            <!-- Output -->
+            <?php $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
+            <?php
+            $pdf->SetTextColor(255, 255, 255);
+            $pdf->SetFont('Helvetica', 'B', 13);
+            $pdf->MultiCell(0,11,utf8_decode('Categoria: '.$categoria['nombre']),0,'C',1);
+            $pdf->SetY($pdf->GetY());
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetFont('Helvetica', 'B', 9);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->Cell(8,8,utf8_decode('N°'),1,0,'C');
+            $pdf->Cell(25,8,utf8_decode('Código'),1,0,'C');
+            $pdf->Cell(35,8,utf8_decode('Producto'),1,0,'C');
+            $pdf->Cell(36,8,utf8_decode('Imagen'),1,0,'C');
+            $pdf->Cell(65,8,utf8_decode('Descripción'),1,0,'C');
+            $pdf->Cell(22,8,utf8_decode('Precio'),1,0,'C');
+        }//FIN while
+    }// FIN else
+
 //Aquí escribimos lo que deseamos mostrar... (PRINT)
 $pdf->Output();
 ?>
