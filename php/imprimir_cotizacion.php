@@ -92,7 +92,7 @@ $pdf->SetY($pdf->GetY()+10);
 
 
 ////   TABLA A MOSTRAR    //////
-$sql_art =  mysqli_query($conn,"SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id_venta=$id_cotizacion");
+$sql_art =  mysqli_query($conn,"SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id_venta=$id");
     if (mysqli_num_rows($sql_art) <= 0) {
         echo "<h5> NO SE ENCONTRARON ARTICULOS</h5>";
     }else{
@@ -105,8 +105,6 @@ $sql_art =  mysqli_query($conn,"SELECT * FROM `punto_venta_detalle_cotizacion` W
             <?php $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
             <?php
             $pdf->SetTextColor(255, 255, 255);
-            $pdf->SetFont('Helvetica', 'B', 13);
-            $pdf->MultiCell(0,11,utf8_decode('Categoria: '.$categoria['nombre']),0,'C',1);
             $pdf->SetY($pdf->GetY());
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetFont('Helvetica', 'B', 9);
