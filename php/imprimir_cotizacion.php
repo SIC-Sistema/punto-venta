@@ -92,31 +92,68 @@ $pdf->SetY($pdf->GetY()+10);
 
 
 ////   TABLA A MOSTRAR    //////
-$sql_art =  mysqli_query($conn,"SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id_venta=$id");
-    if (mysqli_num_rows($sql_art) <= 0) {
-        echo "<h5> NO SE ENCONTRARON ARTICULOS</h5>";
-    }else{
-        while($detalle = mysqli_fetch_array($sql_art)){
-            $id_articulo = $detalle['id_articulo'];
-            $id_detalle_cotizacion=$detalle['id'];
-            $articulo = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_articulos WHERE id=$id_articulo"));
-            ?>
-            <!-- Output -->
-            <?php $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
-            <?php
-            $pdf->SetTextColor(255, 255, 255);
-            $pdf->SetY($pdf->GetY());
-            $pdf->SetTextColor(0, 0, 0);
-            $pdf->SetFont('Helvetica', 'B', 9);
-            $pdf->SetTextColor(0, 0, 0);
-            $pdf->Cell(8,8,utf8_decode('N°'),1,0,'C');
-            $pdf->Cell(25,8,utf8_decode('Código'),1,0,'C');
-            $pdf->Cell(35,8,utf8_decode('Producto'),1,0,'C');
-            $pdf->Cell(36,8,utf8_decode('Imagen'),1,0,'C');
-            $pdf->Cell(65,8,utf8_decode('Descripción'),1,0,'C');
-            $pdf->Cell(22,8,utf8_decode('Precio'),1,0,'C');
-        }//FIN while
-    }// FIN else
+$pdf->SetTextColor(255, 255, 255);
+$pdf->SetFont('Helvetica', 'B', 13);
+$pdf->SetY($pdf->GetY());
+$pdf->SetTextColor(0, 0, 0);
+$pdf->SetFont('Helvetica', 'B', 9);
+$pdf->SetTextColor(0, 0, 0);
+$pdf->Cell(8,8,utf8_decode('N°'),1,0,'C');
+$pdf->Cell(25,8,utf8_decode('Código'),1,0,'C');
+$pdf->Cell(35,8,utf8_decode('Producto'),1,0,'C');
+$pdf->Cell(36,8,utf8_decode('Imagen'),1,0,'C');
+$pdf->Cell(65,8,utf8_decode('Descripción'),1,0,'C');
+$pdf->Cell(22,8,utf8_decode('Precio'),1,0,'C');
+
+
+////   CONTENIDO DE LA TABLA    /////
+$pdf->SetFillColor(240, 240, 240);
+$pdf->SetDrawColor(0, 0, 0);
+$pdf->SetLineWidth(0);
+$pdf->Ln();
+$aux = 1;
+
+$detalle_cotizacion = mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE `punto_venta_detalle_cotizacion`.`id_venta` = $id");
+while($articulos_catalogo = mysqli_fetch_array($detalle_cotizacion)){ 
+
+	///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
+	$ContNombre = ceil(strlen($articulos_catalogo['nombre'])/17);
+	$ContDescripcion = ceil(strlen($articulos_catalogo['descripcion'])/36);
+
+	$masN = ((strlen($articulos_catalogo['nombre'])>16 AND strlen($articulos_catalogo['nombre'])<=21) OR (strlen($articulos_catalogo['nombre'])>32 AND strlen($articulos_catalogo['nombre'])<38) OR (strlen($articulos_catalogo['nombre'])>47 AND strlen($articulos_catalogo['nombre'])<54)) ?  '         ':'';
+	$masD = ((strlen($articulos_catalogo['descripcion'])>35 AND strlen($articulos_catalogo['descripcion'])<=48) OR (strlen($articulos_catalogo['descripcion'])>70 AND strlen($articulos_catalogo['descripcion'])<85) OR (strlen($articulos_catalogo['descripcion'])>106 AND strlen($articulos_catalogo['descripcion'])<120)) ?  '                ':'';
+		
+	//LE DECIMOS CUANTAS FILAS AFECTA A LOS DEMAS
+	$AgregaG = 4;
+	$AgregaN = 5-$ContNombre;
+	$AgregaD = 6-$ContDescripcion;
+
+	$pdf->SetX(15);
+	$pdf->SetFont('Helvetica', '', 9);
+	$pdf->MultiCell(8,6,utf8_decode("\n".$aux.str_repeat("\n", $AgregaG).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(23);
+	$pdf->MultiCell(25,6,utf8_decode("\n".$articulos_catalogo['codigo'].str_repeat("\n", $AgregaG).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(48);
+	$pdf->MultiCell(35,6,utf8_decode("\n".$articulos_catalogo['nombre'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(83);
+	$pdf->MultiCell(36,6,utf8_decode(str_repeat("\n", 5).' '),1,'C',1);
+	if ($articulos_catalogo['imagen'] != '') {
+		$pdf->Image('../Imagenes/Catalogo/'.$articulos_catalogo['imagen'], 84, $pdf->GetY()-34, 34, 32, 'jpg'); /// LOGO SIC
+	}
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(119);
+	$pdf->SetFont('Helvetica', '', 8.5);
+	$pdf->MultiCell(65,6,utf8_decode($articulos_catalogo['descripcion'].$masD.str_repeat("\n", $AgregaD).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(184);
+	$pdf->SetFont('Helvetica', 'B', 9);
+	$pdf->MultiCell(22,6,utf8_decode("\n".'$'.sprintf('%.2f', $articulos_catalogo['precio']).str_repeat("\n", $AgregaG).' '),1,'R',1);
+	$aux ++;
+}//FIN WHILE CATALOGO
+
 
 //Aquí escribimos lo que deseamos mostrar... (PRINT)
 $pdf->Output();

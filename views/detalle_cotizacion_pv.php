@@ -51,17 +51,20 @@ if (isset($_POST['cotizacion']) == false) {
       //FUNCION QUE MANDA IMPRIMIR EL CATALOGO SEGUN EL ID DE CATEGORIA
       // POR EL METODO POST RECIBIMOS EL ID DE LA COTIZACIÓN DEL ARCHIVO cotizacion_nueva_punto_venta.php
       function imprimir_catalogo(){
-       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
-       var id = $("input#cotizacion_imprime").val();
-       if (id == '') {
-        M.toast({html: 'Cotizacion no valida.', classes: 'rounded'});
-       }else{
-        var a = document.createElement("a");
-        a.href = "../php/imprimir_cotizacion.php?id";
-        a.target = "blank";
-        a.click();
-      } 
-    }
+        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+        var id = $("input#cotizacion_imprime").val();
+        if (id == '') {
+          M.toast({html: 'Cotizacion no valida.', classes: 'rounded'});
+        }else{
+          var a = document.createElement("a");
+          a.href = "../php/imprimir_cotizacion.php?id";
+          a.target = "blank";
+          $.post("../php/imprimir_cotizacion.php?id", {
+            id:id,
+          });
+          a.click();
+        } 
+      }
     </script>
     <body>
       <!-- DENTRO DE ESTE DIV VA TODO EL CONTENIDO Y HACE QUE SE VEA AL CENTRO DE LA PANTALLA.-->
