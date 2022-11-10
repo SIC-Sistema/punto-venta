@@ -50,18 +50,22 @@ if (isset($_POST['cotizacion']) == false) {
 
       //FUNCION QUE MANDA IMPRIMIR EL CATALOGO SEGUN EL ID DE CATEGORIA
       // POR EL METODO POST RECIBIMOS EL ID DE LA COTIZACIÓN DEL ARCHIVO cotizacion_nueva_punto_venta.php
-      function imprimir_catalogo(){
+      function imprimir_cotizacion(id){
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
-        var id = $("input#cotizacion_imprime").val();
+        //var id = $("input#cotizacion_imprime").val();
+        var id=id;
+        console.log(id);
         if (id == '') {
           M.toast({html: 'Cotizacion no valida.', classes: 'rounded'});
         }else{
           var a = document.createElement("a");
-          a.href = "../php/imprimir_cotizacion.php?id";
+          a.href = "../php/imprimir_cotizacion.php?id="+id;
           a.target = "blank";
-          $.post("../php/imprimir_cotizacion.php?id", {
-            id:id,
-          });
+          $.post("../php/imprimir_cotizacion.php?id="+id
+           //{
+            //id:id,
+          //}
+          );
           a.click();
         } 
       }
@@ -93,8 +97,8 @@ if (isset($_POST['cotizacion']) == false) {
           <h5 class="hide-on-large-only">Detalles:</h5>
         </div>
         <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
-        <input id="cotizacion_imprime" name="cotizacion_imprime" type="hidden" value="<?php echo $Cotizacion ?>">
-        <a onclick="imprimir_catalogo()" class="waves-effect waves-light btn pink center"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
+        <input id="cotizacion_imprime" name="cotizacion_imprime" type="hidden" value="<?php echo $id_cotizacion ?>">
+        <a onclick="imprimir_cotizacion(<?php echo $id_cotizacion ?>)" class="waves-effect waves-light btn pink center"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
         <!-- CREAMOS UN DIV EL CUAL TENGA id = "modal"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
         <div id="modal"></div>
         <div class="row">

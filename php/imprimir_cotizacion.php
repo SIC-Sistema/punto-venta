@@ -7,6 +7,7 @@ include('../php/conexion.php');
 include("../fpdf/fpdf.php");
 /// SACAMOS LA INFORMACION DEL LA COTIZACION
 $id = $_GET['id'];//RECIBIMOS POR EL METODO GET EL ID DE LA COTIZACIÓN
+//echo $id;
 
 class PDF extends FPDF{
    //Cabecera de página
@@ -113,7 +114,18 @@ $pdf->SetLineWidth(0);
 $pdf->Ln();
 $aux = 1;
 
-$detalle_cotizacion = mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE `punto_venta_detalle_cotizacion`.`id_venta` = $id");
+$detalle_cotizacion = mysqli_query($conn, "
+SELECT
+pvc.*,
+pvdc.*,
+
+pva
+FROM punto_venta_cotizaciones as pvc
+INNER JOIN punto_venta_detalle_cotizacion as pvdc on pvc.id=pvdc.id_venta
+INNER JOIN punto_venta_articulos as pva on pvdc.id_articulo=pva.id
+ WHERE pvc.id = $id");
+
+
 while($articulos_catalogo = mysqli_fetch_array($detalle_cotizacion)){ 
 
 	///VERIFICAMOS CUANTAS COLUMNAS TENDRA EL RENGLON SEGUN EL LARGO DEL NOMBRE O DESCRIPCION	
@@ -157,4 +169,5 @@ while($articulos_catalogo = mysqli_fetch_array($detalle_cotizacion)){
 
 //Aquí escribimos lo que deseamos mostrar... (PRINT)
 $pdf->Output();
+
 ?>
