@@ -100,11 +100,13 @@ $pdf->SetTextColor(0, 0, 0);
 $pdf->SetFont('Helvetica', 'B', 9);
 $pdf->SetTextColor(0, 0, 0);
 $pdf->Cell(8,8,utf8_decode('N°'),1,0,'C');
-$pdf->Cell(25,8,utf8_decode('Código'),1,0,'C');
-$pdf->Cell(35,8,utf8_decode('Producto'),1,0,'C');
-$pdf->Cell(36,8,utf8_decode('Imagen'),1,0,'C');
-$pdf->Cell(65,8,utf8_decode('Descripción'),1,0,'C');
-$pdf->Cell(22,8,utf8_decode('Precio'),1,0,'C');
+$pdf->Cell(35,8,utf8_decode('Imagen'),1,0,'C');
+$pdf->Cell(42,8,utf8_decode('Nombre'),1,0,'C');
+$pdf->Cell(36,8,utf8_decode('Modelo'),1,0,'C');
+$pdf->Cell(16,8,utf8_decode('Cantidad'),1,0,'C');
+$pdf->Cell(12,8,utf8_decode('Unidad'),1,0,'C');
+$pdf->Cell(22,8,utf8_decode('Precio U'),1,0,'C');
+$pdf->Cell(20,8,utf8_decode('Importe'),1,0,'C');
 
 
 ////   CONTENIDO DE LA TABLA    /////
@@ -114,17 +116,9 @@ $pdf->SetLineWidth(0);
 $pdf->Ln();
 $aux = 1;
 
-$detalle_cotizacion = mysqli_query($conn, "
-SELECT
-pvc.*,
-pvdc.*,
 
-pva
-FROM punto_venta_cotizaciones as pvc
-INNER JOIN punto_venta_detalle_cotizacion as pvdc on pvc.id=pvdc.id_venta
-INNER JOIN punto_venta_articulos as pva on pvdc.id_articulo=pva.id
- WHERE pvc.id = $id");
-
+//$detalle_cotizacion = mysqli_query($conn, "SELECT pvc.id as idcotiza, pvc.cotizacion, pvc.id_cliente, pvc.tipo_cambio, pvc.total, pvc.usuario, pvc.fecha, pvdc.id_articulo, pvdc.cantidad, pva.codigo, pva.nombre, pva.descripcion from punto_venta_cotizaciones as pvc INNER JOIN punto_venta_detalle_cotizacion as pvdc on pvc.id=pvdc.id_venta INNER JOIN punto_venta_articulos as pva on pvdc.id_articulo=pva.id WHERE pvc.id=$id");
+$detalle_cotizacion = mysqli_query($conn, "SELECT pvc.id as idcotiza, pva.imagen, pva.nombre, pva.descripcion, pva.modelo, pvdc.cantidad, pva.unidad, pvdc.precio_venta_u, pvdc.importe, pvc.total from punto_venta_cotizaciones as pvc INNER JOIN punto_venta_detalle_cotizacion as pvdc on pvc.id=pvdc.id_venta INNER JOIN punto_venta_articulos as pva on pvdc.id_articulo=pva.id WHERE pvc.id=$id");
 
 while($articulos_catalogo = mysqli_fetch_array($detalle_cotizacion)){ 
 
@@ -145,27 +139,41 @@ while($articulos_catalogo = mysqli_fetch_array($detalle_cotizacion)){
 	$pdf->MultiCell(8,6,utf8_decode("\n".$aux.str_repeat("\n", $AgregaG).' '),1,'C',1);
 	$pdf->SetY($pdf->GetY()-36);
 	$pdf->SetX(23);
-	$pdf->MultiCell(25,6,utf8_decode("\n".$articulos_catalogo['codigo'].str_repeat("\n", $AgregaG).' '),1,'C',1);
-	$pdf->SetY($pdf->GetY()-36);
-	$pdf->SetX(48);
-	$pdf->MultiCell(35,6,utf8_decode("\n".$articulos_catalogo['nombre'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',1);
-	$pdf->SetY($pdf->GetY()-36);
-	$pdf->SetX(83);
-	$pdf->MultiCell(36,6,utf8_decode(str_repeat("\n", 5).' '),1,'C',1);
+	$pdf->MultiCell(35,6,utf8_decode(str_repeat("\n", 5).' '),1,'C',1);
 	if ($articulos_catalogo['imagen'] != '') {
-		$pdf->Image('../Imagenes/Catalogo/'.$articulos_catalogo['imagen'], 84, $pdf->GetY()-34, 34, 32, 'jpg'); /// LOGO SIC
+		$pdf->Image('../Imagenes/Catalogo/'.$articulos_catalogo['imagen'], 24.5, $pdf->GetY()-34, 32, 32, 'jpg'); /// LOGO SIC
 	}
 	$pdf->SetY($pdf->GetY()-36);
-	$pdf->SetX(119);
-	$pdf->SetFont('Helvetica', '', 8.5);
-	$pdf->MultiCell(65,6,utf8_decode($articulos_catalogo['descripcion'].$masD.str_repeat("\n", $AgregaD).' '),1,'C',1);
+	$pdf->SetX(58);
+	$pdf->MultiCell(42,6,utf8_decode("\n".$articulos_catalogo['nombre'].str_repeat("\n", $AgregaG).' '),1,'C',1);
 	$pdf->SetY($pdf->GetY()-36);
-	$pdf->SetX(184);
+	$pdf->SetX(100);
+	$pdf->MultiCell(36,6,utf8_decode("\n".$articulos_catalogo['modelo'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(136);
+	$pdf->MultiCell(16,6,utf8_decode("\n".$articulos_catalogo['cantidad'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',1);
+
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(152);
+	$pdf->MultiCell(12,6,utf8_decode("\n".$articulos_catalogo['unidad'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(164);
+	$pdf->MultiCell(22,6,utf8_decode("\n".'$'.$articulos_catalogo['precio_venta_u'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',1);
+	$pdf->SetY($pdf->GetY()-36);
+	$pdf->SetX(186);
 	$pdf->SetFont('Helvetica', 'B', 9);
-	$pdf->MultiCell(22,6,utf8_decode("\n".'$'.sprintf('%.2f', $articulos_catalogo['precio']).str_repeat("\n", $AgregaG).' '),1,'R',1);
+	$pdf->MultiCell(20,6,utf8_decode("\n".'$'.sprintf('%.2f', $articulos_catalogo['importe']).str_repeat("\n", $AgregaG).' '),1,'R',1);
 	$aux ++;
 }//FIN WHILE CATALOGO
 
+
+$Total = mysqli_query($conn, "SELECT * FROM `punto_venta_cotizaciones` WHERE id = $id");
+//Casilla de total
+$pdf->SetX(164);
+$pdf->Cell(42,8,utf8_decode('Total'),1,0,'C');
+$pdf->SetY($pdf->GetY()+8);
+$pdf->SetX(164);
+//$pdf->MultiCell(42,1.5,utf8_decode("\n".$Total['total'].$masN.str_repeat("\n", $AgregaN).' '),1,'C',1);
 
 //Aquí escribimos lo que deseamos mostrar... (PRINT)
 $pdf->Output();
