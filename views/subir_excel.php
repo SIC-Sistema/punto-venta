@@ -50,7 +50,7 @@ require_once __DIR__.'/../ReadXLSX/src/SimpleXLSX.php';
                         }else{
                             //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
                             if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo'"))>0){
-                                echo '<td><b class="red-text">¡Repetido!</b></td>';                             
+                                echo '<td><b class="red-text">¡Repetido! (NO)</b></td>';                             
                             }else{
                                 // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
                                 $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
@@ -58,9 +58,9 @@ require_once __DIR__.'/../ReadXLSX/src/SimpleXLSX.php';
                                 $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, usuario, fecha)  VALUES('$codigo', '$nombre', '$nombre', '$precio', '$unidad', '$CFiscal', '$CUnidad', 'Por Definir', 10, 49,'$Fecha_hoy')";
                                 //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
                                 if(mysqli_query($conn, $sql)){
-                                    echo '<td><b class="green-text">¡Exito!</b></td>';                                
+                                    echo '<td><b class="green-text">¡Exito! (SI)</b></td>';                                
                                 }else{
-                                    echo '<td><b class="red-text">¡Error!</b></td>';                                
+                                    echo '<td><b class="red-text">¡Error! (NO)</b></td>';                                
                                 }//FIN else DE ERROR   
                             }//FIN ELSE                                                 
                         }
