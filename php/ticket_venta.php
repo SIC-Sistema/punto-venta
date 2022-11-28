@@ -9,7 +9,7 @@
     $Venta =$_GET['v'];//TOMAMOS EL ID DE LA VENTA PREVIAMENTE CREADO
     $FormaPago = $_GET['p'];
     $descripcion = 'Venta N°'.$Venta;
-    $pago = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM pagos WHERE descripcion = '$descripcion'"));
+    $pago = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM pagos WHERE descripcion = '$descripcion' AND tipo = 'Punto Venta'"));
 
     #DEFINIMOS UNA ZONA HORARIA
     date_default_timezone_set('America/Mexico_City');

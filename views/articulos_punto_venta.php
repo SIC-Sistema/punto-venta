@@ -83,7 +83,7 @@
             <div class="input-field col s12">
               <i class="material-icons prefix">search</i>
               <input id="busqueda" name="busqueda" type="text" class="validate" onkeyup="buscar_articulos();">
-              <label for="busqueda">Buscar(Código, Nombre, Descrpición, Código Fiscal)</label>
+              <label for="busqueda">Buscar(Código, Nombre, Descrpición, Código Fiscal, #Categoria)</label>
             </div>
             <!-- CAJA DE SELECCION DE CATEGORIAS -->
             <div class="col s12 m5 l5">

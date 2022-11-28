@@ -48,8 +48,7 @@ $Hoy = date('Y-m-d');
 					<li><a onclick = 'nueva_venta()' class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>  
 					<li><a href="ventas_punto_venta.php" class="indigo-text"><i class="material-icons">local_grocery_store</i>Ventas</a></li>  
 					<li><a href = "cotizaciones_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
-				    <li><a href class="indigo-text"><i class="material-icons">import_export</i>Item 2 </a></li>   
-
+				    <li><a href = "add_factura.php" class="indigo-text"><i class="material-icons">description</i>Nueva Factura</a></li>   
 				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown4'><b><?php echo $_SESSION['user_name'];?> </b><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown4' class='dropdown-content'>
@@ -92,7 +91,7 @@ $Hoy = date('Y-m-d');
 						    <li><a href = "clientes_punto_venta.php"><i class="material-icons">people</i>Clientes </a></li>
 							<li><a href = "usuarios.php"><i class="material-icons">perm_identity</i>Usuarios </a></li>
 						    <li><a href = "articulos_punto_venta.php"><i class="material-icons">dashboard</i>Articulos </a></li>
-							<li><a href = "categorias_punto_venta.php"><i class="material-icons">view_list</i>Categorias </a></li> 			 
+							<li><a href = "categorias_punto_venta.php"><i class="material-icons">view_list</i>Categorias </a></li> 	
 					      </ul>
 					    </span>
 		      		</div>    			
@@ -108,7 +107,7 @@ $Hoy = date('Y-m-d');
 		      			  <ul>
 							<li><a href = "almacenes_punto_venta.php"><i class="material-icons">assignment_turned_in</i>Almacenes</a></li>
 							<li><a href = "almacen_punto_venta.php"><i class="material-icons">list</i>Mi Almacen</a></li>
-							<li><a href = "compras_punto_venta.php"><i class="material-icons">add_shopping_cart</i>Compras</a></li>	 
+							<li><a href = "compras_punto_venta.php"><i class="material-icons">add_shopping_cart</i>Compras</a></li>	
 					      </ul>
 					    </span>
 		      		</div>    			
@@ -125,7 +124,7 @@ $Hoy = date('Y-m-d');
 							<li><a onclick = 'nueva_venta()'><i class="material-icons">monetization_on</i>Nueva Venta</a></li>
 							<li><a href="ventas_punto_venta.php"><i class="material-icons">local_grocery_store</i>Ventas</a></li> 
 		      				<li><a href="cotizaciones_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
-					 		<li><a href="form_mantenimiento.php"><i class="material-icons">add_circle_outline</i>Item 2</a></li>
+					 		<li><a href="add_factura.php"><i class="material-icons">description</i>Nueva Factura</a></li>
 					      </ul>
 					    </span>
 		      		</div>    			

@@ -5,8 +5,7 @@
   include('fredyNav.php');
   include('../php/cobrador.php');
   date_default_timezone_set('America/Mexico_City');
-  $Fecha_hoy = date('Y-m-d');
-  ?>
+  $Fecha_hoy = date('Y-m-d');?>
   <script>
     //FUNCION QUE BORRA LOS COMPRAS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
       function borrar_venta_pv(id){
