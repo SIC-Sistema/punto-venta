@@ -18,7 +18,7 @@ require_once __DIR__.'/../ReadXLSX/src/SimpleXLSX.php';
     <div class="container">
         <?php
         echo '<ul class="collection">
-                  <li class="collection-item indigo"><h4><b class="white-text">Importar de XLSX a MYSQL</b></h4></li>
+                  <li class="collection-item indigo"><h4><b class="white-text">Importar de XLSX a MYSQL Tabla Articulos</b></h4></li>
               </ul>';
 
         if (isset($_FILES['file'])) {
@@ -72,10 +72,14 @@ require_once __DIR__.'/../ReadXLSX/src/SimpleXLSX.php';
             }// FIN ELSE
         }// FIN IF FILE
         ?>
-        <h3>BUSCAR UN ARCHIVO</h3><br>
+        <h3>Formato en el que se debe subir el archivo.xlsx</h3>        
+        <h5>Debe asegurarse que el archivo tenga la información en las columnas como en la imagen <br> (Columna A = codigo, Columna C = Descripcion, Columna D = Precio, etc.)</h5>  
+        <img src="../img/formato.jpg" />  <br><br>
+
+        <h3>BUSCAR UN ARCHIVO:</h3>       
         <form method="post" enctype="multipart/form-data">
         *.XLSX <input type="file" name="file"  />&nbsp;&nbsp;<input type="submit" value="Subir" />
-        </form>
+        </form><br>    
     </div>
 </body>
 </html>

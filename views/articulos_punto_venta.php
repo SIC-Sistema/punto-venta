@@ -68,6 +68,7 @@
   <body onload="buscar_articulos();">
     <div class="container"><br><br>
       <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR ARTICULO    ///////   -->
+      <a href="subir_excel.php" class="waves-effect waves-light btn red darken-2 left right">Desde Excel<i class="material-icons prefix left">list</i></a>
       <a href="add_articulo.php" class="waves-effect waves-light btn pink left right">Agregar Articulo<i class="material-icons prefix left">add</i></a>
       <!-- CREAMOS UN DIV EL CUAL TENGA id = "borrarArticulo"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
       <div id="borrarArticulo"></div>
