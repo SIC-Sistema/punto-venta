@@ -68,6 +68,33 @@
             $("#VentasP").html(mensaje);
       });//FIN post
     }//FIN function
+
+    //FUNCION QUE MOSTRARA EL MODAL PARA ESCOGER FACRTURA O NUEVA
+    function facturar(venta){
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_factura.php" PARA MOSTRAR EL MODAL
+        $.post("modal_factura.php", {
+          //Cada valor se separa por una ,
+            venta:venta,
+          }, function(mensaje){
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_factura.php"
+              $("#modal").html(mensaje);
+      });//FIN post
+    }
+    function facturar_update(id_venta){
+      //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+      var factura = $("select#factura").val();
+
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_facturas.php"
+      $.post("../php/control_facturas.php", {
+        //Cada valor se separa por una ,
+          accion: 0,
+          venta: id_venta,
+          nueva: factura,
+        }, function(mensaje) {
+          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_facturas.php"
+          $("#modal").html(mensaje);
+      });
+    }
   </script>
 </head>
 <main>
@@ -75,6 +102,8 @@
   <div class="container">
     <!-- CREAMOS UN DIV EL CUAL TENGA id = "cancelar"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
     <div id="cancelar"></div>
+    <!-- CREAMOS UN DIV EL CUAL TENGA id = "modal"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
+    <div id="modal"></div>
     <div class="row" ><br>
       <h3 class="hide-on-med-and-down">Ventas</h3>
       <h5 class="hide-on-large-only">Ventas</h5>

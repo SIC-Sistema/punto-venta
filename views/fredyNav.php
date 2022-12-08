@@ -48,7 +48,7 @@ $Hoy = date('Y-m-d');
 					<li><a onclick = 'nueva_venta()' class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>  
 					<li><a href="ventas_punto_venta.php" class="indigo-text"><i class="material-icons">local_grocery_store</i>Ventas</a></li>  
 					<li><a href = "cotizaciones_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
-				    <li><a href = "add_factura.php" class="indigo-text"><i class="material-icons">description</i>Nueva Factura</a></li>   
+				    <li><a onclick = 'nueva_factura(0)' class="indigo-text"><i class="material-icons">description</i>Nueva Factura</a></li>   
 				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown4'><b><?php echo $_SESSION['user_name'];?> </b><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown4' class='dropdown-content'>
@@ -124,7 +124,7 @@ $Hoy = date('Y-m-d');
 							<li><a onclick = 'nueva_venta()'><i class="material-icons">monetization_on</i>Nueva Venta</a></li>
 							<li><a href="ventas_punto_venta.php"><i class="material-icons">local_grocery_store</i>Ventas</a></li> 
 		      				<li><a href="cotizaciones_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
-					 		<li><a href="add_factura.php"><i class="material-icons">description</i>Nueva Factura</a></li>
+					 		<li><a onclick = 'nueva_factura(0)'><i class="material-icons">description</i>Nueva Factura</a></li>
 					      </ul>
 					    </span>
 		      		</div>    			
@@ -141,11 +141,24 @@ $Hoy = date('Y-m-d');
 	<script>
 		function nueva_venta(){
 			//SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-	        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+	        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../views/dos_ventas.php"
 	        $.post("dos_ventas.php", {
 	          //Cada valor se separa por una ,
 	          }, function(mensaje) {
-	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "dos_ventas.php"
+	            $("#resultado_venta").html(mensaje);
+	        });
+		}
+		function nueva_factura(id_venta){
+			//SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+	        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_facturas.php"
+	        $.post("../php/control_facturas.php", {
+	          //Cada valor se separa por una ,
+	        	accion: 0,
+	        	venta: id_venta,
+	        	nueva: 0,
+	          }, function(mensaje) {
+	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_facturas.php"
 	            $("#resultado_venta").html(mensaje);
 	        });
 		}
