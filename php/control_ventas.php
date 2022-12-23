@@ -29,7 +29,6 @@ switch ($Accion) {
         $Total = $sql_total['Total']; 
 
         $sql = "UPDATE `punto_venta_ventas` SET id_cliente = '$cliente', fecha= '$Fecha_hoy', hora = '$Hora', tipo_cambio = '$tipo_cambio', total = '$Total', usuario = '$id_user', estatus = 2  WHERE id = $id_venta";
-
 		//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
         if(mysqli_query($conn, $sql)){
             echo '<script >M.toast({html:"La venta se termino exitosamente.", classes: "rounded"})</script>';
@@ -61,7 +60,12 @@ switch ($Accion) {
 
                 if ($tipo_cambio == 'Credito') {
                     // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
+                    $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
                 }
+                if(mysqli_query($conn, $sql_credito)){
+                    echo '<script >M.toast({html:"Se agrego un nuevo credito.", classes: "rounded"})</script>';  
+                }
+
                 $cliente = ($cliente == 0)? $cliente: $cliente+100000;
                 #--- CREAMOS EL SQL PARA LA INSERCION ---
                 $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";

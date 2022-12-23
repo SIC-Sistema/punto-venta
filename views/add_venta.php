@@ -82,7 +82,7 @@ if (isset($_GET['id']) == false) {
 			      var cantidad = $("input#cantidadP").val();
 			      var precio_venta = $("input#precio_venta").val();
 			      if (id_art == '' || cantidad == '' || precio_venta == '') {
-	          	M.toast({html: 'Seleccione un articulo', classes: 'rounded'});
+	          		M.toast({html: 'Seleccione un articulo', classes: 'rounded'});
 			      }else{
 		          //PEDIMOS VARIABLES Y CONDICIONES PARA INSERTAR ARTICULO A TMP
 		          M.toast({html: 'Insertar articulo N° '+id_art, classes: 'rounded'});
@@ -207,7 +207,7 @@ if (isset($_GET['id']) == false) {
 	            cliente: cliente,
 	            tipo_cambio: tipo_cambio,
 	            cantidadPago: cantidadPago,
-		          id_venta: <?php echo $Venta; ?>,
+		        id_venta: <?php echo $Venta; ?>,
 	          }, function(mensaje) {
 	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
 	            $("#tablaArticuloVenta").html(mensaje);
