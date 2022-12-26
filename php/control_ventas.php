@@ -58,9 +58,10 @@ switch ($Accion) {
                 }//FIN while
                 $descripcion = 'Venta N°'.$id_venta;
 
+                //PARA AGREGAR A CRÉDITO
                 if ($tipo_cambio == 'Credito') {
                     // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
-                    $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
+                    $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
                 }
                 if(mysqli_query($conn, $sql_credito)){
                     echo '<script >M.toast({html:"Se agrego un nuevo credito.", classes: "rounded"})</script>';  
