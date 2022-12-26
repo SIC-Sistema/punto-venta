@@ -48,7 +48,8 @@ $Hoy = date('Y-m-d');
 					<li><a onclick = 'nueva_venta()' class="indigo-text"><i class="material-icons">monetization_on</i>Nueva Venta</a></li>  
 					<li><a href="ventas_punto_venta.php" class="indigo-text"><i class="material-icons">local_grocery_store</i>Ventas</a></li>  
 					<li><a href = "cotizaciones_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Cotizaciones </a></li>   
-				    <li><a onclick = 'nueva_factura(0)' class="indigo-text"><i class="material-icons">description</i>Nueva Factura</a></li>   
+				    <li><a onclick = 'nueva_factura(0)' class="indigo-text"><i class="material-icons">description</i>Nueva Factura</a></li> 
+					<li><a href = "cotizaciones_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Crédito</a></li>  
 				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown4'><b><?php echo $_SESSION['user_name'];?> </b><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown4' class='dropdown-content'>
@@ -125,6 +126,7 @@ $Hoy = date('Y-m-d');
 							<li><a href="ventas_punto_venta.php"><i class="material-icons">local_grocery_store</i>Ventas</a></li> 
 		      				<li><a href="cotizaciones_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
 					 		<li><a onclick = 'nueva_factura(0)'><i class="material-icons">description</i>Nueva Factura</a></li>
+							 <li><a href = "cotizaciones_punto_venta.php" class="indigo-text"><i class="material-icons">local_atm</i>Crédito</a></li> 
 					      </ul>
 					    </span>
 		      		</div>    			
