@@ -8,19 +8,21 @@
     $Fecha_hoy = date('Y-m-d');
     $config = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_config"));
     $folio = $_GET['id'];
+    $factura = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM tmp_pv_factura WHERE folio = $folio "));
   ?>
   <script>
     //FUNCION QUE BORRA LOS COMPRAS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
-    function borrar_venta_pv(id){
-      var answer = confirm("Deseas eliminar el venta N°"+id+"?");
+    function borrar_venta(id){
+      var answer = confirm("Deseas eliminar la venta N°"+id+" de la lista?");
       if (answer) {
-        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-        $.post("../php/control_ventas.php", {
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_facturas.php"
+        $.post("../php/control_facturas.php", {
           //Cada valor se separa por una ,
             id: id,
-            accion: 3,
+            folio: <?php echo $folio; ?>,
+            accion: 2,
           }, function(mensaje) {
-            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_facturas.php"
             $("#cancelar").html(mensaje);
         }); //FIN post
       }//FIN IF
@@ -28,7 +30,6 @@
 
     //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS DE LAS VENTAS (SE ACTIVA AL INICIAR EL ARCHIVO)
     function buscarVentas(folio){
-      //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
       //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_facturas.php"
       $.post("../php/control_facturas.php", {
         //Cada valor se separa por una ,
@@ -39,6 +40,28 @@
             $("#VentasP").html(mensaje);
       });//FIN post
     }//FIN function
+    //FUNCION QUE GUARDA LOS CAMBIOS REALIZADOS
+    function update_factura(folio){
+      //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+      var regimen = $("select#regimen").val();
+      var cdfi = $("select#cdfi").val();
+      var metodo_pago = $("select#metodo_pago").val();
+      var forma_pago = $("select#forma_pago").val();
+
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_facturas.php"
+      $.post("../php/control_facturas.php", {
+        //Cada valor se separa por una ,
+          folio: folio,
+          regimen: regimen,
+          cdfi: cdfi,
+          metodo_pago: metodo_pago,
+          forma_pago: forma_pago,
+          accion: 3,
+        }, function(mensaje){
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_facturas.php"
+            $("#cancelar").html(mensaje);
+      });//FIN post
+    }//FIN function
   </script>
 </head>
 <main>
@@ -47,8 +70,11 @@
     <!-- CREAMOS UN DIV EL CUAL TENGA id = "cancelar"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
     <div id="cancelar"></div>
     <div class="row" ><br>
-      <h3 class="hide-on-med-and-down">Registrar Factura N° <?php echo $folio; ?> (Temporal)</h3>
-      <h5 class="hide-on-large-only">Registrar Factura N° <?php echo $folio; ?> (Temporal) </h5>
+      <h3 class="hide-on-med-and-down col s12 m8">Registrar Factura N° <?php echo $folio; ?> (Temporal)</h3>
+      <h5 class="hide-on-large-only col s12">Registrar Factura N° <?php echo $folio; ?> (Temporal) </h5>
+      <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR COMPRA    ///////   -->
+      <br><a onclick="update_factura(<?php echo $folio; ?>);" class="waves-effect waves-light btn-small tooltipped green right" data-tooltip="Guardar Cambios">Guardar<i class="material-icons prefix left">save</i></a>
+      <a onclick="crear_factura();" class="waves-effect waves-light btn-small tooltipped indigo right" data-tooltip="Crear Factura Solo en Sistema"> Crear Factura<i class="material-icons prefix left">picture_as_pdf</i></a>
     </div>
     <div class="row">
     <!-- ----------------------------  TABs o MENU  ---------------------------------------->
@@ -77,12 +103,20 @@
             <div class="col s7 m8">
               <?php echo $config['rfc']; ?><br>
               <?php echo $config['razon_social']; ?><br>
-              <select class="browser-default col s12 m9">
-                <option value="" disabled selected>Seleccone un regimen</option>
+              <?php
+              if ($factura['regimen_fiscal'] == NULL) {
+                $value = ''; $show = 'Seleccone un regimen';
+              }else{
+                $array = array("612" => "Personas Físicas con Actividades Empresariales y Profesionales");
+                $value = $factura['regimen_fiscal']; $show = $factura['regimen_fiscal'].'-'.$array[$factura['regimen_fiscal']];
+              }
+              ?>
+              <select class="browser-default col s12 m9" id="regimen">
+                <option value="<?php echo $value; ?>" selected><?php echo $show; ?></option>
                 <option value="612">612- Personas Físicas con Actividades Empresariales y Profesionales</option>
               </select><br><br>
               <?php echo $config['cp']; ?><br>
-              <input class="col s12 m8" type="" name="" value="<?php echo $config['correo']; ?>"><br>
+              <input class="col s12 m8" type="" value="<?php echo $config['correo']; ?>"><br>
             </div>
           </div><br><br><br><br><br><br><br>
 
@@ -97,10 +131,25 @@
               <b class="right">Correo Electronico:</b><br>
             </div>
             <div class="col s7 m8">
-              <input class="col s12 m6" type="" name="" value="<?php echo ''; ?>"><br>
-              <input class="col s12 m7" type="" name="" value="<?php echo ''; ?>"><br>
-              <select class="browser-default col s12 m9">
-                <option value="" disabled selected>Seleccone un uso CDFI</option>
+              <?php
+              if ($factura['cliente'] == 0) {
+                $rfc = ''; $razon_social = ''; $correo = '';
+              }else{
+                $id = $factura['cliente'];
+                $cliente = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto-venta_clientes` WHERE id = $id"));
+                $rfc = $cliente['rfc']; $razon_social = $cliente['nombre']; $correo = $cliente['email'];
+              }
+              if ($factura['uso_cdfi'] == NULL) {
+                $value = ''; $show = 'Seleccone un uso CDFI';
+              }else{
+                $array = array("G01" => "Adquisición de mercancia" , "G02" => "Devoluciones, descuentos o bonificaciones", "G03" => "Gastos en general", "I01" => "Construcciones", "I02" => "Moviliario y equipo de oficina por inverciones", "I03" => "Equipo de transporte", "I04" => "Equipo de computo y accesorios", "I05" => "Dados, troqueles, moldes, matrices y herramientas", "I06" => "Comunicaciones telefonicas", "I07" => "Comunicaciones satelitales", "I08" => "Otra maquinaria y equipo", "D01" => "Honorario médicos, dentales y gastos hospitalarios", "D02" => "Gastos médicos por incapacidad o discapacidad", "D03" => "Gastos funerales", "D04" => "Donativos", "D05" => "Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación)", "D06" => "Aportaciones voluntarias al SAR", "D07" => "Primas por seguros de gastos medicos", "D08" => "Gastos de transportación escolar obligatoria", "D09" => "Depositos de cuentas para el ahorro, primas que tengan como base plabes de pensiones", "D10" => "Pagos por servicios educativos (colegiaturas)", "P01" => "Por definir");
+                $value = $factura['uso_cdfi']; $show = $factura['uso_cdfi'].'-'.$array[$factura['uso_cdfi']];
+              }
+              ?>
+              <input class="col s12 m6" type="" id = "rfc" value="<?php echo $rfc; ?>"><br>
+              <input class="col s12 m7" type="" id = "razon_social" value="<?php echo $razon_social; ?>"><br>
+              <select class="browser-default col s12 m9" id="cdfi">
+                <option value="<?php echo $value; ?>" selected><?php echo $show; ?></option>
                 <option value="G01">G01-Adquisición de mercancia</option>
                 <option value="G02">G02-Devoluciones, descuentos o bonificaciones</option>
                 <option value="G03">G03-Gastos en general</option>
@@ -124,7 +173,7 @@
                 <option value="D10">D10-Pagos por servicios educativos (colegiaturas)</option>
                 <option value="P01">P01-Por definir</option>
               </select>
-              <input class="col s12 m8" type="" name="" value="<?php echo ''; ?>"><br>
+              <input class="col s12 m8" type="" id="correo" value="<?php echo $correo; ?>"><br>
             </div>
           </div><br><br><br><br><br><br><br>
         </div>
@@ -157,16 +206,33 @@
         <div class="row"><br>
           <div class="col s12 m6">
             <label><h4>Método de Pago</h4></label>
-            <select class="browser-default">
-                <option value="" disabled selected>Seleccone:</option>
+            <?php
+              if ($factura['metodo_pago'] == NULL) {
+                $value = ''; $show = 'Seleccone:';
+              }else{
+                $array = array("PUE" => "Pago en una sola exhibición", "PPD" => "Pago en parcialidades o diferido");
+                $value = $factura['metodo_pago']; $show = $factura['metodo_pago'].'-'.$array[$factura['metodo_pago']];
+              }
+            ?>
+            <select class="browser-default" id="metodo_pago">
+                <option value="<?php echo $value; ?>" selected><?php echo $show; ?></option>
                 <option value="PUE">PUE-Pago en una sola exhibición</option>
                 <option value="PPD">G01-Pago en parcialidades o diferido</option>
             </select>
           </div>
           <div class="col s12 m6">
-            <label><h4>Forma de Pago</h4></label>          
-            <select class="browser-default">
-                <option value="" disabled selected>Seleccone:</option>
+            <label><h4>Forma de Pago</h4></label>  
+            <?php
+              if ($factura['forma_pago'] == NULL) {
+                $value = ''; $show = 'Seleccone:';
+              }else{
+                $array = array("01" => "Efectivo" , "02" => "Cheque nominativo", "03" => "Transferencia electrónica de fondos", "04" => "Tarjeta de crédito", "05" => "Monedero electrónico", "06" => "Dinero electrónico", "08" => "Vales de despensa", "12" => "Donación en pago", "15" => "Condonación", "17" => "Compensación", "13" => "Pago por subrogación", "23" => "Novación", "24" => "Confusión", "25" => "Remisión de deuda", "26" => "Prescripción o caducidad", "27" => "A satisfacción del acreedor", "28" => "Tarjeta de Débito", "29" => "Tarjeta de Servicio", "30" => "Aplicación de anticipos", "31" => "Intermediario pagos", "99" => "Por definir");
+
+                $value = $factura['forma_pago']; $show = $factura['forma_pago'].'-'.$array[$factura['forma_pago']];
+              }
+            ?>
+            <select class="browser-default" id="forma_pago">
+                <option value="<?php echo $value; ?>" selected><?php echo $show; ?></option>
                 <option value="01">01-Efectivo</option>
                 <option value="02">02-Cheque nominativo</option>
                 <option value="03">03-Transferencia electrónica de fondos</option>
@@ -194,6 +260,8 @@
         </div>
       </div>
     </div>
+    <br><a onclick="update_factura(<?php echo $folio; ?>);" class="waves-effect waves-light btn-small tooltipped green right" data-position="top" data-tooltip="Guardar Cambios">Guardar<i class="material-icons prefix left">save</i></a>
+    <a onclick="crear_factura();" class="waves-effect waves-light btn-small tooltipped indigo right" data-position="top" data-tooltip="Crear Factura Solo en Sistema"> Crear Factura<i class="material-icons prefix left">picture_as_pdf</i></a>
   </div>
 </body>
 </main>

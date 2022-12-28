@@ -9,7 +9,7 @@
   <script>
     //FUNCION QUE BORRA LOS COMPRAS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
       function borrar_venta_pv(id){
-        var answer = confirm("Deseas eliminar el venta N°"+id+"?");
+        var answer = confirm("Deseas eliminar la venta N°"+id+"?");
         if (answer) {
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
           $.post("../php/control_ventas.php", {

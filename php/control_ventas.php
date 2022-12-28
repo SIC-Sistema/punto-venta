@@ -12,10 +12,10 @@ $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE u
 $almacen = $datos_user['almacen'];
 
 
-//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar Venta = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
+//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, , InfoCliente = 2, Borrar Venta = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 $Accion = $conn->real_escape_string($_POST['accion']);
 
-//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar Venta = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
+//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, , InfoCliente = 2, Borrar Venta = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 //echo "hola aqui estoy";
 switch ($Accion) {
     case 0:  ///////////////           IMPORTANTE               ///////////////
