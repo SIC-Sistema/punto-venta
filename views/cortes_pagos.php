@@ -132,7 +132,7 @@
         <ul class="collapsible">
           <?php 
           $sql_pagos_efectivo_int = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Efectivo' AND tipo != 'Dispositivo'  AND tipo != 'Orden Servicio' AND tipo != 'Punto Venta'");
-          //VERIFICAMOS SI HAY PAGOS EN EFECTIVO DEL PUNTO DE VENTA SI HAY MOSTRAMOS EL DESPLEGABLE
+          //VERIFICAMOS SI HAY PAGOS EN EFECTIVO DE INTERNET SI HAY MOSTRAMOS EL DESPLEGABLE
           if (mysqli_num_rows($sql_pagos_efectivo_int) > 0) { 
             ?>
             <li>
@@ -187,7 +187,7 @@
           }// FIN IF EFECTIVO
 
           $sql_pagos_banco_int = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Banco' AND tipo != 'Dispositivo'  AND tipo != 'Orden Servicio' AND tipo != 'Punto Venta'");
-          //VERIFICAMOS SI HAY PAGOS EN BANCO DEL PUNTO DE VENTA SI HAY MOSTRAMOS EL DESPLEGABLE
+          //VERIFICAMOS SI HAY PAGOS EN BANCO DE INTERNET SI HAY MOSTRAMOS EL DESPLEGABLE
           if (mysqli_num_rows($sql_pagos_banco_int) > 0) { 
             ?>
             <li>
@@ -242,7 +242,7 @@
           }// FIN IF BANCO
 
           $sql_pagos_credito_int = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Credito' AND tipo != 'Dispositivo'  AND tipo != 'Orden Servicio' AND tipo != 'Punto Venta'");
-          //VERIFICAMOS SI HAY PAGOS EN CREDITO DEL PUNTO DE VENTA SI HAY MOSTRAMOS EL DESPLEGABLE
+          //VERIFICAMOS SI HAY PAGOS EN CREDITO DE INTERNET SI HAY MOSTRAMOS EL DESPLEGABLE
           if (mysqli_num_rows($sql_pagos_credito_int) > 0) { 
             ?>
             <li>
@@ -297,212 +297,6 @@
           }// FIN IF CREDITO
           ?>
         </ul>
-    </div>
-    <!-----------------------------------------------------------------------------
-    #        ------------  PAGOS DE LAS ORDENES DE SERVICO -----------------
-    #----------------------------------------------------------------------------->
-    <div class="row">
-        <ul class="collection">
-          <li class="collection-item grey"><h6><b> >>> ORDEN SERVICIOS: <span class="new badge green" data-badge-caption="pago(s)">0</span></b></h6></li>
-        </ul>
-      <div class="row">
-        <?php
-        $sql_pagos = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Efectivo' AND tipo = 'Orden Servicio'");
-        $filas = mysqli_num_rows($sql_pagos);
-        if ($filas > 0) {
-          $total = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS precio FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Efectivo' AND tipo = 'Orden Servicio'"));
-        ?> 
-        <h5 class="blue-text"><b>Efectivo:</b></h5>
-        <table class="bordered highlight responsive-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>No. Cliente</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Tipo</th>
-                    <th>Fecha</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody>
-        <?php        
-          $aux = 0;
-         while($pagos = mysqli_fetch_array($sql_pagos)){
-          $aux ++;
-          $id_cliente = $pagos['id_cliente'];
-          $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM especiales WHERE id_cliente = $id_cliente"));
-            ?>
-            <tr>
-              <th><?php echo $aux; ?></th> 
-              <td><?php echo $id_cliente; ?></td>
-              <td><?php echo $cliente['nombre']; ?></td>
-              <td><?php echo $pagos['descripcion']; ?></td>
-              <td><?php echo $pagos['tipo']; ?></td>
-              <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
-              <td>$<?php echo $pagos['cantidad'];?>.00</td>
-            </tr>
-            <?php
-         }
-        ?>
-            </tbody>
-        </table>
-        </div>
-        <div class="row">
-        <h4 class="right">Total: $<?php echo $total['precio'];?></h4>
-        </div>
-        <?php
-        }
-        $sql_banco = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Banco'  AND tipo = 'Orden Servicio'");
-        $filas = mysqli_num_rows($sql_banco);
-        if ($filas > 0) {
-          $total = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS precio FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Banco' AND tipo = 'Orden Servicio'"));
-        ?>
-        <h5 class="blue-text"><b>Banco:</b></h5>        
-        <div class="row">
-        <table class="bordered highlight responsive-table">
-          <thead>
-            <th>#</th>
-            <th>No. Cliente</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Tipo</th>
-            <th>Fecha</th>
-            <th>Cantidad</th>
-          </thead>
-          <tbody>
-          <?php
-          $aux = 0;
-          while($pagos = mysqli_fetch_array($sql_banco)){
-          $aux ++;
-          $id_cliente = $pagos['id_cliente'];
-          $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM especiales WHERE id_cliente = $id_cliente"));
-            ?>
-            <tr>
-              <th><?php echo $aux; ?></th> 
-              <td><?php echo $id_cliente; ?></td>
-              <td><?php echo $cliente['nombre']; ?></td>
-              <td><?php echo $pagos['descripcion']; ?></td>
-              <td><?php echo $pagos['tipo']; ?></td>
-              <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
-              <td>$<?php echo $pagos['cantidad'];?>.00</td>
-            </tr>
-          <?php
-          }
-          ?> 
-          </tbody>
-        </table>
-        </div>
-        <div class="row">
-        <h4 class="right">Total: $<?php echo $total['precio'];?></h4>
-        </div>
-        <?php
-        }
-        ?>
-    </div>
-    <!-----------------------------------------------------------------------------
-    #           ------------  PAGOS DEL SERVICIO TECNICO ------------------
-    #----------------------------------------------------------------------------->
-    <div class="row">
-        <ul class="collection">
-          <li class="collection-item grey"><h6><b> >>> SERVICIO TECNICO: <span class="new badge green" data-badge-caption="pago(s)">0</span></b></h6></li>
-        </ul>
-      <div class="row">
-        <?php
-        $sql_pagos = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Efectivo' AND tipo = 'Dispositivo'");
-        $filas = mysqli_num_rows($sql_pagos);
-        if ($filas > 0) {
-          $total = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS precio FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Efectivo' AND tipo = 'Dispositivo'"));
-        ?>
-        <h5 class="blue-text"><b>Efectivo:</b></h5>
-        <table class="bordered highlight responsive-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>No. Cliente</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Tipo</th>
-                    <th>Fecha</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody>
-        <?php        
-          $aux = 0;
-         while($pagos = mysqli_fetch_array($sql_pagos)){
-          $aux ++;
-          $id_cliente = $pagos['id_cliente'];
-          $sql = mysqli_query($conn, "SELECT nombre FROM dispositivos WHERE id_dispositivo = $id_cliente"); 
-          $cliente= mysqli_fetch_array($sql);
-            ?>
-            <tr>
-              <th><?php echo $aux; ?></th> 
-              <td><?php echo $id_cliente; ?></td>
-              <td><?php echo $cliente['nombre']; ?></td>
-              <td><?php echo $pagos['descripcion']; ?></td>
-              <td><?php echo $pagos['tipo']; ?></td>
-              <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
-              <td>$<?php echo $pagos['cantidad'];?>.00</td>
-            </tr>
-            <?php
-         }
-        ?>
-            </tbody>
-        </table>
-        </div>
-        <div class="row">
-        <h4 class="right">Total: <?php echo $total['precio'];?></h4>
-        </div>
-        <?php
-         }
-        $sql_banco = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Banco'  AND tipo = 'Dispositivo'");
-        $filas = mysqli_num_rows($sql_banco);
-        if ($filas > 0) {
-          $total = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS precio FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Banco' AND tipo = 'Dispositivo'"));
-        ?>
-        <h5 class="blue-text"><b>Banco:</b></h5>        
-        <div class="row">
-        <table class="bordered highlight responsive-table">
-          <thead>
-            <th>#</th>
-            <th>No. Cliente</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Tipo</th>
-            <th>Fecha</th>
-            <th>Cantidad</th>
-          </thead>
-          <tbody>
-          <?php
-          $aux = 0;
-          while($pagos = mysqli_fetch_array($sql_banco)){
-          $aux ++;
-          $id_cliente = $pagos['id_cliente'];
-          $sql = mysqli_query($conn, "SELECT nombre FROM dispositivos WHERE id_dispositivo = $id_cliente"); 
-          $cliente= mysqli_fetch_array($sql);
-          
-            ?>
-            <tr>
-              <th><?php echo $aux; ?></th> 
-              <td><?php echo $id_cliente; ?></td>
-              <td><?php echo $cliente['nombre']; ?></td>
-              <td><?php echo $pagos['descripcion']; ?></td>
-              <td><?php echo $pagos['tipo']; ?></td>
-              <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
-              <td>$<?php echo $pagos['cantidad'];?>.00</td>
-            </tr>
-          <?php
-          }
-          ?> 
-          </tbody>
-        </table></div>
-        <div class="row">
-        <h4 class="right">Total: <?php echo $total['precio'];?></h4>
-        </div>
-        <?php
-        }
-        ?>
     </div>
     <!-----------------------------------------------------------------------------
     #           ------------  PAGOS DEL PUNTO DE VENTA ------------------
@@ -680,11 +474,334 @@
           ?>         
         </ul>
     </div>
+    <!-----------------------------------------------------------------------------
+    #           ------------  PAGOS DEL SERVICIO TECNICO ------------------
+    #----------------------------------------------------------------------------->
+    <div class="row">
+        <ul class="collection">
+          <?php 
+          $sql_pagos_ST = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo = 'Dispositivo'");
+          ?>
+          <li class="collection-item grey"><h6><b> >>> SERVICIO TECNICO: <span class="new badge green" data-badge-caption="pago(s)"><?php echo mysqli_num_rows($sql_pagos_ST); ?></span></b></h6></li>
+        </ul>
+        <ul class="collapsible">
+          <?php 
+          $sql_pagos_efectivo_ST = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Efectivo' AND tipo = 'Dispositivo'");
+          //VERIFICAMOS SI HAY PAGOS EN EFECTIVO DE LAS ORDENES DE SERVICO SI HAY MOSTRAMOS EL DESPLEGABLE
+          if (mysqli_num_rows($sql_pagos_efectivo_ST) > 0) { 
+            ?>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">local_atm</i>EFECTIVO</div>
+              <div class="collapsible-body">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>N° Cliente</th>
+                      <th>Cliente</th>
+                      <th>Descripción</th>
+                      <th>Tipo</th>
+                      <th>Fecha y Hora</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php 
+                    $aux = 0;
+                    $Total = 0;
+                    while ($pagos = mysqli_fetch_array($sql_pagos_efectivo_ST)) {
+                      $aux ++;
+                      $id_cliente = $pagos['id_cliente'];
+                      $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT nombre FROM dispositivos WHERE id_dispositivo = $id_cliente"));
+                      ?>
+                      <tr>
+                        <td><?php echo $aux; ?></td> 
+                        <td><?php echo $id_cliente; ?></td>
+                        <td><?php echo $cliente['nombre']; ?></td>
+                        <td><?php echo $pagos['descripcion']; ?></td>
+                        <td><?php echo $pagos['tipo']; ?></td>
+                        <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
+                        <td>$<?php echo sprintf('%.2f', $pagos['cantidad']); ?></td>
+                      </tr>
+                      <?php
+                      $Total += $pagos['cantidad'];
+                    }
+                  ?>
+                  </tbody>
+                </table>
+                <h6 class="right"><b>TOTAL EFECTIVO . $<?php echo sprintf('%.2f', $Total); ?> </b></h6><br>                 
+              </div>
+            </li> 
+          <?php 
+          }// FIN IF EFECTIVO
+
+          $sql_pagos_banco_ST = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Banco' AND tipo = 'Dispositivo'");
+          //VERIFICAMOS SI HAY PAGOS EN BANCO DE LAS ORDENES DE SERVICO SI HAY MOSTRAMOS EL DESPLEGABLE
+          if (mysqli_num_rows($sql_pagos_banco_ST) > 0) { 
+            ?>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">credit_card</i>A BANCO</div>
+              <div class="collapsible-body">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>N° Cliente</th>
+                      <th>Cliente</th>
+                      <th>Descripción</th>
+                      <th>Tipo</th>
+                      <th>Fecha y Hora</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php 
+                    $aux = 0;
+                    $Total = 0;
+                    while ($pagos = mysqli_fetch_array($sql_pagos_banco_ST)) {
+                      $aux ++;
+                      $id_cliente = $pagos['id_cliente'];
+                      $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT nombre FROM dispositivos WHERE id_dispositivo = $id_cliente"));
+                      ?>
+                      <tr>
+                        <td><?php echo $aux; ?></td> 
+                        <td><?php echo $id_cliente; ?></td>
+                        <td><?php echo $cliente['nombre']; ?></td>
+                        <td><?php echo $pagos['descripcion']; ?></td>
+                        <td><?php echo $pagos['tipo']; ?></td>
+                        <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
+                        <td>$<?php echo sprintf('%.2f', $pagos['cantidad']); ?></td>
+                      </tr>
+                      <?php
+                      $Total += $pagos['cantidad'];
+                    }
+                  ?>
+                  </tbody>
+                </table>
+                <h6 class="right"><b>TOTAL BANCO . $<?php echo sprintf('%.2f', $Total); ?> </b></h6><br>                 
+              </div>
+            </li> 
+          <?php 
+          }// FIN IF BANCO
+
+          $sql_pagos_credito_ST = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Credito' AND tipo = 'Dispositivo'");
+          //VERIFICAMOS SI HAY PAGOS EN CREDITO DE LAS ORDENES DE SERVICO SI HAY MOSTRAMOS EL DESPLEGABLE
+          if (mysqli_num_rows($sql_pagos_credito_ST) > 0) { 
+            ?>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">featured_play_list</i>A CREDITO</div>
+              <div class="collapsible-body">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>N° Cliente</th>
+                      <th>Cliente</th>
+                      <th>Descripción</th>
+                      <th>Tipo</th>
+                      <th>Fecha y Hora</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php 
+                    $aux = 0;
+                    $Total = 0;
+                    while ($pagos = mysqli_fetch_array($sql_pagos_credito_ST)) {
+                      $aux ++;
+                      $id_cliente = $pagos['id_cliente'];
+                      $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT nombre FROM dispositivos WHERE id_dispositivo = $id_cliente"));
+                      ?>
+                      <tr>
+                        <td><?php echo $aux; ?></td> 
+                        <td><?php echo $id_cliente; ?></td>
+                        <td><?php echo $cliente['nombre']; ?></td>
+                        <td><?php echo $pagos['descripcion']; ?></td>
+                        <td><?php echo $pagos['tipo']; ?></td>
+                        <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
+                        <td>$<?php echo sprintf('%.2f', $pagos['cantidad']); ?></td>
+                      </tr>
+                      <?php
+                      $Total += $pagos['cantidad'];
+                    }
+                  ?>
+                  </tbody>
+                </table>
+                <h6 class="right"><b>TOTAL CREDITO . $<?php echo sprintf('%.2f', $Total); ?> </b></h6><br>                 
+              </div>
+            </li> 
+          <?php 
+          }// FIN IF CREDITO
+          ?>
+        </ul>
+    </div>
+    <!-----------------------------------------------------------------------------
+    #        ------------  PAGOS DE LAS ORDENES DE SERVICO -----------------
+    #----------------------------------------------------------------------------->
+    <div class="row">
+        <ul class="collection">
+          <?php 
+          $sql_pagos_OS = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo = 'Orden Servicio'");
+          ?>
+          <li class="collection-item grey"><h6><b> >>> ORDEN SERVICIOS: <span class="new badge green" data-badge-caption="pago(s)"><?php echo mysqli_num_rows($sql_pagos_OS); ?></span></b></h6></li>
+        </ul>
+        <ul class="collapsible">
+          <?php 
+          $sql_pagos_efectivo_OS = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Efectivo' AND tipo = 'Orden Servicio'");
+          //VERIFICAMOS SI HAY PAGOS EN EFECTIVO DE LAS ORDENES DE SERVICO SI HAY MOSTRAMOS EL DESPLEGABLE
+          if (mysqli_num_rows($sql_pagos_efectivo_OS) > 0) { 
+            ?>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">local_atm</i>EFECTIVO</div>
+              <div class="collapsible-body">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>N° Cliente</th>
+                      <th>Cliente</th>
+                      <th>Descripción</th>
+                      <th>Tipo</th>
+                      <th>Fecha y Hora</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php 
+                    $aux = 0;
+                    $Total = 0;
+                    while ($pagos = mysqli_fetch_array($sql_pagos_efectivo_OS)) {
+                      $aux ++;
+                      $id_cliente = $pagos['id_cliente'];
+                      $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM especiales WHERE id_cliente = $id_cliente"));
+                      ?>
+                      <tr>
+                        <td><?php echo $aux; ?></td> 
+                        <td><?php echo $id_cliente; ?></td>
+                        <td><?php echo $cliente['nombre']; ?></td>
+                        <td><?php echo $pagos['descripcion']; ?></td>
+                        <td><?php echo $pagos['tipo']; ?></td>
+                        <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
+                        <td>$<?php echo sprintf('%.2f', $pagos['cantidad']); ?></td>
+                      </tr>
+                      <?php
+                      $Total += $pagos['cantidad'];
+                    }
+                  ?>
+                  </tbody>
+                </table>
+                <h6 class="right"><b>TOTAL EFECTIVO . $<?php echo sprintf('%.2f', $Total); ?> </b></h6><br>                 
+              </div>
+            </li> 
+          <?php 
+          }// FIN IF EFECTIVO
+
+          $sql_pagos_banco_OS = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Banco' AND tipo = 'Orden Servicio'");
+          //VERIFICAMOS SI HAY PAGOS EN BANCO DE LAS ORDENES DE SERVICO SI HAY MOSTRAMOS EL DESPLEGABLE
+          if (mysqli_num_rows($sql_pagos_banco_OS) > 0) { 
+            ?>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">credit_card</i>A BANCO</div>
+              <div class="collapsible-body">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>N° Cliente</th>
+                      <th>Cliente</th>
+                      <th>Descripción</th>
+                      <th>Tipo</th>
+                      <th>Fecha y Hora</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php 
+                    $aux = 0;
+                    $Total = 0;
+                    while ($pagos = mysqli_fetch_array($sql_pagos_banco_OS)) {
+                      $aux ++;
+                      $id_cliente = $pagos['id_cliente'];
+                      $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM especiales WHERE id_cliente = $id_cliente"));
+                      ?>
+                      <tr>
+                        <td><?php echo $aux; ?></td> 
+                        <td><?php echo $id_cliente; ?></td>
+                        <td><?php echo $cliente['nombre']; ?></td>
+                        <td><?php echo $pagos['descripcion']; ?></td>
+                        <td><?php echo $pagos['tipo']; ?></td>
+                        <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
+                        <td>$<?php echo sprintf('%.2f', $pagos['cantidad']); ?></td>
+                      </tr>
+                      <?php
+                      $Total += $pagos['cantidad'];
+                    }
+                  ?>
+                  </tbody>
+                </table>
+                <h6 class="right"><b>TOTAL BANCO . $<?php echo sprintf('%.2f', $Total); ?> </b></h6><br>                 
+              </div>
+            </li> 
+          <?php 
+          }// FIN IF BANCO
+
+          $sql_pagos_credito_OS = mysqli_query($conn, "SELECT * FROM pagos WHERE id_user=$id_user AND corte = 0 AND tipo_cambio='Credito' AND tipo = 'Orden Servicio'");
+          //VERIFICAMOS SI HAY PAGOS EN CREDITO DE LAS ORDENES DE SERVICO SI HAY MOSTRAMOS EL DESPLEGABLE
+          if (mysqli_num_rows($sql_pagos_credito_OS) > 0) { 
+            ?>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">featured_play_list</i>A CREDITO</div>
+              <div class="collapsible-body">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>N° Cliente</th>
+                      <th>Cliente</th>
+                      <th>Descripción</th>
+                      <th>Tipo</th>
+                      <th>Fecha y Hora</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php 
+                    $aux = 0;
+                    $Total = 0;
+                    while ($pagos = mysqli_fetch_array($sql_pagos_credito_OS)) {
+                      $aux ++;
+                      $id_cliente = $pagos['id_cliente'];
+                      $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM especiales WHERE id_cliente = $id_cliente"));
+                      ?>
+                      <tr>
+                        <td><?php echo $aux; ?></td> 
+                        <td><?php echo $id_cliente; ?></td>
+                        <td><?php echo $cliente['nombre']; ?></td>
+                        <td><?php echo $pagos['descripcion']; ?></td>
+                        <td><?php echo $pagos['tipo']; ?></td>
+                        <td><?php echo $pagos['fecha'].' '.$pagos['hora']; ?></td>
+                        <td>$<?php echo sprintf('%.2f', $pagos['cantidad']); ?></td>
+                      </tr>
+                      <?php
+                      $Total += $pagos['cantidad'];
+                    }
+                  ?>
+                  </tbody>
+                </table>
+                <h6 class="right"><b>TOTAL CREDITO . $<?php echo sprintf('%.2f', $Total); ?> </b></h6><br>                 
+              </div>
+            </li> 
+          <?php 
+          }// FIN IF CREDITO
+          ?>
+        </ul>
+    </div>    
+    
     <div class="row">
       <a class="waves-effect waves-light btn pink right modal-trigger" href="#corte">CORTE<i class="material-icons right">content_cut</i></a>
     </div>
 
-<!-- VISTA DE CONFIRMAR PAGO  -->
+    <!-- VISTA DE CONFIRMAR PAGO  -->
     <div id="resultado_confirmar"></div>
     <div class="row"><br><br>
       <h3 class="hide-on-med-and-down">Confirmar Corte:</h3>
@@ -711,7 +828,7 @@
       </form>
     </div>
   </div><br><br><!-- FIN DE CONTAINER  -->
-<?php mysqli_close($conn);?>
+  <?php mysqli_close($conn);?>
 </body>
 </main>
 </html>
