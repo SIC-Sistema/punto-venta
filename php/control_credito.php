@@ -47,14 +47,14 @@ switch ($Accion) {
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
 
-        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "proveedores_punto_venta.php"
+        //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "credito.php"
         $Texto = $conn->real_escape_string($_POST['texto']);
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
 			//MOSTRARA LOS PROVEEDORES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
-			$sql = "SELECT * FROM `punto_venta_proveedores` WHERE  nombre LIKE '%$Texto%'  OR id = '$Texto' OR rfc LIKE '%$Texto%' OR colonia LIKE '%$Texto%' OR direccion LIKE '%$Texto%' ORDER BY id";	
+			$sql = "SELECT * FROM `punto_venta_credito` WHERE  id = '$Texto' OR id_cliente LIKE '%$Texto%' OR id_venta LIKE '%$Texto%' OR fecha LIKE '%$Texto%' OR total LIKE '%$Texto%' OR usuario LIKE '%$Texto%' ORDER BY id";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
-			$sql = "SELECT * FROM `punto_venta_proveedores`";
+			$sql = "SELECT * FROM `punto_venta_credito`";
 		}//FIN else $Texto VACIO O NO
 
         // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
@@ -63,30 +63,28 @@ switch ($Accion) {
 
 		//VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
 		if (mysqli_num_rows($consulta) == 0) {
-				echo '<script>M.toast({html:"No se encontraron proveedores.", classes: "rounded"})</script>';
+				echo '<script>M.toast({html:"No se encontraron creditos.", classes: "rounded"})</script>';
         } else {
             //SI NO ESTA EN == 0 SI TIENE INFORMACION
             //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
             //RECORREMOS UNO A UNO LOS PROVEEDORES CON EL WHILE
-            while($proveedor = mysqli_fetch_array($consulta)) {
-                $id_user = $proveedor['usuario'];
+            while($credito = mysqli_fetch_array($consulta)) {
+                $id_user = $credito['usuario'];
+                $id_cliente = $credito['id_cliente'];
 				$user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
+                $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id=$id_cliente"));
 				//Output
                 $contenido .= '			
 		          <tr>
-		            <td>'.$proveedor['id'].'</td>
-		            <td>'.$proveedor['nombre'].'</td>
-		            <td>'.$proveedor['direccion'].'</td>
-		            <td>'.$proveedor['colonia'].'</td>
-		            <td>'.$proveedor['cp'].'</td>
-		            <td>'.$proveedor['rfc'].'</td>
-		            <td>'.$proveedor['email'].'</td>
-		            <td>'.$proveedor['telefono'].'</td>
-		            <td>'.$proveedor['dias_c'].'</td>
+		            <td>'.$credito['id'].'</td>
+		            <td>'.$cliente['nombre'].' ('.$credito['id_cliente'].')</td>
+		            <td>'.$credito['id_venta'].'</td>
+		            <td>'.$credito['fecha'].'</td>
+		            <td>'.$credito['hora'].'</td>
+		            <td>'.$credito['total'].'</td>
 		            <td>'.$user['firstname'].'</td>
-		            <td>'.$proveedor['fecha'].'</td>
-		            <td><form method="post" action="../views/editar_proveedor_pv.php"><input id="id" name="id" type="hidden" value="'.$proveedor['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
-		            <td><a onclick="borrar_proveedor_pv('.$proveedor['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+		            <td><form method="post" action="../views/editar_proveedor_pv.php"><input id="id" name="id" type="hidden" value="'.$credito['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
+		            <td><a onclick="borrar_proveedor_pv('.$credito['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
 
 			}//FIN while
