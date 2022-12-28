@@ -26,68 +26,74 @@ switch ($Accion) {
         $cliente = $conn->real_escape_string($_POST['cliente']);   
         $tipo_cambio = $conn->real_escape_string($_POST['tipo_cambio']);  
         $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS Total FROM `tmp_pv_detalle_venta` WHERE usuario = $id_user AND id_venta = $id_venta"));
-        $Total = $sql_total['Total']; 
-
-        $sql = "UPDATE `punto_venta_ventas` SET id_cliente = '$cliente', fecha= '$Fecha_hoy', hora = '$Hora', tipo_cambio = '$tipo_cambio', total = '$Total', usuario = '$id_user', estatus = 2  WHERE id = $id_venta";
-		//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
-        if(mysqli_query($conn, $sql)){
-            echo '<script >M.toast({html:"La venta se termino exitosamente.", classes: "rounded"})</script>';
-            //REGISTRAMOS LOS ARTICULOS EN punto_venta_detalle_venta
-            //REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-            $consulta = mysqli_query($conn, "SELECT * FROM `tmp_pv_detalle_venta` WHERE usuario = $id_user AND id_venta = $id_venta"); 
-            //VERIFICAMOS SI HAY ARTICULOS POR AGREGAR
-            if(mysqli_num_rows($consulta)>0){
-                //RECORREMOS CON UN WHILE UNO POR UNO LOS ARTICULOS
-                while($detalle_articulo = mysqli_fetch_array($consulta)){
-                    $id_articulo = $detalle_articulo['id_articulo'];
-                    $cantidad = $detalle_articulo['cantidad'];
-                    $precio_venta = $detalle_articulo['precio_venta'];
-                    $importe = $detalle_articulo['importe'];
-                    // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_venta
-                    $sql = "INSERT INTO `punto_venta_detalle_venta` (id_venta, id_producto, cantidad, precio_venta, importe) VALUES($id_venta, $id_articulo, '$cantidad', '$precio_venta','$importe')";
-
-                    // VERIFICAMOS SI SE HIZO LA INSERCION
-                    if (mysqli_query($conn, $sql)) {
-                        // VERIFICAMOS SI EL ARTICULO YA ESTA EN ALMACEN Y SOLO MODIFICAMOS LA CANTIDAD -
-                        if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'"))>0) {
-                            mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad-$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");
-                        }//FIN if esta en ALMACEN
-                        // SI SE INSERTO BORRAMOS EL ARTICULO DE tmp_pv_detalle_venta
-                        mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_venta` WHERE `tmp_pv_detalle_venta`.`id_articulo` = $id_articulo AND id_venta = $id_venta");
-                    }//FIN if insert              
-                }//FIN while
-                $descripcion = 'Venta N°'.$id_venta;
-
-                //PARA AGREGAR A CRÉDITO
-                if ($tipo_cambio == 'Credito') {
-                    // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
-                    $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
-                }
-                if(mysqli_query($conn, $sql_credito)){
-                    echo '<script >M.toast({html:"Se agrego un nuevo credito.", classes: "rounded"})</script>';  
-                }
-
-                $cliente = ($cliente == 0)? $cliente: $cliente+100000;
-                #--- CREAMOS EL SQL PARA LA INSERCION ---
-                $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
-                #--- SE INSERTA EL PAGO -----------
-                if(mysqli_query($conn, $sql)){
-                    $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
-                    ?>
-                    <script>
-                        var a = document.createElement("a");
-                          a.href = "../php/ticket_venta.php?p="+<?php echo $cantidadPago; ?>+"&v="+<?php echo $id_venta; ?>;
-                          a.target = "blank";
-                          a.click();
-                    </script>
-                    <?php
-                    echo '<script>M.toast({html:"El pago se dió de alta satisfcatoriamente.", classes: "rounded"})</script>';
-                 }// FIN if pago
-            }//FIN if consulta
-            echo '<script>recargar_venta();</script>';
+        $Total = $sql_total['Total'];
+        
+        //SÍ LA FORMA DE PAGO ES A CREDITO Y NO HAY CLIENTE, NO SE PUEDE HACER LA VENTA
+        if ($tipo_cambio == 'Credito' AND $cliente == 0){
+            echo '<script >M.toast({html:"Debe seleccionar un cliente sí quiere registrar a crédito.", classes: "rounded"})</script>'; 
         }else{
-            echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';            
-        }// FIN else error
+            $sql = "UPDATE `punto_venta_ventas` SET id_cliente = '$cliente', fecha= '$Fecha_hoy', hora = '$Hora', tipo_cambio = '$tipo_cambio', total = '$Total', usuario = '$id_user', estatus = 2  WHERE id = $id_venta";
+  
+            //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+            if(mysqli_query($conn, $sql)){
+                echo '<script >M.toast({html:"La venta se termino exitosamente.", classes: "rounded"})</script>';
+                //REGISTRAMOS LOS ARTICULOS EN punto_venta_detalle_venta
+                //REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+                $consulta = mysqli_query($conn, "SELECT * FROM `tmp_pv_detalle_venta` WHERE usuario = $id_user AND id_venta = $id_venta"); 
+                //VERIFICAMOS SI HAY ARTICULOS POR AGREGAR
+                if(mysqli_num_rows($consulta)>0){
+                    //RECORREMOS CON UN WHILE UNO POR UNO LOS ARTICULOS
+                    while($detalle_articulo = mysqli_fetch_array($consulta)){
+                        $id_articulo = $detalle_articulo['id_articulo'];
+                        $cantidad = $detalle_articulo['cantidad'];
+                        $precio_venta = $detalle_articulo['precio_venta'];
+                        $importe = $detalle_articulo['importe'];
+                        // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_venta
+                        $sql = "INSERT INTO `punto_venta_detalle_venta` (id_venta, id_producto, cantidad, precio_venta, importe) VALUES($id_venta, $id_articulo, '$cantidad', '$precio_venta','$importe')";
+
+                        // VERIFICAMOS SI SE HIZO LA INSERCION
+                        if (mysqli_query($conn, $sql)) {
+                            // VERIFICAMOS SI EL ARTICULO YA ESTA EN ALMACEN Y SOLO MODIFICAMOS LA CANTIDAD -
+                            if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'"))>0) {
+                                mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad-$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");
+                            }//FIN if esta en ALMACEN
+                            // SI SE INSERTO BORRAMOS EL ARTICULO DE tmp_pv_detalle_venta
+                            mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_venta` WHERE `tmp_pv_detalle_venta`.`id_articulo` = $id_articulo AND id_venta = $id_venta");
+                        }//FIN if insert              
+                    }//FIN while
+                    $descripcion = 'Venta N°'.$id_venta;
+
+                    //PARA AGREGAR A CRÉDITO
+                    if ($tipo_cambio == 'Credito') {
+                        // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
+                        $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
+                    }
+                    if(mysqli_query($conn, $sql_credito)){
+                        echo '<script >M.toast({html:"Se agrego un nuevo credito.", classes: "rounded"})</script>';  
+                    }
+
+                    $cliente = ($cliente == 0)? $cliente: $cliente+100000;
+                    #--- CREAMOS EL SQL PARA LA INSERCION ---
+                    $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
+                    #--- SE INSERTA EL PAGO -----------
+                    if(mysqli_query($conn, $sql)){
+                        $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
+                        ?>
+                        <script>
+                            var a = document.createElement("a");
+                            a.href = "../php/ticket_venta.php?p="+<?php echo $cantidadPago; ?>+"&v="+<?php echo $id_venta; ?>;
+                            a.target = "blank";
+                            a.click();
+                        </script>
+                        <?php
+                        echo '<script>M.toast({html:"El pago se dió de alta satisfcatoriamente.", classes: "rounded"})</script>';
+                    }// FIN if pago
+                }//FIN if consulta
+                echo '<script>recargar_venta();</script>';
+            }else{
+                echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';            
+            }// FIN else error
+        }//FIN else COMPROBACION DE CLIENTE EN CREDITO
         break;
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:

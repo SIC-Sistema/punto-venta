@@ -73,18 +73,22 @@ switch ($Accion) {
                 $id_cliente = $credito['id_cliente'];
 				$user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
                 $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id=$id_cliente"));
+                $a1=$credito['id_cliente'];
+                if($a1 == 0 OR $a1 == "" ){
+                    $a1 = 'Venta Público';
+                }
 				//Output
                 $contenido .= '			
 		          <tr>
 		            <td>'.$credito['id'].'</td>
-		            <td>'.$cliente['nombre'].' ('.$credito['id_cliente'].')</td>
+		            <td>'.$cliente['nombre'].' ['.$a1.']</td>
 		            <td>'.$credito['id_venta'].'</td>
 		            <td>'.$credito['fecha'].'</td>
 		            <td>'.$credito['hora'].'</td>
-		            <td>'.$credito['total'].'</td>
+		            <td>'."$".$credito['total'].'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td><form method="post" action="../views/editar_proveedor_pv.php"><input id="id" name="id" type="hidden" value="'.$credito['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
-		            <td><a onclick="borrar_proveedor_pv('.$credito['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+		            <td><a onclick="borrar_credito_pv('.$credito['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
 
 			}//FIN while
@@ -127,9 +131,9 @@ switch ($Accion) {
         //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "proveedores_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
         #SELECCIONAMOS LA INFORMACION A BORRAR
-        $proveedor = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_proveedores` WHERE id = $id"));
-        #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_proveedor` PARA NO PERDER INFORMACION
-        $sql = "INSERT INTO `pv_borrar_proveedor` (id_proveedor, nombre, direccion, colonia, cp, rfc, email, telefono, registro, borro, fecha_borro) 
+        $credito = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_credito` WHERE id = $id"));
+        #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_cliente` PARA NO PERDER INFORMACION
+        $sql = "INSERT INTO `pv_borrar_credito` (id_proveedor, nombre, direccion, colonia, cp, rfc, email, telefono, registro, borro, fecha_borro) 
                 VALUES($id, '".$proveedor['nombre']."', '".$proveedor['direccion']."', '".$proveedor['colonia']."', '".$proveedor['cp']."', '".$proveedor['rfc']."', '".$proveedor['email']."', '".$proveedor['telefono']."', '".$proveedor['usuario']."', '$id_user','$Fecha_hoy')";
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
         if(mysqli_query($conn, $sql)){
