@@ -38,7 +38,6 @@
 </script>
 <!--Termina Script Buscar clientes-->
 
-
 <!-- Modal AGREGAR ARTICULOS IMPOTANTE! -->
 <div id="modal_addArticulo" class="modal"><br>
   <div class="modal-content">
@@ -87,23 +86,28 @@
 </div>
 <!--Cierre modal AGREGAR ARTICULOS COMPRA IMPORTANTE! -->
 
-
-
-
 <!--Modal cortes-->
 <div id="corte" class="modal">
   <div class="modal-content">
-    <h4 class="red-text center">! Advertencia !</h4><br>
+    <h4 class="red-text center">! Advertencia !</h4>
     <h6 ><b>Una vez generado el corte se comenzara una nueva lista de pagos para el siguinete corte. </b></h6><br>
     <h5 class="red-text darken-2">¿DESEA CONTINUAR?</h5>
     <div class="row">
-    <div class="input-field col s12 m6 l6">
+      <div class="input-field col s12 m5 l5">
         <i class="material-icons prefix">lock</i>
         <input type="password" name="clave" id="clave">
         <label for="clave">Ingresar Clave</label>
+      </div>
+      <div class="input-field row col s12 m5 l5">
+          <i class="col s1"> <br></i>
+          <select id="recibio" class="browser-default col s10" >
+            <option value="0" selected >Recibio</option>
+            <option value="Jonatan">Jonatan</option>
+            <option value="Gabriel">Gabriel</option>
+          </select>
+      </div>
     </div>
-    </div>
-    <h4>¿Desea agregar algun deducible?</h4>
+    <h5>¿Desea agregar algun deducible?</h5>
       <form class="row">
       <div class="input-field col s12 m6 l4">
           <i class="material-icons prefix">attach_money</i>
@@ -118,12 +122,11 @@
       </form>
   </div>
   <div class="modal-footer">
-      <a onclick="recargar_corte()" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-      <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cerrar<i class="material-icons right">close</i></a>
+      <a onclick="recargar_corte()" class="modal-action modal-close waves-effect waves-green btn green">Aceptar<i class="material-icons right">done</i></a>
+      <a href="#" class="modal-action modal-close waves-effect waves-red btn red darken-2">Cerrar<i class="material-icons right">close</i></a>
   </div>
 </div>
 <!--Cierre modal Cortes-->
-
 
 <!--Modal cortes PARCIALES-->
 <div id="corteP" class="modal">

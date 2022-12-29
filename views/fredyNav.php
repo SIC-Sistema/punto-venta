@@ -51,6 +51,7 @@ $Hoy = date('Y-m-d');
 				    <li><a onclick = 'nueva_factura(0)' class="indigo-text"><i class="material-icons">description</i>Nueva Factura</a></li> 
 				    <li><a href="facturas_punto_venta.php" class="indigo-text"><i class="material-icons">description</i>Facturas</a></li>
 					<li><a href = "credito.php" class="indigo-text"><i class="material-icons">credit_card</i>Crédito</a></li>     
+					<li><a href = "cortes_pagos.php" class="indigo-text"><i class="material-icons">content_cut</i>Realizar Corte</a></li>     
 				</ul>
  				<li><a class='dropdown-button indigo-text' data-target='dropdown4'><b><?php echo $_SESSION['user_name'];?> </b><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown4' class='dropdown-content'>
@@ -129,6 +130,7 @@ $Hoy = date('Y-m-d');
 					 		<li><a onclick = 'nueva_factura(0)'><i class="material-icons">description</i>Nueva Factura</a></li>
 				    		<li><a href="facturas_punto_venta.php"><i class="material-icons">description</i>Facturas</a></li>   
 							<li><a href = "credito.php" class="indigo-text"><i class="material-icons">credit_card</i>Crédito</a></li> 
+							<li><a href = "cortes_pagos.php"><i class="material-icons">content_cut</i>Realizar Corte</a></li>     
 					      </ul>
 					    </span>
 		      		</div>    			

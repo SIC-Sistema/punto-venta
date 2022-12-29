@@ -227,7 +227,7 @@
       </div>
       <div class="row" >
         <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-        <div class="row" id="resultado_insert">
+        <div class="row" id="resultado_insert"></div>
         <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
         <form class="row col s12" name="formCompras">
             <!-- CAJA DE SELECCION DE PROVEEDORES -->

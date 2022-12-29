@@ -252,7 +252,7 @@ if (isset($_GET['id']) == false) {
                   $consulta = mysqli_query($conn,"SELECT * FROM `punto-venta_clientes`");
                   //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
                   if (mysqli_num_rows($consulta) == 0) {
-                    echo '<script>M.toast({html:"No se encontraron proveedores.", classes: "rounded"})</script>';
+                    echo '<script>M.toast({html:"No se encontraron clientes.", classes: "rounded"})</script>';
                   } else {
                     //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
                     while($cliente = mysqli_fetch_array($consulta)) {

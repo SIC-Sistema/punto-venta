@@ -190,7 +190,7 @@ switch ($Accion) {
             }
         }
         // REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-        $consulta = mysqli_query($conn, "SELECT * FROM `tmp_pv_detalle_venta` WHERE usuario = $id_user AND id_venta = $id_venta");      
+        $consulta = mysqli_query($conn, "SELECT * FROM `tmp_pv_detalle_venta` WHERE id_venta = $id_venta");      
         ?>
         <div class="row"><br><br>
             <div class="hide-on-small-only col s1"><br></div>
@@ -347,7 +347,7 @@ switch ($Accion) {
             echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
         }
         // REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-        $consulta = mysqli_query($conn, "SELECT * FROM tmp_pv_detalle_venta WHERE usuario = $id_user AND id_venta = $id_venta");      
+        $consulta = mysqli_query($conn, "SELECT * FROM tmp_pv_detalle_venta WHERE  id_venta = $id_venta");      
         ?>
         <div class="row"><br><br>
             <div class="hide-on-small-only col s1"><br></div>
