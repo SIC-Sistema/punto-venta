@@ -88,7 +88,7 @@ switch ($Accion) {
 		            <td>'."$".$credito['total'].'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td><form method="post" action="../views/editar_proveedor_pv.php"><input id="id" name="id" type="hidden" value="'.$credito['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
-		            <td><a onclick="borrar_credito_pv('.$credito['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+		            <td><a onclick="verificar_eliminar('.$credito['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
 
 			}//FIN while
@@ -128,25 +128,35 @@ switch ($Accion) {
         break;
     case 3:
         // $Accion es igual a 3 realiza:
-        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "proveedores_punto_venta.php" QUE NESECITAMOS PARA BORRAR
-        $id = $conn->real_escape_string($_POST['id']);
+        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "verificar_eliminar_credito.php" QUE NESECITAMOS PARA BORRAR
+        $id = $conn->real_escape_string($_POST['valorIdPago']);
+        $motivo = $conn->real_escape_string($_POST['valorMotivo']);
         #SELECCIONAMOS LA INFORMACION A BORRAR
         $credito = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_credito` WHERE id = $id"));
         #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_cliente` PARA NO PERDER INFORMACION
-        $sql = "INSERT INTO `pv_borrar_credito` (id_proveedor, nombre, direccion, colonia, cp, rfc, email, telefono, registro, borro, fecha_borro) 
-                VALUES($id, '".$proveedor['nombre']."', '".$proveedor['direccion']."', '".$proveedor['colonia']."', '".$proveedor['cp']."', '".$proveedor['rfc']."', '".$proveedor['email']."', '".$proveedor['telefono']."', '".$proveedor['usuario']."', '$id_user','$Fecha_hoy')";
+        $sql = "INSERT INTO `pv_borrar_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, registro, borro, fecha_borro, motivo) VALUES($id, ".$credito['id_cliente'].", ".$credito['id_venta'].", ".$credito['fecha'].", ".$credito['hora'].", ".$credito['tipo_cambio'].", ".$credito['total'].", ".$credito['usuario'].",$id_user,'$Fecha_hoy', '$motivo')";
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
         if(mysqli_query($conn, $sql)){
-            //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_proveedores`
-        	#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL PROVEEDOR DE `punto_venta_proveedores`
-            if(mysqli_query($conn, "DELETE FROM `punto_venta_proveedores` WHERE `punto_venta_proveedores`.`id` = $id")){
+            //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_credito`
+        	#VERIFICAMOS QUE SE BORRE CORRECTAMENTE EL CREDITO DE `punto_venta_credito`
+            if(mysqli_query($conn, "DELETE FROM `punto_venta_credito` WHERE `punto_venta_credito`.`id` = $id")){
                 #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-                echo '<script >M.toast({html:"Proveedor borrado con exito.", classes: "rounded"})</script>';
-                echo '<script>recargar_proveedores()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+                echo '<script >M.toast({html:"Crédito borrado con exito de la tabla creditos.", classes: "rounded"})</script>';
+                
+                if(mysqli_query($conn, "DELETE FROM `punto_venta_ventas` WHERE `punto_venta_ventas`.`id_venta` = ".$credito['id_venta']."")){
+                    echo '<script >M.toast({html:"Crédito borrado con exito de la tabla ventas.", classes: "rounded"})</script>';
+                    
+                    if(mysqli_query($conn, "DELETE FROM `punto_venta_detalle_venta` WHERE `punto_venta_detalle_venta`.`id_venta` = ".$credito['id_venta']."")){
+                        echo '<script >M.toast({html:"Crédito borrado con exito de la tabla de detalle venta.", classes: "rounded"})</script>';
+                    }
+                }  
+                echo '<script>recargar_credito()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
             }else{
                 #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA
-    		    echo "<script >M.toast({html: 'Ha ocurrido un error.', classes: 'rounded'});/script>";
+    		    echo "<script >M.toast({html: 'Ha ocurrido un error al borrar crédito.', classes: 'rounded'});/script>";
             }
+        }else{
+            echo "<script >M.toast({html: 'Error al insertar en la tabla de pv_borrar_credito.', classes: 'rounded'});/script>";
         }
         break;
 }// FIN switch

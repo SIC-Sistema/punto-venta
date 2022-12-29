@@ -9,35 +9,28 @@
     ?>
     <title>SIC | Crédito Punto Venta</title>
     <script>
-       //FUNCION QUE HACE LA BUSQUEDA DE CREDITOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
-      function buscar_creditos(){
-        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
-        var texto = $("input#busqueda").val();
-        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_credito.php"
-        $.post("../php/control_credito.php", {
-          //Cada valor se separa por una ,
-            texto: texto,
-            accion: 1,
-          }, function(mensaje){
-              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_credito.php"
-              $("#creditosALL").html(mensaje);
-        });//FIN post
-      }//FIN function
-      //FUNCION QUE BORRA LOS CREDITOS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
-      function borrar_credito_pv(id){
-        var answer = confirm("Deseas eliminar el credito N°"+id+"?");
-        if (answer) {
-        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_credito.php"
-        $.post("../php/control_credito.php", {
+        //FUNCION QUE HACE LA BUSQUEDA DE CREDITOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+        function buscar_creditos(){
+            //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+            var texto = $("input#busqueda").val();
+            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_credito.php"
+            $.post("../php/control_credito.php", {
             //Cada valor se separa por una ,
-            id: id,
-            accion: 3,
-          }, function(mensaje) {
-            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_credito.php"
-            $("#borrarCredito").html(mensaje);
-          }); //FIN post
-        }//FIN IF
-      };//FIN function
+                texto: texto,
+                accion: 1,
+            }, function(mensaje){
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_credito.php"
+                $("#creditosALL").html(mensaje);
+            });//FIN post
+        }//FIN function
+        //FUNCION QUE MANDA AL MODAL PARA BORRAR LOS CREDITOS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+        function verificar_eliminar(IdPago){ 
+            $.post("../php/verificar_eliminar_credito.php", {
+                valorIdPago: IdPago,
+            }, function(mensaje) {
+                $("#modalBorrar").html(mensaje);
+            }); 
+        };
     </script>
   </head>
   <main>
@@ -64,6 +57,7 @@
       </div>
       <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS PROVEEDORES    ///////   -->
       <div class="row">
+        <div id="modalBorrar"></div>
         <table class="bordered highlight responsive-table">
           <thead>
             <tr>
