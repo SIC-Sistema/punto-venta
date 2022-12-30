@@ -133,8 +133,18 @@ switch ($Accion) {
         $motivo = $conn->real_escape_string($_POST['valorMotivo']);
         #SELECCIONAMOS LA INFORMACION A BORRAR
         $credito = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_credito` WHERE id = $id"));
+        
+        //OBTENEMOS LAS VARIABLES QUE NECECITAMOS
+        $id_cliente = $credito['id_cliente'];
+        $id_venta = $credito['id_venta'];
+        $fecha_credito = $credito['fecha'];
+        $hora_credito = $credito['hora'];
+        $cambio = $credito['tipo_cambio'];
+        $total = $credito['total'];
+        $borro = $credito['usuario'];
+
         #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_cliente` PARA NO PERDER INFORMACION
-        $sql = "INSERT INTO `pv_borrar_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, registro, borro, fecha_borro, motivo) VALUES($id, ".$credito['id_cliente'].", ".$credito['id_venta'].", ".$credito['fecha'].", ".$credito['hora'].", ".$credito['tipo_cambio'].", ".$credito['total'].", ".$credito['usuario'].",$id_user,'$Fecha_hoy', '$motivo')";
+        $sql = "INSERT INTO `pv_borrar_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, registro, borro, fecha_borro, motivo) VALUES($id_cliente, $id_venta, '$fecha_credito', '$hora_credito', '$cambio', $total, $borro, $id_user,'$Fecha_hoy', '$motivo')";
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
         if(mysqli_query($conn, $sql)){
             //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_credito`
@@ -143,10 +153,10 @@ switch ($Accion) {
                 #SI ES ELIMINADO MANDAR MSJ CON ALERTA
                 echo '<script >M.toast({html:"Crédito borrado con exito de la tabla creditos.", classes: "rounded"})</script>';
                 
-                if(mysqli_query($conn, "DELETE FROM `punto_venta_ventas` WHERE `punto_venta_ventas`.`id_venta` = ".$credito['id_venta']."")){
+                if(mysqli_query($conn, "DELETE FROM `punto_venta_ventas` WHERE `punto_venta_ventas`.`id_venta` = $id_venta")){
                     echo '<script >M.toast({html:"Crédito borrado con exito de la tabla ventas.", classes: "rounded"})</script>';
                     
-                    if(mysqli_query($conn, "DELETE FROM `punto_venta_detalle_venta` WHERE `punto_venta_detalle_venta`.`id_venta` = ".$credito['id_venta']."")){
+                    if(mysqli_query($conn, "DELETE FROM `punto_venta_detalle_venta` WHERE `punto_venta_detalle_venta`.`id_venta` = $id_venta")){
                         echo '<script >M.toast({html:"Crédito borrado con exito de la tabla de detalle venta.", classes: "rounded"})</script>';
                     }
                 }  
