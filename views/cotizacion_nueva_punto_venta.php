@@ -159,62 +159,29 @@
       }
 
       //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
-      function insert_compra() {
-        almacen = <?php echo $datos_user['almacen']; ?>;
-        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-        var textoCotizacion = $("input#cotizacion").val();//ej:LA VARIABLE "textoFactura" GUARDAREMOS LA INFORMACION QUE ESTE EN EL SELECT QUE TENGA EL id = "factura"
+      function crear_cotizacion() {
         var textoCliente = $("select#cliente").val();
-
-        if(document.getElementById('cambio').checked==true){
-          textoTipoCambio = "Credito";  
-        }else{    
-          textoTipoCambio = "Contado";
-        }
-
+        var exist = $("input#mayor_exist").val();
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
         //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
         if (textoCliente == 0) {
           M.toast({html: 'Seleccione un Cliente.', classes: 'rounded'});
-        }else if (textoCotizacion == "") {
-          M.toast({html: 'El campo Código Cotización se encuentra vacío.', classes: 'rounded'});
+        }else if (exist) {
+            M.toast({html: '! NO SE PUEDE REALIZAR LA COTIZACION ¡', classes: 'rounded'});
+            M.toast({html: 'Alguno de los articulos superan su existencia', classes: 'rounded'});
         }else{
           //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
           $.post("../php/control_cotizacion.php", {
             //Cada valor se separa por una ,
               accion: 0,
-              almacen: almacen,
               valorCliente: textoCliente,
-              valorCotizacion: textoCotizacion,
-              valorTipoCambio: textoTipoCambio,
             }, function(mensaje) {
                 //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
                 $("#resultado_insert").html(mensaje);
             }); 
         }//FIN else CONDICIONES
       };//FIN function 
-
-      //SI EL SISTEMA DETECTA DIFERENCIA DE PRECIOS CON ESTA FUNCION SE CAMBIA SI EL USUARIO LO DESEA
-      function cambiar_precio(id_articulo) {
-        var precio = $("input#precioCambio"+id_articulo).val();
-        // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
-        //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
-        if (precio == "" || precio < 0) {
-          M.toast({html: 'Coloque un Precio Fijo valido.', classes: 'rounded'});
-        }else{
-          //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
-          $.post("../php/control_cotizacion.php", {
-              //Cada valor se separa por una ,
-              accion: 9,
-              id_articulo: id_articulo,
-              precio: precio,
-            }, function(mensaje){
-                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
-                $("#cambio").html(mensaje);
-          });//FIN post
-        }//FIN else
-      }
     </script>
   </head>
   <main>
@@ -223,12 +190,12 @@
     <div class="container" >
       <!--    //////    TITULO    ///////   -->
       <div class="row" >
-        <h3 class="hide-on-med-and-down">Registrar Cotización</h3>
-        <h5 class="hide-on-large-only">Registrar Cotización</h5>
+        <h3 class="hide-on-med-and-down">Nueva Cotización</h3>
+        <h5 class="hide-on-large-only">Nueva Cotización</h5>
       </div>
       <div class="row" >
       <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_insert"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-      <div class="row" id="resultado_insert">
+      <div class="row" id="resultado_insert"></div>
       <!-- FORMULARIO EL CUAL SE MUETRA EN PANTALLA .-->
       <form class="row col s12" name="formCotizacion">
         <!-- CAJA DE SELECCION DE CLIENTES -->
@@ -264,15 +231,7 @@
             </div>
             <hr>
             <div  class="row">
-              <div class="col s12 m6 l6">
-                <h5 class="input-field col s4"><b>Código Cotización</b></h5>
-                <div class="input-field col s7">
-                  <i class="material-icons prefix">tab</i>
-                  <input id="cotizacion" type="text" class="validate" data-length="50" required>
-                  <label for="cotizacion">(ej: 13436)</label>
-                </div> 
-              </div>
-              <div class="col s12 m6 l6">
+              <div class="col s12">
                 <h4>Almacen N° <?php echo $datos_user['almacen'];?> - <?php echo $datos_almacen['nombre'];?></h4>
               </div>
             </div>

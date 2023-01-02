@@ -211,16 +211,15 @@ switch ($Accion) {
                $total = 0;
                //VERIFICAMOS SI HA ARRTICULOS EN LA TABLA
                if(mysqli_num_rows($consulta)>0){
+                    $mayor = false;
                     while($detalle_articulo = mysqli_fetch_array($consulta)){
                         $id_art = $detalle_articulo['id_articulo'];
                         $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id = $id_art"));
                         $total += $detalle_articulo['importe'];
                         $existe = mysqli_fetch_array(mysqli_query($conn, "SELECT cantidad FROM `punto_venta_almacen_general` WHERE id_almacen = $almacen AND id_articulo = $id_art"));
-                        if (!$existe) {
-                            $existe['cantidad'] = 0;
-                        }
+                        if (!$existe) {  $existe['cantidad'] = 0;  }
                         $color = ($detalle_articulo['cantidad']>$existe['cantidad'])? 'class = "red-text"':'';
-                        $mayor = ($detalle_articulo['cantidad']>$existe['cantidad'])? true:false;
+                        if ($detalle_articulo['cantidad']>$existe['cantidad']){        $mayor = true;           }
                         ?>
                         <tr>
                             <td><?php echo $articulo['codigo'] ?></td>
@@ -368,16 +367,15 @@ switch ($Accion) {
                $total = 0;
                //VERIFICAMOS SI HA ARRTICULOS EN LA TABLA
                if(mysqli_num_rows($consulta)>0){
+                    $mayor = false;
                     while($detalle_articulo = mysqli_fetch_array($consulta)){
                         $id_art = $detalle_articulo['id_articulo'];
                         $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id = $id_art"));
                         $total += $detalle_articulo['importe'];
                         $existe = mysqli_fetch_array(mysqli_query($conn, "SELECT cantidad FROM `punto_venta_almacen_general` WHERE id_almacen = $almacen AND id_articulo = $id_art"));
-                        if (!$existe) {
-                            $existe['cantidad'] = 0;
-                        }
+                        if (!$existe) {   $existe['cantidad'] = 0;  }
                         $color = ($detalle_articulo['cantidad']>$existe['cantidad'])? 'class = "red-text"':'';
-                        $mayor = ($detalle_articulo['cantidad']>$existe['cantidad'])? true:false;
+                        if ($detalle_articulo['cantidad']>$existe['cantidad']){    $mayor = true;     }
                         ?>
                         <tr>
                             <td><?php echo $articulo['codigo'] ?></td>

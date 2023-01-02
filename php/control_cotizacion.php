@@ -7,46 +7,44 @@ include('is_logged.php');
 date_default_timezone_set('America/Mexico_City');
 $id_user = $_SESSION['user_id'];// ID DEL USUARIO LOGEADO
 $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
+$datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$id_user"));
+$almacen = $datos_user['almacen'];
 
-//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, Consultar compras = 1, InfoProveedor = 2, Borrar compra = 3, Buscar e Insertar Articulos TMP = 4, Actualizar Cant. o Costo = 5, Consulta articulos Modal = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
+//CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, Consultar compras = 1, InfoCliente = 2, Borrar cotizacion = 3, Buscar e Insertar Articulos TMP = 4, Actualizar Cant. o Costo = 5, Consulta articulos Modal = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 $Accion = $conn->real_escape_string($_POST['accion']);
 
-//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, Consultar compras = 1, InfoProveedor = 2, Borrar compra = 3, Buscar e Insertar Articulos TMP = 4, Actualizar Cant. o Costo = 5, Consulta articulos Modal = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
+//UN SWITCH EL CUAL DECIDIRA QUE ACCION REALIZA DEL CRUD (Insertar = 0, Consultar cotizacions = 1, InfoCliente = 2, Borrar cotizacion = 3, Buscar e Insertar Articulos TMP = 4, Actualizar Cant. o Costo = 5, Consulta articulos Modal = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 //echo "hola aqui estoy";
 switch ($Accion) {
     case 0:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 0 realiza:
 
         //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA INSERTAR
-        $Cliente = $conn->real_escape_string($_POST['valorCliente']);   
-        $Cotizacion = $conn->real_escape_string($_POST['valorCotizacion']);   
-        $TipoCambio = $conn->real_escape_string($_POST['valorTipoCambio']); 
+        $Cliente = $conn->real_escape_string($_POST['valorCliente']);
+        $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS Total FROM tmp_pv_detalle_cotizacion WHERE usuario = $id_user"));
+        $Total = $sql_total['Total'];
 
         //VERIFICAMOS QUE NO HALLA UNA COMPRA CON LOS MISMOS DATOS
-		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_cotizaciones` WHERE cotizacion='$Cotizacion' "))>0){
+		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_cotizaciones` WHERE id_cliente='$Cliente' AND fecha = '$Fecha_hoy' AND total = '$Total'"))>0){
             echo '<script >M.toast({html:"Ya se encuentra una Cotización con el mismo número de Cotización.", classes: "rounded"})</script>';
             echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-        }else{
-            $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS Total FROM tmp_pv_detalle_cotizacion WHERE usuario = $id_user"));
-            $Total = $sql_total['Total'];
+        }else{            
 
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-            $sql = "INSERT INTO `punto_venta_cotizaciones` (cotizacion, id_cliente, total, tipo_cambio, usuario, fecha) 
-               VALUES('$Cotizacion', '$Cliente', '$Total', '$TipoCambio','$id_user','$Fecha_hoy')";
+            $sql = "INSERT INTO `punto_venta_cotizaciones` (id_cliente, total, usuario, fecha, venta) 
+               VALUES('$Cliente', '$Total','$id_user','$Fecha_hoy', 0)";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"La cotizacion se registró exitosamente.", classes: "rounded"})</script>';
-                #SELECCIONAMOS EL ULTIMO CORTE CREADO
+                #SELECCIONAMOS EL ULTIM A COTICACION CREADA
                 $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id) AS id FROM `punto_venta_cotizaciones` WHERE usuario=$id_user"));           
-                $venta = $ultimo['id'];//TOMAMOS EL ID DEL ULTIMO CORTE
+                $id = $ultimo['id'];//TOMAMOS EL ID DEL ULTIMA COTIZACION
 
                 //REGISTRAMOS LOS ARTICULOS EN tmp_pv_detalle_cotizacion
                 //REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
                 $consulta = mysqli_query($conn, "SELECT * FROM tmp_pv_detalle_cotizacion WHERE usuario = $id_user"); 
                 //VERIFICAMOS SI HAY ARTICULOS POR AGREGAR
                 if(mysqli_num_rows($consulta)>0){
-                    $LISTA = '';
-                    $almacen = $conn->real_escape_string($_POST['almacen']); //ID DE ALMACEN
                     //RECORREMOS CON UN WHILE UNO POR UNO LOS ARTICULOS
                     while($detalle_articulo = mysqli_fetch_array($consulta)){
                         $id_articulo = $detalle_articulo['id_articulo'];
@@ -54,61 +52,18 @@ switch ($Accion) {
                         $precio_venta_u = $detalle_articulo['precio_venta_u'];
                         $importe = $detalle_articulo['importe'];
                         // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_cotizacion
-                        $sql = "INSERT INTO `punto_venta_detalle_cotizacion` (id_venta, id_articulo, cantidad, precio_venta_u, importe) VALUES($venta, $id_articulo, '$cantidad', '$precio_venta_u','$importe')";
+                        $sql = "INSERT INTO `punto_venta_detalle_cotizacion` (id_venta, id_articulo, cantidad, precio_venta_u, importe) VALUES($id, $id_articulo, '$cantidad', '$precio_venta_u','$importe')";
 
                         // VERIFICAMOS SI SE HIZO LA INSERCION
-                        if (mysqli_query($conn, $sql)) {
-                            
-                            // HAY QUE CREAR UN LISTADO DE ARTICULOS QUE CAMBIARON EL PRECION CON DIFERENCIA DEL 50% DE LA UTILIDAD Y PREGUNTAR MODAL SI CAMBIAR EL PRECIO (CAMBIAR EN ARTICULOS)
-                            $CincuentaP = (20/2)/100; //($utilidad/2)/100 porcentaje
-                            // SELECCIONAMOS EL PRECIO DEL ARTICULO EN TURNO
-                            $articulo =  mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM punto_venta_articulos WHERE id=$id_articulo")); 
-                            $UtilidadCincuenta = $articulo['precio']*$CincuentaP;//LIMITE PARA LA DIFERENCIA
-                            $Diferencia = abs($articulo['precio']-$precio_venta_u); //DIFERENCIA DE PRECIOS
-                            //COMPARAMOS PRECIOS
-                            if ($Diferencia >= $UtilidadCincuenta) {
-                                $LISTA .= '<tr><td>'.$articulo['codigo'].'</td><td>'.$articulo['nombre'].'</td><td>$'.sprintf('%.2f', $articulo['precio']).'</td><td>$'.sprintf('%.2f', $precio_venta_u).'</td><td><div class = "col s1"><br>$</div> <input id="precioCambio'.$id_articulo.'" type="number" class="validate col s10"></td><td><a onclick="cambiar_precio('.$id_articulo.')" class="btn-small indigo waves-effect waves-light">Cambiar</a></td></tr>';
-                            }         
-
+                        if (mysqli_query($conn, $sql)) {    
                             // SI SE INSERTO BORRAMOS EL ARTICULO DE tmp_pv_detalle_cotizacion
                             mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_cotizacion` WHERE `tmp_pv_detalle_cotizacion`.`id_articulo` = $id_articulo");
                         }//FIN IF                   
                     }//FIN WHILE 
-                    // SI LA LISTA NO ESTA VACIA MOSTRAMOS LA VISTA:
-                    if ($LISTA != '') {                    
-                        ?>
-                        <div class="row">
-                            <div class="row"><br><br><hr>
-                                <h4 class="red-text center">¡ADVERTENCIA!</h4><br>
-                                <h5 class="blue-text">Articulos que se tomaron a consideracion para cambio de precio:</h5>
-                            </div>
-                            <div id="cambio"></div>
-                            <form class="row">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Nombre</th>
-                                            <th>Precio Actual</th>
-                                            <th>Precio Venta</th>
-                                            <th>Precio Fijado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php echo $LISTA; ?>
-                                    </tbody>
-                                </table><br><br><br>
-                                <a onclick="recargar_cotizaciones()" class="btn waves-effect waves-light pink right">Aceptar y Continuar<i class="material-icons right">done</i></a>
-                            </form>
-                        </div><hr>
-                        <?php 
-                    }else{
-                        //SI NO HAY NADA POR CAMBIAR SOLO REDIRECCIONAMOS
-                        echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
-                    }
                 }else{
                     echo '<script >M.toast({html:"No se encontraron articulos por agregar.", classes: "rounded"})</script>';  
                 }//FIN ELSE
+                echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
 			}else{
                 echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';   
             }//FIN else DE ERROR            
@@ -243,11 +198,12 @@ switch ($Accion) {
                 <thead>
                     <tr>
                         <th>Código</th>
+                        <th>Artículo</th>
                         <th>Imagen</th>
                         <th>Cantidad</th>
-                        <th>Artículo</th>
-                        <th>Costo Unitario</th>
+                        <th>Costo Unitario.</th>
                         <th>Importe</th>
+                        <th>Exist.</th>
                     </tr>
                 </thead>
               <tbody>
@@ -256,24 +212,28 @@ switch ($Accion) {
                $total = 0;
                //VERIFICAMOS SI HA ARRTICULOS EN LA TABLA
                if(mysqli_num_rows($consulta)>0){
+                    $mayor = true;
                     while($detalle_articulo = mysqli_fetch_array($consulta)){
                         $id_art = $detalle_articulo['id_articulo'];
                         $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id = $id_art"));
                         $total += $detalle_articulo['importe'];
-                        ?>
-                        <!-- OBTENEMOS LA IMAGEN -->
-                        <?php $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
+                         $existe = mysqli_fetch_array(mysqli_query($conn, "SELECT cantidad FROM `punto_venta_almacen_general` WHERE id_almacen = $almacen AND id_articulo = $id_art"));
+                        if (!$existe) {   $existe['cantidad'] = 0;    }
+                        if ($detalle_articulo['cantidad']>$existe['cantidad']){     $mayor = true;      }
+                        $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
                         <tr>
                             <td><?php echo $articulo['codigo'] ?></td>
-                            <?php echo $img ?>
-                            <td class="row col s10"><input id="cantidadA<?php echo $id_art; ?>" type="number" class="validate col s6 m4 l4" value="<?php echo $detalle_articulo['cantidad'];?>" onchange= 'totales(<?php echo $id_art.', '.$user_id;?>);'><br><?php echo $articulo['unidad'] ?></td>
                             <td><?php echo $articulo['nombre'] ?></td>
-                            <td class="row col s12"><p class="col s2">$</p><input id="precio_compra<?php echo $id_art; ?>" type="number" class="validate col s10 m7 l6" value="<?php echo sprintf('%.2f', $detalle_articulo['precio_venta_u']); ?>" onchange= 'totales(<?php echo $id_art.', '.$user_id;?>);'></td>
+                            <?php echo $img ?>
+                            <td><input id="cantidadA<?php echo $id_art; ?>" type="number" class="validate col s6 m4 l4" value="<?php echo $detalle_articulo['cantidad'];?>" onchange= 'totales(<?php echo $id_art.', '.$user_id;?>);'><br><?php echo $articulo['unidad'] ?></td>
+                            <td><p class="col s2">$</p><input id="precio_compra<?php echo $id_art; ?>" type="number" class="validate col s10 m7 l6" value="<?php echo sprintf('%.2f', $detalle_articulo['precio_venta_u']); ?>" onchange= 'totales(<?php echo $id_art.', '.$user_id;?>);'></td>
                             <td><div class="col s2">$</div><input class="col s10 m7 l6" type="" id="importe<?php echo $id_art; ?>" value = "<?php echo sprintf('%.2f', $detalle_articulo['importe']); ?>"></td>
+                            <td><?php echo $existe['cantidad'].' '.$articulo['unidad'] ?></td>
                             <td><a onclick="borrar_lista_articulo(<?php echo $id_art; ?>);" class="waves-effect waves-light btn-small red right"><i class="material-icons">delete</i></a></td>
                         </tr>
                     <?php
                     }//FIN WHILE
+                    echo '<input type="hidden" id="mayor_exist" value="'.$mayor.'">';
                }else{
                   echo '<tr><td></td><td></td><td><h6> Sin Artículos </h6></td></tr>';
                }//FIN ELSE
@@ -284,19 +244,11 @@ switch ($Accion) {
         <div class="row">
             <div class="hide-on-small-only col s1"><br></div>
             <div class="col s12 m10 l10">
-                <div class="col s6 m6 l6 ">
-                    <h5 class="right"><b>Número de Artículos <?php echo $aux;?></b></h5><br><br><br><br>
-                    <!-- Switch -->
-                    <div class="switch right">
-                        <label>
-                          Al Contado
-                          <input type="checkbox" id="cambio">
-                          <span class="lever"></span>
-                          Credito
-                        </label>
-                    </div><br><br><br>
-                    <a onclick="borrar_lista_all(<?php echo $user_id; ?>)" class="waves-effect waves-light btn-small red right">Cancelar<i class="material-icons left">close</i></a>
-                    <a onclick="insert_compra()" class="waves-effect waves-light btn-small indigo right">Registrar<i class="material-icons left">done</i></a>
+                <div class="col s6 m6">
+                    <h5 class="right"><b>Número de Artículos:  <?php echo $aux;?> </b></h5><br><br><br><br>
+                    <a onclick="borrar_lista_all(<?php echo $user_id; ?>)" class="waves-effect waves-light btn-large indigo lighten-5 red-text right"><b>Cancelar<i class="material-icons left">remove_shopping_cart</i></b></a>
+                    <a class="right white-text"> <br>_ _ _ _</a>
+                    <a onclick="crear_cotizacion()" class="waves-effect waves-light btn-large indigo lighten-5 teal-text right"><b>GUARDAR<i class="material-icons left">save</i></b></a>
                 </div>
                 <div class="hide-on-small-only col s2"><br></div>
                 <div class="col s6 m4 l4 row">
@@ -413,40 +365,46 @@ switch ($Accion) {
         <div class="row">
             <div class="hide-on-small-only col s1"><br></div>
             <table class="col s12 m10 l10">
-              <thead>
-                <tr>
-                  <th>Código</th>
-                  <th>Imagen</th>
-                  <th>Cantidad</th>
-                  <th>Artículo</th>
-                  <th>Costo U.</th>
-                  <th>Importe</th>
-                </tr>
-              </thead>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Artículo</th>
+                        <th>Imagen</th>
+                        <th>Cantidad</th>
+                        <th>Costo U.</th>
+                        <th>Importe</th>
+                        <th>Exist.</th>
+                    </tr>
+                </thead>
               <tbody>
                <?php
                $aux = mysqli_num_rows($consulta);
                $total = 0;
                //VERIFICAMOS SI HA ARRTICULOS EN LA TABLA
                if(mysqli_num_rows($consulta)>0){
+                    $mayor = false;
                     while($detalle_articulo = mysqli_fetch_array($consulta)){
                         $id_art = $detalle_articulo['id_articulo'];
                         $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id = $id_art"));
                         $total += $detalle_articulo['importe'];
-                        ?>
-                        <!-- OBTENEMOS LA IMAGEN -->
-                        <?php $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
+                        $existe = mysqli_fetch_array(mysqli_query($conn, "SELECT cantidad FROM `punto_venta_almacen_general` WHERE id_almacen = $almacen AND id_articulo = $id_art"));
+                        if (!$existe) {  $existe['cantidad'] = 0;       }
+                        if ($detalle_articulo['cantidad']>$existe['cantidad']){     $mayor = true;      }
+
+                        $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
                         <tr>
                             <td><?php echo $articulo['codigo'] ?></td>
-                            <?php echo $img ?>
-                            <td class="row col s10"><input id="cantidadA<?php echo $id_art; ?>" type="number" class="validate col s6 m4 l4" value="<?php echo $detalle_articulo['cantidad'];?>" onchange= 'totales(<?php echo $id_art.', '.$user_id;?>);'><br><?php echo $articulo['unidad'] ?></td>
                             <td><?php echo $articulo['nombre'] ?></td>
-                            <td class="row col s12"><p class="col s2">$</p><input id="precio_compra<?php echo $id_art; ?>" type="number" class="validate col s10 m7 l6" value="<?php echo sprintf('%.2f', $detalle_articulo['precio_venta_u']); ?>" onchange= 'totales(<?php echo $id_art.', '.$user_id;?>);'></td>
+                            <?php echo $img ?>
+                            <td><input id="cantidadA<?php echo $id_art; ?>" type="number" class="validate col s6 m4 l4" value="<?php echo $detalle_articulo['cantidad'];?>" onchange= 'totales(<?php echo $id_art.', '.$user_id;?>);'><br><?php echo $articulo['unidad'] ?></td>
+                            <td><p class="col s2">$</p><input id="precio_compra<?php echo $id_art; ?>" type="number" class="validate col s10 m7 l6" value="<?php echo sprintf('%.2f', $detalle_articulo['precio_venta_u']); ?>" onchange= 'totales(<?php echo $id_art.', '.$user_id;?>);'></td>
                             <td><div class="col s2">$</div><input class="col s10 m7 l6" type="" id="importe<?php echo $id_art; ?>" value = "<?php echo sprintf('%.2f', $detalle_articulo['importe']); ?>"></td>
+                            <td><?php echo $existe['cantidad'].' '.$articulo['unidad'] ?></td>
                             <td><a onclick="borrar_lista_articulo(<?php echo $id_art; ?>);" class="waves-effect waves-light btn-small red right"><i class="material-icons">delete</i></a></td>
                         </tr>
                     <?php
                     }//FIN WHILE
+                    echo '<input type="hidden" id="mayor_exist" value="'.$mayor.'">';
                }else{
                   echo '<tr><td></td><td></td><td><h6> Sin Artículos </h6></td></tr>';
                }//FIN ELSE
@@ -457,19 +415,11 @@ switch ($Accion) {
         <div class="row">
             <div class="hide-on-small-only col s1"><br></div>
             <div class="col s12 m10 l10">
-                <div class="col s6 m6 l6 ">
-                    <h5 class="right"><b>Número de Artículos <?php echo $aux;?></b></h5><br><br><br><br>
-                    <!-- Switch -->
-                    <div class="switch right">
-                        <label>
-                          Al Contado
-                          <input type="checkbox" id="cambio">
-                          <span class="lever"></span>
-                          Credito
-                        </label>
-                    </div><br><br><br>
-                    <a onclick="borrar_lista_all(<?php echo $id_user; ?>)" class="waves-effect waves-light btn-small red right">Cancelar<i class="material-icons left">close</i></a>
-                    <a onclick="insert_compra()" class="waves-effect waves-light btn-small indigo right">Registrar<i class="material-icons left">done</i></a>
+                <div class="col s6 m6">
+                    <h5 class="right"><b>Número de Artículos:  <?php echo $aux;?> </b></h5><br><br><br><br>
+                    <a onclick="borrar_lista_all(<?php echo $user_id; ?>)" class="waves-effect waves-light btn-large indigo lighten-5 red-text right"><b>Cancelar<i class="material-icons left">remove_shopping_cart</i></b></a>
+                    <a class="right white-text"> <br>_ _ _ _</a>
+                    <a onclick="crear_cotizacion()" class="waves-effect waves-light btn-large indigo lighten-5 teal-text right"><b>GUARDAR<i class="material-icons left">save</i></b></a>
                 </div>
                 <div class="hide-on-small-only col s2"><br></div>
                 <div class="col s6 m4 l4 row">

@@ -29,8 +29,6 @@
     var textoRecibio = $("select#recibio").val(); 
     var textoCantidad = $("input#cantidadD").val(); 
     var textoDescripcion = $("input#descripcionD").val();
-    var textoCantidadSAN = $("input#cantidadSAN").val(); 
-    var textoDescripcionSAN = $("input#descripcionSAN").val();
 
     entra = "Si";
     if (textoCantidad != 0 || textoDescripcion != "") {
@@ -39,16 +37,6 @@
         texto = "Ingrese una cantidad correcta";
       }
       if (textoDescripcion == "") {
-        entra = "No";
-        texto = "Ingrese una descripcion correcta";
-      }
-    } 
-    if (textoCantidadSAN != 0 || textoDescripcionSAN != "") {
-      if (textoCantidadSAN <= 0) {
-        entra = "No";
-        texto = "Ingrese una cantidad correcta";
-      }
-      if (textoDescripcionSAN == "") {
         entra = "No";
         texto = "Ingrese una descripcion correcta";
       }
@@ -65,8 +53,6 @@
           valorRecibio: textoRecibio,
           valorCantidad: textoCantidad,
           valorDescripcion: textoDescripcion,
-          valorCantidadSAN: textoCantidadSAN,
-          valorDescripcionSAN: textoDescripcionSAN,
         }, function(mensaje) {
            $("#resultado_corte").html(mensaje);
       });
