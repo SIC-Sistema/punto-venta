@@ -68,7 +68,7 @@
               <th>Hora</th>
               <th>Total</th>
               <th>Registro</th>
-              <th>Editar</th>
+              <th>Ver</th>
               <th>Borrar</th>
             </tr>
           </thead>
