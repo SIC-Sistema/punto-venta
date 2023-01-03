@@ -33,6 +33,20 @@ if (isset($_POST['cotizacion']) == false) {
       $Cotizacion = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_cotizaciones WHERE id=$id_cotizacion"));
       ?>
     </head>
+    <script>
+        //FUNCION QUE ABRE EL MODAL PARA EDITAR LA CANTIDAD DEL ARTICULO SELECCIONADO.
+        function editarCotizacion(id){
+            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_almacen.php" PARA MOSTRAR EL MODAL
+            $.post("modal_editar_cotizacion.php", {
+                //Cada valor se separa por una ,
+                id: id,
+                // almacen: almacen,
+            }, function(mensaje){
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_almacen.php"
+                $("#modal").html(mensaje);
+            });//FIN post
+        }//FIN function
+    </script>
     <body>
       <!-- DENTRO DE ESTE DIV VA TODO EL CONTENIDO Y HACE QUE SE VEA AL CENTRO DE LA PANTALLA.-->
     	<div class="container">
@@ -54,8 +68,7 @@ if (isset($_POST['cotizacion']) == false) {
                     </div>
                     <div class="col s12 m6">
                       <b><b>TOTAL: </b> $<?php echo sprintf('%.2f', $Cotizacion['total']); ?></b><br>
-                      <a href="../php/imprimir_cotizacion.php?id=<?php echo $id_cotizacion; ?>" target = 'blank' class="waves-effect waves-light btn-small pink right"><i class="material-icons right">print</i>IMPRIMIR</a>
-                      <form method="post" action="../views/editar_cotizacion_pv.php"><input id="cotizacion" name="cotizacion" type="hidden" value="<?php echo $id_cotizacion; ?>"><button class="btn-small waves-effect waves-light indigo"><i class="material-icons right">edit</i>Editar</button></form>
+                      <a href="../php/imprimir_cotizacion.php?id=<?php echo $id_cotizacion; ?>" target = 'blank' class="waves-effect waves-light btn-small pink"><i class="material-icons right">print</i>IMPRIMIR</a>
                     </div><br>
                   </p><br><br>
                 </li>
@@ -79,6 +92,7 @@ if (isset($_POST['cotizacion']) == false) {
                 <th>Precio Venta</th>
                 <th>Cantidad</th>
                 <th>Importe</th>
+                <th>Editar</th>
               </tr>
             </thead>
             <tbody>
@@ -102,10 +116,11 @@ if (isset($_POST['cotizacion']) == false) {
                       <td><?php echo $articulo['modelo'] ?></td>
                       <td>$<?php echo sprintf('%.2f', $detalle['importe']); ?></td>
                       <td><?php echo $detalle['cantidad'].' '.$articulo['unidad']; ?></td>
-                      <td>$<?php echo sprintf('%.2f', $detalle['importe']); ?></td>                      
+                      <td>$<?php echo sprintf('%.2f', $detalle['importe']); ?></td>
+                      <td><a onclick="editarCotizacion(<?php echo $detalle['id']?>);" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">edit</i></a></td>                      
                     </tr>
                   <?php
-                }//FIN while <td><a onclick="editarCotizacion(<?php echo $detalle['id']);" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">edit</i></a></td>
+                }//FIN while 
               }// FIN else
               ?>
               <tr><td colspan="5"><td colspan="2"><b>TOTAL</b></td><td><b>$<?php echo sprintf('%.2f', $Cotizacion['total']); ?></b></td></tr>

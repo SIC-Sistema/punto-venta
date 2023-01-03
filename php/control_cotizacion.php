@@ -64,6 +64,14 @@ switch ($Accion) {
                     echo '<script >M.toast({html:"No se encontraron articulos por agregar.", classes: "rounded"})</script>';  
                 }//FIN ELSE
                 echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
+                ?>
+                <script>
+                    var a = document.createElement("a");
+                      a.href = "../php/imprimir_cotizacion.php?id="+id;
+                      a.target = "blank";
+                      a.click();
+                </script>
+                <?php
 			}else{
                 echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';   
             }//FIN else DE ERROR            
@@ -77,9 +85,9 @@ switch ($Accion) {
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
 		if ($Texto != "") {
 			//MOSTRARA LOS PRODUCTOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
-			$sql = "SELECT * FROM `punto_venta_cotizaciones`  WHERE  cotizacion LIKE '$Texto%' OR id LIKE '$Texto%' OR id_cliente LIKE '$Texto%' LIMIT 30";	
+			$sql = "SELECT * FROM `punto_venta_cotizaciones`  WHERE id LIKE '$Texto%' OR id_cliente LIKE '$Texto%' LIMIT 30";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
-			$sql = "SELECT * FROM `punto_venta_cotizaciones` LIMIT 30";
+			$sql = "SELECT * FROM `punto_venta_cotizaciones`";
 		}//FIN else $Texto VACIO O NO
 
         // REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
@@ -102,9 +110,7 @@ switch ($Accion) {
                 $contenido .= '			
 		          <tr>
 		            <td>'.$cotizacion['id'].'</td>
-                    <td>'.$cotizacion['cotizacion'].'</td>
                     <td>'.$id_cliente.' - '.$cliente['nombre'].'</td>
-                    <td>'.$cotizacion['tipo_cambio'].'</td>
                     <td>$'.sprintf('%.2f', $cotizacion['total']).'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td>'.$cotizacion['fecha'].'</td>
@@ -439,7 +445,7 @@ switch ($Accion) {
         #VERIFICAMOS QUE SE BORRE CORRECTAMENTE TODOS LAS ARTICULOS QUE REGITRO EL USUARIO EN `tmp_pv_detalle_cotizacion`
         if(mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_cotizacion` WHERE `usuario` = $id_usuario")){
             #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-            echo '<script >M.toast({html:"Si hay articulos en la lsita fueron borrados con exito.", classes: "rounded"})</script>';
+            echo '<script >M.toast({html:"Si hay articulos en la lista fueron borrados con exito.", classes: "rounded"})</script>';
             echo '<script>recargar_cotizaciones()</script>';// REDIRECCIONAMOS (FUNCION ESTA EN ARCHIVO modals.php)
         }else{
             #SI NO ES BORRADO MANDAR UN MSJ CON ALERTA

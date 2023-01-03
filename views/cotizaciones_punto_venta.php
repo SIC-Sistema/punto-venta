@@ -58,7 +58,7 @@
             <div class="input-field col s12">
               <i class="material-icons prefix">search</i>
               <input id="busqueda" name="busqueda" type="text" onkeyup="buscar_cotizaciones();">
-              <label for="busqueda">Buscar(N° Cotización, Código Cotización, N° Cliente)</label>
+              <label for="busqueda">Buscar(N° Cotización, N° Cliente)</label>
             </div>
           </div>
         </form>
@@ -69,9 +69,7 @@
           <thead>
             <tr>
               <th>N°</th>
-              <th>Código Cotización</th>
               <th>N° Cliente</th>
-              <th>Tipo Cambio</th>
               <th>Total</th>
               <th>Registro</th>
               <th>Fecha</th>

@@ -49,15 +49,8 @@
                 </table>
             </div><br>
             <div class="input-field col s12 m6 l6">
-                <!--CAMPO PARA AGREGAR LA DESCRIPCIÓN DEL CAMBIO-->
-                <div class="input-field">
-                    <i class="material-icons prefix">comment</i>
-                    <input id="descripcion_cambio" name="descripcion_cambio" type="text" class="validate" data-length="200" required>
-                    <label for="descripcion_cambio">¿Cuál es el motivo del cambio?:</label>
-                </div>
                 <!-- PARA DIRIGIR HACIA CONTROL COTIZACION CON EL VALOR >>|10|<< -->
                 <input id="id_cotizacion" name="id_cotizacion" type="hidden" value="<?php echo $id ?>">
-                <!-- <input id="almacen" name="almacen" type="hidden" value="<?php /* echo $id_almacen  */?>"> -->
                 <input id="accion" name="accion" type="hidden" value="10">
             </div><br><br>
             <button class="btn waves-effect waves-light pink right" type="submit" name="action">Guardar<i class="material-icons right">save</i></button>
