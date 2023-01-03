@@ -61,13 +61,13 @@ $user_id = $_SESSION['user_id'];
 <body>
 	<div class="container" id="mostrar_abonos">
   <?php 
-  $sql = mysqli_query($conn,"SELECT * FROM clientes WHERE id_cliente=$no_cliente");
+  $sql = mysqli_query($conn,"SELECT * FROM `punto-venta_clientes` WHERE id=$no_cliente");
   if (mysqli_num_rows($sql)<=0) {
     $sql = mysqli_query($conn,"SELECT * FROM especiales WHERE id_cliente=$no_cliente");
   } 
   $datos = mysqli_fetch_array($sql);
-  $id_comunidad = $datos['lugar'];
-  $comunidad = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM comunidades WHERE id_comunidad = $id_comunidad"));
+  $id_comunidad = $datos['localidad'];
+  //$comunidad = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM comunidades WHERE id_comunidad = $id_comunidad"));
 
   // SACAMOS LA SUMA DE TODAS LAS DEUDAS Y ABONOS ....
   $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $no_cliente"));
@@ -96,10 +96,9 @@ if ($Saldo < 0) {
               <span class="title"><b>No. Cliente: </b><?php echo $no_cliente; ?></span>
               <p><b>Nombre(s): </b><?php echo $datos['nombre']; ?><br>
                  <b>Telefono: </b><?php echo $datos['telefono']; ?><br>
-                 <b>Comunidad: </b><?php echo $comunidad['nombre']; ?><br>
+                 <b>Localidad: </b><?php echo $datos['localidad']; ?><br>
                  <b>Dirección: </b><?php echo $datos['direccion']; ?><br>
-                 <b>Referencia: </b><?php echo $datos['referencia']; ?><br>
-                 <b>IP: </b><a href="http://<?php echo $datos['ip']; ?>"><?php echo $datos['ip']; ?></a>
+                 <!-- <b>IP: </b><a href="http://<?php //echo $datos['ip']; ?>"><?php //echo $datos['ip']; ?></a> -->
                  <br><br><hr>
                  <b>SALDO: </b> <span class="new badge <?php echo $color ?>" id="mostrar_deuda" data-badge-caption="">$<?php echo $Saldo; ?><br>
               </p>

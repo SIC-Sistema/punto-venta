@@ -67,6 +67,15 @@ switch ($Accion) {
                     if ($tipo_cambio == 'Credito') {
                         // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
                         $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
+                        //SE LE SUMA 10000 AL id DEL CLIENTE DEL PUNTO DE VENTA
+                        $cliente_punto_venta = $cliente+10000
+                        $mysql_credito = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";
+                            
+                        mysqli_query($conn,$mysql_credito);
+                        $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $IdCliente"));            
+                        //$id_deuda = $ultimo['id'];
+                        //$sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($IdCliente, '$descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
+                
                     }
                     if(mysqli_query($conn, $sql_credito)){
                         echo '<script >M.toast({html:"Se agrego un nuevo credito.", classes: "rounded"})</script>';  
