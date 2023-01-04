@@ -32,7 +32,7 @@ switch ($Accion) {
         if ($tipo_cambio == 'Credito' AND $cliente == 0){
             echo '<script >M.toast({html:"Debe seleccionar un cliente sí quiere registrar a crédito.", classes: "rounded"})</script>'; 
         }else{
-            $sql = "UPDATE `punto_venta_ventas` SET id_cliente = '$cliente', fecha= '$Fecha_hoy', hora = '$Hora', tipo_cambio = '$tipo_cambio', total = '$Total', usuario = '$id_user', estatus = 2  WHERE id = $id_venta";
+            $sql = "UPDATE `punto_venta_ventas` SET id_cliente = $cliente, fecha= '$Fecha_hoy', hora = '$Hora', tipo_cambio = '$tipo_cambio', total = '$Total', usuario = $id_user, estatus = 2  WHERE id = $id_venta";
   
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
@@ -67,8 +67,8 @@ switch ($Accion) {
                     if ($tipo_cambio == 'Credito') {
                         // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
                         $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
-                        //SE LE SUMA 10000 AL id DEL CLIENTE DEL PUNTO DE VENTA
-                        $cliente_punto_venta = $cliente+10000
+                        //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
+                        $cliente_punto_venta = $cliente+10000;
                         $mysql_credito = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";
                             
                         mysqli_query($conn,$mysql_credito);
@@ -81,7 +81,7 @@ switch ($Accion) {
                         echo '<script >M.toast({html:"Se agrego un nuevo credito.", classes: "rounded"})</script>';  
                     }
 
-                    $cliente = ($cliente == 0)? $cliente: $cliente+100000;
+                    $cliente = ($cliente == 0)? $cliente: $cliente+10000;
                     #--- CREAMOS EL SQL PARA LA INSERCION ---
                     $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
                     #--- SE INSERTA EL PAGO -----------

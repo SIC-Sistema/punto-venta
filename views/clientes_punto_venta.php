@@ -78,6 +78,7 @@
             <th>C.P.</th>
             <th>Registro</th>
             <th>Fecha</th>
+            <th>Crédito</th>
             <th>Editar</th>
             <th>Borrar</th>
           </tr>
