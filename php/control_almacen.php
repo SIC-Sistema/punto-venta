@@ -192,11 +192,13 @@ switch ($Accion) {
         $almacen = $conn->real_escape_string($_POST['almacen']);
         $DesCambio = $conn->real_escape_string($_POST['descripcion_cambio']);
         $Cantidad = $conn->real_escape_string($_POST['cantidadCambiar']);
-
+        $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo = $id_articulo AND id_almacen = $almacen"));
+        $Can_A = $articulo['cantidad'];
         //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ALMACEN Y LA GUARDAMOS EN UNA VARIABLE
         $sql_update = "UPDATE `punto_venta_almacen_general` SET cantidad = '$Cantidad' WHERE id_articulo = $id_articulo AND id_almacen = $almacen";        
         //VERIFICAMOS QUE LAS SENTECIAS SON EJECUTADAS CON EXITO!
         if(mysqli_query($conn, $sql_update)){
+            $DesCambio = $DesCambio.'(De '.$Can_A.' A '.$Cantidad.')';
             $sql_insert = "INSERT INTO `punto_venta_modificaciones_mi_almacen` (descripcion_cambio, producto, almacen, usuario, fecha) VALUES('$DesCambio',$id_articulo,$almacen,$id_user,'$Fecha_hoy')";
             if(mysqli_query($conn, $sql_insert)){
                 echo 'Los datos se actualizarón con exito.';	

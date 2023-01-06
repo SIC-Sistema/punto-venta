@@ -50,24 +50,12 @@
             </div><br>
             <div class="input-field col s12 m6 l6">
                 <!--CAMPO PARA AGREGAR LA DESCRIPCIÓN DEL CAMBIO-->
-                <div class="input-field">
-                    <i class="material-icons prefix">comment</i>
-                    <input id="descripcion_cambio" name="descripcion_cambio" type="text" class="validate" data-length="200" required>
-                    <label for="descripcion_cambio">¿Cuál es el motivo del cambio?:</label>
-                </div>
-                <!-- CAJA DE SELECCION DE CATEGORIAS -->
-                <div class="input-field">
-                    <i class="material-icons prefix">view_list</i>
-                    <!--<label for="categoria">Categoria:</label>-->
-                    <select id="categoria" name="categoria" class="validate">
-                        <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
-                        <option value="a" selected>A</option>
-                        <option value="b">B</option>
-                        <option value="c">C</option>
-                        <option value="d">D</option>
-                        <option value="e">E</option>
-                    </select>
-                </div> 
+                <select class="browser-default" id="descripcion_cambio" name="descripcion_cambio">
+                    <option value="" disabled selected>Seleccione el motivo</option>
+                    <option value="Traspaso Interno">Traspaso Interno</option>
+                    <option value="Perdida por inventario">Perdida por inventario</option>
+                    <option value="Aumento por Inventario">Aumento por Inventario</option>
+                </select>
                 <!-- PARA DIRIGIR HACIA CONTROL ALMACEN CON EL VALOR 5 -->
                 <input id="id_articulo" name="id_articulo" type="hidden" value="<?php echo $id ?>">
                 <input id="almacen" name="almacen" type="hidden" value="<?php echo $id_almacen ?>">
