@@ -276,7 +276,8 @@
               </div>
             </div>
             <hr>            
-            <a href="#modal_addArticulo" class="waves-effect waves-light btn-small modal-trigger pink right">Agregar Artículo<i class="material-icons left">add</i></a><br><br>
+            <a href="#modal_addArticulo" class="waves-effect waves-light btn-small modal-trigger pink right">Agregar Artículo<i class="material-icons left">add</i></a>
+            <a href="../views/add_articulo.php" target="blank" class="waves-effect waves-light btn-small indigo lighten-5 indigo-text"><b><i class="material-icons right">add</i>Nuevo Articulo</b></a><br><br>
             <!-- CREAMOS UN DIV EL CUAL TENGA id = "articulosCompra"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
             <div class="row" id="articulosCompra">
             </div>
