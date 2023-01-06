@@ -15,12 +15,17 @@
 	    $('#modalAlmacen').modal('open'); 
 	 });
 </script>
-
 <!-- MODALES DE ALMACEN -->
 <!-- Modal EditarAlmacen Structure -->
 <div id="modalAlmacen" class="modal">
-    <div class="modal-content"> 
+    <div class="modal-content">
         <h5 class="red-text"><b>EDITAR EXISTENCA (CANTIDAD) DEL ARTICULO</b></h5><br>
+        <select name="" id="">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+        </select>
         <h6><b>NOTA:  Cada edición conlleva un motivo para que, se pueda realizar el cambio.</b></h6><br>
         <form class="row" action="../php/control_almacen.php" method="post">
             <div>
@@ -50,6 +55,19 @@
                     <input id="descripcion_cambio" name="descripcion_cambio" type="text" class="validate" data-length="200" required>
                     <label for="descripcion_cambio">¿Cuál es el motivo del cambio?:</label>
                 </div>
+                <!-- CAJA DE SELECCION DE CATEGORIAS -->
+                <div class="input-field">
+                    <i class="material-icons prefix">view_list</i>
+                    <!--<label for="categoria">Categoria:</label>-->
+                    <select id="categoria" name="categoria" class="validate">
+                        <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
+                        <option value="a" selected>A</option>
+                        <option value="b">B</option>
+                        <option value="c">C</option>
+                        <option value="d">D</option>
+                        <option value="e">E</option>
+                    </select>
+                </div> 
                 <!-- PARA DIRIGIR HACIA CONTROL ALMACEN CON EL VALOR 5 -->
                 <input id="id_articulo" name="id_articulo" type="hidden" value="<?php echo $id ?>">
                 <input id="almacen" name="almacen" type="hidden" value="<?php echo $id_almacen ?>">
@@ -60,3 +78,4 @@
         </form>
     </div>
 </div>
+                        
