@@ -46,6 +46,7 @@ include('fredyNav.php');
   }
 </script>
 </head>
+<!-- SE RECIBE UNA VARIABLE DEL NUMERO DE CLIENTE DESDE EL ARCHIVO control_credito.php -->
 <?php
 if (isset($_POST['no_cliente']) == false) {
   ?>
@@ -70,8 +71,8 @@ $user_id = $_SESSION['user_id'];
   //$comunidad = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM comunidades WHERE id_comunidad = $id_comunidad"));
 
   // SACAMOS LA SUMA DE TODAS LAS DEUDAS Y ABONOS ....
-  $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $no_cliente"));
-  $abono = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM pagos WHERE id_cliente = $no_cliente AND tipo = 'Abono'"));
+  $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $no_cliente+10000"));
+  $abono = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM pagos WHERE id_cliente = $no_cliente+10000 AND tipo = 'Abono'"));
   //COMPARAMOS PARA VER SI LOS VALORES ESTAN VACIOS::
   if ($deuda['suma'] == "") {
     $deuda['suma'] = 0;
@@ -164,7 +165,7 @@ if ($Saldo < 0) {
           </thead>
           <tbody>
             <?php
-              $deudas = mysqli_query($conn, "SELECT * FROM deudas WHERE id_cliente = $no_cliente");
+              $deudas = mysqli_query($conn, "SELECT * FROM deudas WHERE id_cliente = $no_cliente+10000");
               $aux = mysqli_num_rows($deudas);
               if ($aux > 0) {
                 while ($resultados = mysqli_fetch_array($deudas)) {
@@ -202,7 +203,7 @@ if ($Saldo < 0) {
           </thead>
           <tbody>
            <?php
-              $abonos = mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $no_cliente AND tipo = 'Abono'");
+              $abonos = mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $no_cliente+10000 AND tipo = 'Abono'");
               $aux = mysqli_num_rows($abonos);
               if ($aux > 0) {
                 while ($resultados = mysqli_fetch_array($abonos)) {

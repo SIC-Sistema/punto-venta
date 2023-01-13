@@ -50,7 +50,7 @@ switch ($Accion) {
                         $importe = $detalle_articulo['importe'];
                         // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_venta
                         $sql = "INSERT INTO `punto_venta_detalle_venta` (id_venta, id_producto, cantidad, precio_venta, importe) VALUES($id_venta, $id_articulo, '$cantidad', '$precio_venta','$importe')";
-
+                        
                         // VERIFICAMOS SI SE HIZO LA INSERCION
                         if (mysqli_query($conn, $sql)) {
                             // VERIFICAMOS SI EL ARTICULO YA ESTA EN ALMACEN Y SOLO MODIFICAMOS LA CANTIDAD -
@@ -63,22 +63,19 @@ switch ($Accion) {
                     }//FIN while
                     $descripcion = 'Venta N°'.$id_venta;
 
-                    //PARA AGREGAR A CRÉDITO
                     if ($tipo_cambio == 'Credito') {
-                        // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
-                        $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
+                        $cliente_punto_venta = $cliente + 10000;
+                        $mysql_deudas = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";  
+                        mysqli_query($conn,$mysql_deudas);
                         //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
-                        $cliente_punto_venta = $cliente+10000;
-                        $mysql_credito = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";
-                            
-                        mysqli_query($conn,$mysql_credito);
-                        $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $IdCliente"));            
-                        //$id_deuda = $ultimo['id'];
-                        //$sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($IdCliente, '$descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
-                
-                    }
-                    if(mysqli_query($conn, $sql_credito)){
-                        echo '<script >M.toast({html:"Se agrego un nuevo credito.", classes: "rounded"})</script>';  
+                        $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
+                        $id_deuda = $ultimo['id'];
+                        $sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente_punto_venta, '$Descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
+                        // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
+                        $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, id_deuda, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $id_deuda, $Total, $id_user)");
+                        if(mysqli_query($conn, $mysql_deuda)){
+                            echo '<script >M.toast({html:"Se agrego una nueva deuda.", classes: "rounded"})</script>';  
+                        }
                     }
 
                     $cliente = ($cliente == 0)? $cliente: $cliente+10000;
@@ -140,6 +137,17 @@ switch ($Accion) {
                     VALUES($id, '".$venta['id_cliente']."', '".$venta['fecha']."', '".$venta['hora']."', '".$venta['tipo_cambio']."', '".$venta['total']."', '".$venta['usuario']."', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
+                //SÍ SE BORRA UNA VENTA QUE ES A CREDITO ENTONCES SE BORRA LA DEUDA Y EL CREDITO CORRESPONDIENTE
+                if(mysqli_query($conn, "DELETE FROM `punto_venta_credito` WHERE 'id_venta' = $id")){
+                    #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+                    echo '<script >M.toast({html:"Crédito borrado con exito.", classes: "rounded"})</script>';
+                }
+                
+                if(mysqli_query($conn, "DELETE FROM `deudas` WHERE 'id_deuda' = $id")){
+                    #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+                    echo '<script >M.toast({html:"Crédito borrado con exito.", classes: "rounded"})</script>';
+                }
+                /////////////////////////////////////////////////////////////////////////////////////////////////
                 //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_ventas`
                 #VERIFICAMOS QUE SE BORRE CORRECTAMENTE LA COMPRA DE `punto_venta_ventas`
                 if(mysqli_query($conn, "DELETE FROM `punto_venta_ventas` WHERE `punto_venta_ventas`.`id` = $id")){

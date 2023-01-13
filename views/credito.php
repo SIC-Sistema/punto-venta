@@ -36,8 +36,6 @@
   <main>
   <body onload="buscar_creditos();">
     <div class="container"><br><br>
-      <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR PROVEEDOR    ///////   -->
-      <a href="add_credito.php" class="waves-effect waves-light btn pink left right">Agregar Credito<i class="material-icons prefix left">add</i></a>
       <!-- CREAMOS UN DIV EL CUAL TENGA id = "borrarCredito"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
       <div id="borrarCredito"></div>
       <div class="row">
