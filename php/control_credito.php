@@ -88,9 +88,7 @@ switch ($Accion) {
 		            <td>'."$".$credito['total'].'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td><form method="post" action="../views/credito_abono_pv.php"><input id="no_cliente" name="no_cliente" type="hidden" value="'.$id_cliente.'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">credit_card</i></button></form></td>
-                    <td><a onclick="verificar_eliminar('.$credito['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';
-
 			}//FIN while
         }//FIN else
 

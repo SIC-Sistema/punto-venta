@@ -16,13 +16,13 @@ $id_user = $_SESSION['user_id'];
 if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $IdCliente+10000 AND descripcion = '$Descripcion' AND cantidad='$Cantidad' AND fecha='$Fecha_hoy'"))>0){
 	echo '<script>M.toast({html:"Ya se encuentra un abono registrado con los mismos valores el día de hoy.", classes: "rounded"})</script>';
 }else{ 
-	$sql = "INSERT INTO pagos (id_cliente, cantidad, fecha, hora, descripcion , tipo_cambio, id_user, tipo, corte, corteP) VALUES ($IdCliente, '$Cantidad', '$Fecha_hoy', '$Hora', '$Descripcion', '$Tipo_Campio', '$id_user', 'Abono', 0, 0)";
+	$sql = "INSERT INTO pagos (id_cliente, cantidad, fecha, hora, descripcion , tipo_cambio, id_user, tipo, corte, corteP) VALUES ($IdCliente+10000, '$Cantidad', '$Fecha_hoy', '$Hora', '$Descripcion', '$Tipo_Campio', '$id_user', 'Abono', 0, 0)";
 	if(mysqli_query($conn, $sql)){          
     $Deuda_check = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM deudas WHERE id_cliente = $IdCliente AND liquidada=0 limit 1"));
      
     // SACAMOS LA SUMA DE TODAS LAS DEUDAS QUE ESTAN LIQUIDADDAS Y TODOS LOS ABONOS ....
-    $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $IdCliente AND liquidada = 1"));
-    $abono = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM pagos WHERE id_cliente = $IdCliente AND tipo = 'Abono'"));
+    $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $IdCliente+10000 AND liquidada = 1"));
+    $abono = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM pagos WHERE id_cliente = $IdCliente+10000 AND tipo = 'Abono'"));
     $deuda['suma'] = ($deuda['suma'] == "")? 0 : $deuda['suma'];
     $abono['suma'] = ($abono['suma'] == "")? 0 : $abono['suma'];
     
@@ -43,12 +43,12 @@ if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $
         echo '<script>M.toast({html:"Deuda liquidada.", classes: "rounded"})</script>';
       }  
       // COMO CAMBIAMOS EL ESTATUS DE UNA DEUDA VOLVEMOS A SACAR LA SUMA DE LAS DEUDAS LIQUIDADAS PARA MODIFICAR LA CANTIDAD $Resta
-      $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $IdCliente AND liquidada = 1"));
+      $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $IdCliente+10000 AND liquidada = 1"));
       $deuda['suma'] = ($deuda['suma'] == "")? 0 : $deuda['suma'];
 
       $Resta = $abono['suma']-$deuda['suma'];
       //SELECCIONAMOS OTRA DEUDA
-      $Deuda_check = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM deudas WHERE id_cliente = $IdCliente AND liquidada=0 limit 1"));
+      $Deuda_check = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM deudas WHERE id_cliente = $IdCliente+10000 AND liquidada=0 limit 1"));
 
       $Entra = False;// SI EL VALOR ES FALSE EL WHILE TERMINA 
       //VERIFICAMOS QUE LA DEUDA A COMPRAR TENGA ALGUN VALOR MAYOR A 0
@@ -76,7 +76,7 @@ if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $
 ?>
   <?php 
   $no_cliente = $IdCliente;
-  $sql = mysqli_query($conn,"SELECT * FROM clientes WHERE id_cliente=$no_cliente");
+  $sql = mysqli_query($conn,"SELECT * FROM `punto-venta_clientes` WHERE id_cliente=$no_cliente");
   if (mysqli_num_rows($sql)<=0) {
     $sql = mysqli_query($conn,"SELECT * FROM especiales WHERE id_cliente=$no_cliente");
   } 
@@ -85,8 +85,8 @@ if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $
   $comunidad = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM comunidades WHERE id_comunidad = $id_comunidad"));
 
   // SACAMOS LA SUMA DE TODAS LAS DEUDAS Y ABONOS ....
-  $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $no_cliente"));
-  $abono = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM pagos WHERE id_cliente = $no_cliente AND tipo = 'Abono'"));
+  $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $no_cliente+10000"));
+  $abono = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM pagos WHERE id_cliente = $no_cliente+10000 AND tipo = 'Abono'"));
   //COMPARAMOS PARA VER SI LOS VALORES ESTAN VACOIOS::
   if ($deuda['suma'] == "") {
     $deuda['suma'] = 0;
@@ -175,7 +175,7 @@ $Saldo = $abono['suma']-$deuda['suma'];
           </thead>
           <tbody>
             <?php
-              $deudas = mysqli_query($conn, "SELECT * FROM deudas WHERE id_cliente = $no_cliente");
+              $deudas = mysqli_query($conn, "SELECT * FROM deudas WHERE id_cliente = $no_cliente+10000");
               $aux = mysqli_num_rows($deudas);
               if ($aux > 0) {
                 while ($resultados = mysqli_fetch_array($deudas)) {
@@ -213,7 +213,7 @@ $Saldo = $abono['suma']-$deuda['suma'];
           </thead>
           <tbody>
            <?php
-              $abonos = mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $no_cliente AND tipo = 'Abono'");
+              $abonos = mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $no_cliente+10000 AND tipo = 'Abono'");
               $aux = mysqli_num_rows($abonos);
               if ($aux > 0) {
                 while ($resultados = mysqli_fetch_array($abonos)) {

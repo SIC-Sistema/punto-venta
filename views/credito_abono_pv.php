@@ -144,7 +144,7 @@ if ($Saldo < 0) {
             <label for="SAN">SAN</label>
           </p>
         </div>
-        <input id="id_cliente" value="<?php echo htmlentities($datos['id_cliente']);?>" type="hidden">
+        <input id="id_cliente" value="<?php echo htmlentities($datos['id']);?>" type="hidden">
       </form>
       <a onclick="insert_abono();" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Registrar Abono</a>
       <br>

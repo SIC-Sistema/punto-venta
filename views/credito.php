@@ -23,14 +23,6 @@
                 $("#creditosALL").html(mensaje);
             });//FIN post
         }//FIN function
-        //FUNCION QUE MANDA AL MODAL PARA BORRAR LOS CREDITOS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
-        function verificar_eliminar(IdPago){ 
-            $.post("../php/verificar_eliminar_credito.php", {
-                valorIdPago: IdPago,
-            }, function(mensaje) {
-                $("#modalBorrar").html(mensaje);
-            }); 
-        };
     </script>
   </head>
   <main>
@@ -67,7 +59,6 @@
               <th>Total</th>
               <th>Registro</th>
               <th>Ver</th>
-              <th>Borrar</th>
             </tr>
           </thead>
           <!-- DENTRO DEL tbody COLOCAMOS id = "creditosALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_proveedores() -->
