@@ -16,9 +16,10 @@
             $user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM users WHERE user_id=$id_user"));
 
             $fila = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM pagos WHERE id_pago=$id_max"));
-            $id_cliente = $fila['id_cliente'];
+            $id_cliente = $fila['id_cliente']-10000;
+            $cliente_pv = $fila['id_cliente'];
             $tipo_pago = $fila['tipo'];
-            $sql = mysqli_query($conn, "SELECT * FROM clientes WHERE id_cliente=$id_cliente");
+            $sql = mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id=$id_cliente");
             if (mysqli_num_rows($sql)<=0) {
                 $sql = mysqli_query($conn,"SELECT * FROM especiales WHERE id_cliente=$id_cliente");
             } 
@@ -34,7 +35,7 @@
             $this->Cell(90,4,'Fecha: '.$fila['fecha'],0,0,'C',true);
             $this->SetFont('Arial','',10);
             $this->Ln(5);
-            $this->Cell(20,4,utf8_decode('No. Cliente: '.$fila['id_cliente']),0,0,'L',true);
+            $this->Cell(20,4,utf8_decode('No. Cliente: '.$id_cliente),0,0,'L',true);
             $this->Ln(5);
             $this->MultiCell(60,4,utf8_decode('Nombre:').$cliente['nombre'],0,'L',true);
             $this->Ln(1);
@@ -48,8 +49,8 @@
             $this->Ln(5);
             if ($tipo_pago == 'Abono') {
                 // SACAMOS LA SUMA DE TODAS LAS DEUDAS Y ABONOS ....
-                $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $id_cliente"));
-                $abono = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM pagos WHERE id_cliente = $id_cliente AND tipo = 'Abono'"));
+                $deuda = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM deudas WHERE id_cliente = $cliente_pv"));
+                $abono = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(cantidad) AS suma FROM pagos WHERE id_cliente = $cliente_pv AND tipo = 'Abono'"));
                   //COMPARAMOS PARA VER SI LOS VALORES ESTAN VACIOS::
                 if ($deuda['suma'] == "") {
                     $deuda['suma'] = 0;
