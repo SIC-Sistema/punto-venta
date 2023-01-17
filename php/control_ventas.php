@@ -71,6 +71,8 @@ switch ($Accion) {
                         $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
                         $id_deuda = $ultimo['id'];
                         $sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente_punto_venta, '$Descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
+                        //SE AÑADE EL ID DE LA DEUDA A LA VENTA
+                        $esecuele = "UPDATE `punto_venta_ventas` SET id_deuda = $id_deuda WHERE id = $id_venta";
                         // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
                         $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, id_deuda, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $id_deuda, $Total, $id_user)");
                         if(mysqli_query($conn, $mysql_deuda)){
@@ -124,7 +126,7 @@ switch ($Accion) {
     case 3:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 3 realiza:
 
-        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "compras_punto_venta.php" QUE NESECITAMOS PARA BORRAR
+        //CON POST RECIBIMOS LA VARIABLE DEL BOTON POR EL SCRIPT DE "ventas_punto_venta.php" QUE NESECITAMOS PARA BORRAR
         $id = $conn->real_escape_string($_POST['id']);
     	//Obtenemos la informacion del Usuario
         $User = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id = $id_user"));
@@ -133,19 +135,22 @@ switch ($Accion) {
             #SELECCIONAMOS LA INFORMACION A BORRAR
             $venta = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_ventas` WHERE id = $id"));
             #CREAMOS EL SQL DE LA INSERCION A LA TABLA  `pv_borrar_compras` PARA NO PERDER INFORMACION
-            $sql = "INSERT INTO `pv_borrar_ventas` (id_venta, id_cliente, fecha, hora, tipo_cambio, total, registro, borro, fecha_borro) 
-                    VALUES($id, '".$venta['id_cliente']."', '".$venta['fecha']."', '".$venta['hora']."', '".$venta['tipo_cambio']."', '".$venta['total']."', '".$venta['usuario']."', '$id_user','$Fecha_hoy')";
+            $sql = "INSERT INTO `pv_borrar_ventas` (id_venta, id_cliente, fecha, hora, tipo_cambio, total, registro, borro, fecha_borro) VALUES($id, '".$venta['id_cliente']."', '".$venta['fecha']."', '".$venta['hora']."', '".$venta['tipo_cambio']."', '".$venta['total']."', '".$venta['usuario']."', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
                 //SÍ SE BORRA UNA VENTA QUE ES A CREDITO ENTONCES SE BORRA LA DEUDA Y EL CREDITO CORRESPONDIENTE
-                if(mysqli_query($conn, "DELETE FROM `punto_venta_credito` WHERE 'id_venta' = $id")){
+                if($venta['tipo_cambio']='credito'){
                     #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-                    echo '<script >M.toast({html:"Crédito borrado con exito.", classes: "rounded"})</script>';
-                }
-                
-                if(mysqli_query($conn, "DELETE FROM `deudas` WHERE 'id_deuda' = $id")){
-                    #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-                    echo '<script >M.toast({html:"Crédito borrado con exito.", classes: "rounded"})</script>';
+                    if(mysqli_query($conn, "DELETE FROM `punto_venta_credito` WHERE 'id_venta' = $id")){
+                        echo '<script >M.toast({html:"Crédito borrado con exito.", classes: "rounded"})</script>';
+                    }
+                    $cliente_punto_venta = $venta['id_cliente'];
+                    $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
+                    $id_deuda = $ultimo['id'];
+                    if(mysqli_query($conn, "DELETE FROM `deudas` WHERE 'id_deuda' = $id_deuda")){
+                        #SI ES ELIMINADO MANDAR MSJ CON ALERTA
+                        echo '<script >M.toast({html:"Deuda borrada con exito.", classes: "rounded"})</script>';
+                    }
                 }
                 /////////////////////////////////////////////////////////////////////////////////////////////////
                 //SI DE CREA LA INSERCION PROCEDEMOS A BORRRAR DE LA TABLA `punto_venta_ventas`
@@ -173,7 +178,7 @@ switch ($Accion) {
                 }
             } 
         }else{
-            echo '<script >M.toast({html:"Permiso denegado.", classes: "rounded"});
+            echo '<script >M.toast({html:"Permiso denegado, no tienes permiso para borrar ventas", classes: "rounded"});
             M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
         }   
         break;
