@@ -64,25 +64,24 @@ switch ($Accion) {
 
                     if ($tipo_cambio == 'Credito') {
                         $cliente_punto_venta = $cliente + 10000;
-                        $mysql_deudas = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$tipo_cambio', '$descripcion', $id_user)";  
-                        if(mysqli_query($conn, $mysql_deudas)){
+                        $mysql_deudas = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";  
+                        mysqli_query($conn,$mysql_deudas);
+                        //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
+                        $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
+                        $id_deuda = $ultimo['id'];
+                        $sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente_punto_venta, '$Descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
+                        //SE AÑADE EL ID DE LA DEUDA A LA VENTA
+                        $esecuele = "UPDATE `punto_venta_ventas` SET id_deuda = $id_deuda WHERE id = $id_venta";
+                        // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
+                        $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, id_deuda, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $id_deuda, $Total, $id_user)");
+                        if(mysqli_query($conn, $mysql_deuda)){
                             echo '<script >M.toast({html:"Se agrego una nueva deuda.", classes: "rounded"})</script>';  
                         }
-                        //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
-                        $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id_deuda FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
-                        $id_deuda = $ultimo['id_deuda'];
-                        //SE AÑADE EL ID DE LA DEUDA A LA VENTA
-                        //FALTA EL MYSLQUERY
-                        $esecuele =  mysqli_query($conn, "UPDATE `punto_venta_ventas` SET id_deuda = $id_deuda WHERE id = $id_venta");
-                        // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
-                        $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, id_deuda, fecha, hora, tipo_cambio, total, usuario) VALUES($cliente, $id_venta,  $id_deuda, '$Fecha_hoy', '$Hora', '$tipo_cambio', $Total, $id_user)");
-                    }else{
-                        $id_deuda = NULL;
                     }
 
                     $cliente = ($cliente == 0)? $cliente: $cliente+10000;
                     #--- CREAMOS EL SQL PARA LA INSERCION ---
-                    $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, corte, corteP, id_user, descuento, tipo_cambio, id_deuda, Cotejado, Corte_tel) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', 0, 0, $id_user, NULL, '$tipo_cambio', $id_deuda, 0, NULL)";
+                    $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
                     #--- SE INSERTA EL PAGO -----------
                     if(mysqli_query($conn, $sql)){
                         $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
@@ -99,7 +98,7 @@ switch ($Accion) {
                 }//FIN if consulta
                 echo '<script>recargar_venta();</script>';
             }else{
-                echo '<script >M.toast({html:"Ha ocurrio un error al insertar el pago.", classes: "rounded"})</script>';            
+                echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';            
             }// FIN else error
         }//FIN else COMPROBACION DE CLIENTE EN CREDITO
         break;
@@ -139,24 +138,17 @@ switch ($Accion) {
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
                 //SÍ SE BORRA UNA VENTA QUE ES A CREDITO ENTONCES SE BORRA LA DEUDA Y EL CREDITO CORRESPONDIENTE
-                if($venta['tipo_cambio']='Credito'){
-                    //id_deuda DE LA VENTA
-                    $id_deuda = $venta['id_deuda'];
+                if($venta['tipo_cambio']='credito'){
                     #SI ES ELIMINADO MANDAR MSJ CON ALERTA
-                    if(mysqli_query($conn, "DELETE FROM `punto_venta_credito` WHERE `punto_venta_credito`.`id_venta` = $id")){
+                    if(mysqli_query($conn, "DELETE FROM `punto_venta_credito` WHERE 'id_venta' = $id")){
                         echo '<script >M.toast({html:"Crédito borrado con exito.", classes: "rounded"})</script>';
-                    }else{
-                        echo '<script >M.toast({html:"No se pudo borrar el crédito.", classes: "rounded"})</script>';
-                        echo $id;
                     }
-                    $cliente_punto_venta = $venta['id_cliente']+10000;
-                    $deuda =  mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `deudas` WHERE `deudas`.`id_deuda` = $id_deuda"));
-                    if(mysqli_query($conn, "DELETE FROM `deudas` WHERE `deudas`.`id_deuda` = $id_deuda")){
+                    $cliente_punto_venta = $venta['id_cliente'];
+                    $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
+                    $id_deuda = $ultimo['id'];
+                    if(mysqli_query($conn, "DELETE FROM `deudas` WHERE 'id_deuda' = $id_deuda")){
                         #SI ES ELIMINADO MANDAR MSJ CON ALERTA
                         echo '<script >M.toast({html:"Deuda borrada con exito.", classes: "rounded"})</script>';
-                    }else{
-                        echo '<script >M.toast({html:"No se pudo borrar la deuda del crédito.", classes: "rounded"})</script>';
-                        echo $id_deuda;
                     }
                 }
                 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -576,7 +568,7 @@ switch ($Accion) {
         $id_venta = $conn->real_escape_string($_POST['id_venta']);  
 
         //CREAMOS EL SQL PARA CREAR LA DEVOLUCION
-        $sql = "INSERT INTO `punto_venta_devoluciones_articulos` (id_venta, fecha, hora, usuario) VALUES($id_venta, '$Fecha_hoy', '$Hora', $id_user)";
+        $sql = "INSERT INTO `punto_venta_devoluciones_articulos`(id_venta, fecha, hora, usuario) VALUES($id_venta, '$Fecha_hoy', '$Hora', $id_user)";
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
         if(mysqli_query($conn, $sql)){
             //SI SE CREA LA DEVOLUCION CREAMOS LOS DETALLES
@@ -591,20 +583,27 @@ switch ($Accion) {
                 $cantidad = $articulo[1];
                 //echo "Venta N° $id_venta id: $id_art cantidad: $cantidad <br>";
                 // INSERTAMOS UNO A UNO LOS ARTICULOS EN EL DETALLE DE LA DEVOLUCION
-                $sql = "INSERT INTO `pv_detalles_devoluciones` (id_devolucion, id_articulo, cantidad) VALUES($id_devolucion, ,'$id_art', '$cantidad')";
+                $sql_devoluciones = "INSERT INTO `pv_detalles_devoluciones` (id_devolucion, id_articulo, cantidad) VALUES($id_devolucion, '$id_art', '$cantidad')";
                 //VERIFICAMOS SI SE HACE LA INSERCION
-                if (mysqli_query($conn, $sql)) {
+                if (mysqli_query($conn, $sql_devoluciones)) {
                     //AHORA MODIFICAMOS LA EXISTENCIA EN EL ALMACEN
                     mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad+$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_art' AND id_almacen = '$almacen'");
                 }
             }//FIN FOR
+            ?>
+            <script>
+                var a = document.createElement("a");
+                    a.href = "../php/ticket_devolucion.php?id="+<?php echo $id_devolucion; ?>;
+                    a.target = "blank";
+                    a.click();
+            </script>
+            <?php
             echo '<script>recargar_venta();</script>';
         }else{
-                echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';            
+            echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';            
         }// FIN else error
        
         break;
-
 }// FIN switch
 mysqli_close($conn);
     
