@@ -155,12 +155,12 @@ if (isset($_GET['id']) == false) {
 	          M.toast({html: '! NO SE PUEDE REALIZAR LA VENTA ¡', classes: 'rounded'});
 	          M.toast({html: 'Alguno de los articulos superan su existencia', classes: 'rounded'});
 	      	}else{
-	      		//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_almacen.php" PARA MOSTRAR EL MODAL
+	      		//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_venta.php" PARA MOSTRAR EL MODAL
 		        $.post("modal_venta.php", {
 		          //Cada valor se separa por una ,
 		            id_venta: <?php echo $Venta; ?>,
 		          }, function(mensaje){
-		              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_almacen.php"
+		              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_venta.php"
 		              $("#modal").html(mensaje);
 		        });//FIN post
 		      }//FIN else

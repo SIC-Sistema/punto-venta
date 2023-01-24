@@ -43,7 +43,7 @@
     function buscarVentasR(){
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
       var texto = $("input#busqueda1").val();
-      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/controlventas.php"
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
       $.post("../php/control_ventas.php", {
         //Cada valor se separa por una ,
           texto: texto,
@@ -58,7 +58,7 @@
     function buscarVentasP(){
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
       var texto = $("input#busqueda2").val();
-      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/controlventas.php"
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
       $.post("../php/control_ventas.php", {
         //Cada valor se separa por una ,
           texto: texto,
@@ -95,6 +95,56 @@
           $("#modal").html(mensaje);
       });
     }
+    function devolucion_venta_pv(id) {
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_devolucion.php" PARA MOSTRAR EL MODAL
+      $.post("modal_devolucion.php", {
+        //Cada valor se separa por una ,
+          id_venta: id,
+        }, function(mensaje){
+          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_devolucion.php"
+          $("#modal").html(mensaje);
+      });//FIN post
+    }
+    function realizar_devolucion(bandera, id_venta) {
+      var answer = confirm("Reviso correctamente la devolucion?");
+      if (answer) {
+        array = '';/// ARRA DONDE SE ALMACENARA LOS PRODUCTOS A DEVOLVER
+        mayor = false;//CONDICION DE SI SOBREPASA LA CANTIDAD
+        menor = false;//CONDICION DONDE  SI HAY ALGUNO MENOS O IGUAL A 0
+        //RECORREMOS CON UN CICLO LA LISTA DE PRODUCTOS
+        for(var i=1;i<=bandera;i++){
+            //VERIFICAMOS QUE PORDUCTOS FUERON SELECCIONADOS
+            if(document.getElementById('select'+i).checked==true){
+                var cantidadVenta = $("input#cantidadA"+i).val();
+                var cantidadDevolver = $("input#cantidadD"+i).val();
+                var id = $("input#id"+i).val();
+                if (array != '') {    array += ', ';     }// SEPARAMOS POR  , CADA PRODUCTO
+                if (cantidadVenta < cantidadDevolver) {    mayor = true;      }//CONDICION DE SI SOBREPASA LA CANTIDAD
+                if (cantidadDevolver <= 0) {    menor = true;     }//CONDICION DONDE  SI HAY ALGUNO MENOS O IGUAL A 0
+                array += id+'-'+cantidadDevolver;// AGREGAMOS EL PRODUCTO AL ARRAY
+            }
+        }  
+        //M.toast({html: ''+array, classes: 'rounded'});
+        if (mayor) { 
+          M.toast({html: 'La cantidad a devolver no puede superar a la cantidad que se vendio', classes: 'rounded'});
+        }else  if (menor) { 
+          M.toast({html: 'La cantidad a devolver debe ser mayor a 0', classes: 'rounded'});
+        }else if(array == ''){
+          M.toast({html: 'Seleccione al menos un articulos de la lista', classes: 'rounded'});
+        }else{
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+          $.post("../php/control_ventas.php", {
+            //Cada valor se separa por una ,
+              id_venta: id_venta,
+              array: array,
+              accion: 11,
+            }, function(mensaje){
+                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+                $("#modal").html(mensaje);
+          });//FIN post
+        }// FIN ELSE
+      }// FIN PREGUNTA reviso
+    }//FIN function
   </script>
 </head>
 <main>
@@ -137,6 +187,7 @@
                   <th>Estatus</th>
                   <th>Detalles</th>
                   <th>Facturar</th>
+                  <th>Devolución</th>
                   <th>Borrar</th>
                 </tr>
               </thead>

@@ -146,6 +146,5 @@ class PDF extends FPDF{
     $pdf->SetX(6);
     $pdf->MultiCell(69,3,utf8_decode('-----------------------------------------------------------------------'),0,'L',0);
 
-
     $pdf->Output('VENTA','I');
 ?>

@@ -11,7 +11,6 @@ $Hora = date('H:i:s');
 $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$id_user"));
 $almacen = $datos_user['almacen'];
 
-
 //CON METODO POST TOMAMOS UN VALOR DEL 0 AL 3 PARA VER QUE ACCION HACER (Insertar = 0, , InfoCliente = 2, Borrar Venta = 3, Consulta Articulos TMP = 4, pausar venta = 5, buscar articulo y mostrar = 6, borrar listado TMP = 7, borrar todo TMP usuario = 8)
 $Accion = $conn->real_escape_string($_POST['accion']);
 
@@ -21,7 +20,7 @@ switch ($Accion) {
     case 0:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 0 realiza:
 
-        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA ACTUALIOZAR LA INFO DE LA VENTA
+        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA INSERTAR LA INFO DE LA VENTA
         $id_venta = $conn->real_escape_string($_POST['id_venta']);   
         $cliente = $conn->real_escape_string($_POST['cliente']);   
         $tipo_cambio = $conn->real_escape_string($_POST['tipo_cambio']);  
@@ -502,6 +501,7 @@ switch ($Accion) {
                     <td>'.$estatus.'</td>
                     <td><form method="post" action="../views/detalles_venta_pv.php"><input id="venta" name="venta" type="hidden" value="'.$venta['id'].'"><br><button class="btn-small waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
                     <td><a onclick="facturar('.$venta['id'].')" class="btn-small blue darken-1 waves-effect waves-light"><i class="material-icons">note</i></a></td>
+                    <td><a onclick="devolucion_venta_pv('.$venta['id'].')" class="btn-small grey darken-4 waves-effect waves-light"><i class="material-icons">reply</i></a></td>
                     <td><a onclick="borrar_venta_pv('.$venta['id'].')" class="btn-small red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
                   </tr>';
             }//FIN while
@@ -561,6 +561,42 @@ switch ($Accion) {
         }//FIN else
         echo $contenido;// MOSTRAMOS LA INFORMACION HTML
         break;
+        break;
+        break;
+    case 11:///////////////           IMPORTANTE               //////////////
+        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL MODAL DEVOLUCIONES
+        $id_venta = $conn->real_escape_string($_POST['id_venta']);  
+
+        //CREAMOS EL SQL PARA CREAR LA DEVOLUCION
+        $sql = "INSERT INTO `punto_venta_devoluciones_articulos` (id_venta, fecha, hora, usuario) VALUES($id_venta, '$Fecha_hoy', '$Hora', $id_user)";
+        //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+        if(mysqli_query($conn, $sql)){
+            //SI SE CREA LA DEVOLUCION CREAMOS LOS DETALLES
+            $array = $conn->real_escape_string($_POST['array']);
+            $articulos = explode(", ", $array); // SEPARAMOS EL ARRAY EN ARTICULOS
+            $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id) AS id FROM punto_venta_devoluciones_articulos WHERE id_venta = $id_venta AND usuario = $id_user"));  
+            $id_devolucion = $ultimo['id'];
+            //MEDIANTE UN CICLO RECORREMOS UNO POR UNO LOS ARTICULOS
+            for ($i = 0; $i <= count($articulos)-1; $i++) {
+                $articulo = explode("-", $articulos[$i]);
+                $id_art = $articulo[0];
+                $cantidad = $articulo[1];
+                //echo "Venta N° $id_venta id: $id_art cantidad: $cantidad <br>";
+                // INSERTAMOS UNO A UNO LOS ARTICULOS EN EL DETALLE DE LA DEVOLUCION
+                $sql = "INSERT INTO `pv_detalles_devoluciones` (id_devolucion, id_articulo, cantidad) VALUES($id_devolucion, ,'$id_art', '$cantidad')";
+                //VERIFICAMOS SI SE HACE LA INSERCION
+                if (mysqli_query($conn, $sql)) {
+                    //AHORA MODIFICAMOS LA EXISTENCIA EN EL ALMACEN
+                    mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad+$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_art' AND id_almacen = '$almacen'");
+                }
+            }//FIN FOR
+            echo '<script>recargar_venta();</script>';
+        }else{
+                echo '<script >M.toast({html:"Ha ocurrio un error.", classes: "rounded"})</script>';            
+        }// FIN else error
+       
+        break;
+
 }// FIN switch
 mysqli_close($conn);
     

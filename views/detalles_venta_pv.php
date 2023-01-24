@@ -85,7 +85,7 @@ if (isset($_POST['venta']) == false) {
                   $articulo = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_articulos WHERE id=$id_articulo"));
                   ?>
                     <tr>
-                      <td><?php echo $detalle['id']; ?></td>
+                      <td><?php echo $id_articulo; ?></td>
                       <td><?php echo $articulo['codigo']; ?></td>
                       <td><?php echo $articulo['nombre']; ?></td>
                       <td><?php echo $detalle['cantidad'].' '.$articulo['unidad']; ?></td>
