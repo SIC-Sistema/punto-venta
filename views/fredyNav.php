@@ -129,7 +129,7 @@ $Hoy = date('Y-m-d');
 		      				<li><a href="cotizaciones_punto_venta.php"><i class="material-icons">add</i>Cotizaciones</a></li>
 					 		<li><a onclick = 'nueva_factura(0)'><i class="material-icons">description</i>Nueva Factura</a></li>
 				    		<li><a href="facturas_punto_venta.php"><i class="material-icons">description</i>Facturas</a></li>   
-							<li><a href = "credito.php" class="indigo-text"><i class="material-icons">credit_card</i>s</a></li> 
+							<li><a href = "credito.php" class="indigo-text"><i class="material-icons">credit_card</i></a></li> 
 							<li><a href = "cortes_pagos.php"><i class="material-icons">content_cut</i>Realizar Corte</a></li>     
 					      </ul>
 					    </span>
