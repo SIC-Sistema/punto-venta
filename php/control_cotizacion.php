@@ -31,8 +31,8 @@ switch ($Accion) {
         }else{            
 
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-            $sql = "INSERT INTO `punto_venta_cotizaciones` (id_cliente, total, usuario, fecha, venta) 
-               VALUES('$Cliente', '$Total','$id_user','$Fecha_hoy', 0)";
+            $sql = "INSERT INTO `punto_venta_cotizaciones` (id_cliente, total, usuario, venta, fecha) 
+               VALUES($Cliente, $Total,$id_user,0,'$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"La cotizacion se registró exitosamente.", classes: "rounded"})</script>';
@@ -223,8 +223,8 @@ switch ($Accion) {
                         $id_art = $detalle_articulo['id_articulo'];
                         $articulo = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE id = $id_art"));
                         $total += $detalle_articulo['importe'];
-                         $existe = mysqli_fetch_array(mysqli_query($conn, "SELECT cantidad FROM `punto_venta_almacen_general` WHERE id_almacen = $almacen AND id_articulo = $id_art"));
-                        if (!$existe) {   $existe['cantidad'] = 0;    }
+                        $existe = mysqli_fetch_array(mysqli_query($conn, "SELECT cantidad FROM `punto_venta_almacen_general` WHERE id_almacen = $almacen AND id_articulo = $id_art"));
+                        if ($existe) {   $existe['cantidad'] == 0;    }
                         if ($detalle_articulo['cantidad']>$existe['cantidad']){     $mayor = true;      }
                         $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>'; ?>
                         <tr>
@@ -277,7 +277,7 @@ switch ($Accion) {
         $id_usuario = $conn->real_escape_string($_POST['valorIdUs']);
         $CantidadA = $conn->real_escape_string($_POST['valorCantidadA']);
         $PrecioU = $conn->real_escape_string($_POST['valorPrecioU']);
-        $Importe = $CantidadA*$PrecioU;
+        $Importe = ($CantidadA*$PrecioU);
         //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DE LOS ARTICULOS Y LA GUARDAMOS EN UNA VARIABLE
         $sql = "UPDATE `tmp_pv_detalle_cotizacion` SET cantidad = '$CantidadA', precio_venta_u = '$PrecioU', importe= '$Importe' WHERE id_articulo = $id_articulo AND usuario = $id_usuario";
         //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!

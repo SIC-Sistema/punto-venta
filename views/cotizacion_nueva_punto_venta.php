@@ -161,14 +161,10 @@
       //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
       function crear_cotizacion() {
         var textoCliente = $("select#cliente").val();
-        var exist = $("input#mayor_exist").val();
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
         //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
         if (textoCliente == 0) {
           M.toast({html: 'Seleccione un Cliente.', classes: 'rounded'});
-        }else if (exist) {
-            M.toast({html: '! NO SE PUEDE REALIZAR LA COTIZACION ¡', classes: 'rounded'});
-            M.toast({html: 'Alguno de los articulos superan su existencia', classes: 'rounded'});
         }else{
           //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
