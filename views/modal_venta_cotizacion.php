@@ -1,25 +1,27 @@
 <?php
   //ARCHIVO QUE CONTIENE LA VARIABLE CON LA CONEXION A LA BASE DE DATOS
   include('../php/conexion.php');
-  // POR EL METODO POST ¿RECIBIMOS EL ID DEL ARTICULO DESDE EL ARCHIVO views/add_venta.php
-  $Venta = $conn->real_escape_string($_POST['id_venta']);
+  // POR EL METODO POST RECIBIMOS EL ID DEL ARTICULO DESDE EL ARCHIVO views/detalle_cotizacion_pv.php
+  $Cotizacion = $conn->real_escape_string($_POST['id_cotizacion']);
+  $SQL_COT = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto_venta_cotizaciones` WHERE id = $Cotizacion"));
+  $id_cliente = $SQL_COT['id_cliente'];
   // REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-  $consulta = mysqli_fetch_array (mysqli_query($conn, "SELECT count(id_articulo) AS num, sum(importe) AS suma FROM `tmp_pv_detalle_venta` WHERE id_venta = $Venta"));
+  $consulta = mysqli_fetch_array (mysqli_query($conn, "SELECT count(id_articulo) AS num, sum(importe) AS suma FROM `punto_venta_detalle_cotizacion` WHERE id_venta = $Cotizacion"));
 ?>
 <script>
 	$(document).ready(function(){
-	    $('#modalVenta').modal();
-	    $('#modalVenta').modal('open'); 
+	    $('#modalVenta_Cotizacion').modal();
+	    $('#modalVenta_Cotizacion').modal('open'); 
 	 });
 </script>
 
-<!-- MODALES DE ALMACEN -->
-<!-- Modal EditarAlmacen Structure -->
-<div id="modalVenta" class="modal">
+<!-- MODALES DE COBRAR -->
+<!-- Modal modalVenta_Cotizacion Structure -->
+<div id="modalVenta_Cotizacion" class="modal">
     <div class="modal-content"> 
         <div class="row">
             <ul class="collection center">
-                <li class="collection-item indigo lighten-5 "><b class="indigo-text">VENTA - Folio N° <?php echo substr(str_repeat(0, 5).$Venta, - 6); ?></b></li>
+                <li class="collection-item indigo lighten-5 "><b class="indigo-text">VENTA - Folio N° <?php echo substr(str_repeat(0, 5).$Cotizacion, - 6); ?></b></li>
             </ul>
             <div class="col s12 m5">
                 <hr>
@@ -28,6 +30,8 @@
                 <b class="col s5">Efectivo</b><div class="col s7"><input type="number" id="efectivoV" value="0.00" onchange="cambio();"></div>
                 <b class="col s5">A Credito</b><div class="col s7"><input type="number" id="creditoV" value="0.00" onchange="cambio();"></div>
                 <b class="col s5">A Banco</b><div class="col s7"><input type="number" id="bancoV" value="0.00" onchange="cambio();"></div>
+                <div class="col s7"><input type="hidden" id="id_cliente" value=" <?php echo $id_cliente; ?>"></div>
+                <div class="col s7"><input type="hidden" id="id_cotizacion" value=" <?php echo $Cotizacion; ?>"></div>
                 <br><br><br><br><br><br><br><hr>
             </div>
             <div class="col s12 m7">
