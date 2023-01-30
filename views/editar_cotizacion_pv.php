@@ -31,6 +31,17 @@ if (isset($_POST['cotizacion']) == false) {
         <?php
       }
       $Cotizacion = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM punto_venta_cotizaciones WHERE id=$id_cotizacion"));
+      $cotizacion_user = $Cotizacion['usuario'];
+      if ($id != $cotizacion_user) {
+        ?>
+        <script>    
+          M.toast({html: "Permiso denegado.", classes: "rounded"});
+          M.toast({html: "Contacta a un Administrador.", classes: "rounded"});
+          M.toast({html: "No tiene permiso para editar esta cotización.", classes: "rounded"});
+          setTimeout("location.href='cotizaciones_punto_venta.php'", 1000);
+        </script>
+        <?php
+      }
       ?>
     </head>
     <script>
