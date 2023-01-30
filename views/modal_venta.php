@@ -48,9 +48,13 @@
             <ul class="collection center">
                 <li class="collection-item indigo lighten-5 "></li>
             </ul>  
+            <p class="col s6 m4" align="center"><label>
+                <input type="checkbox" id="pago" checked />
+                <span>Realizar pago</span>
+            </label></p>
             <a class="modal-action modal-close waves-effect waves-light btn-large indigo lighten-5 indigo-text right"><b>Regresar<i class="material-icons left">close</i></b></a>
             <a class="right white-text"> <br>_ _ _ _</a>
-            <a onclick="insert_venta()" class="waves-effect waves-green btn-large indigo lighten-5 teal-text right"><b>Cobrar<i class="material-icons left">local_atm</i></b></a>          
+            <a onclick="insert_venta()" class="waves-effect waves-green btn-large indigo lighten-5 teal-text right"><b>REALIZAR<i class="material-icons left">local_atm</i></b></a>          
         </div>
     </div>
 </div>

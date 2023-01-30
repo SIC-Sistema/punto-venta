@@ -162,8 +162,9 @@
     <!-- ----------------------------  TABs o MENU  ---------------------------------------->
       <div class="col s12">
         <ul id="tabs-swipe-demo" class="tabs">
-          <li class="tab col s6"><a class="active black-text" href="#test-swipe-1">VENTAS REALIZADAS</a></li>
-          <li class="tab col s6"><a class="black-text" href="#test-swipe-2">VENTAS PAUSADAS O EN PROCESO</a></li>
+          <li class="tab col s4"><a class="active black-text" href="#test-swipe-2">VENTAS PAUSADAS O EN PROCESO</a></li>
+          <li class="tab col s4"><a class="black-text" href="#test-swipe-3">VENTAS PAGO PENDIENTE</a></li>
+          <li class="tab col s4"><a class="black-text" href="#test-swipe-1">VENTAS REALIZADAS</a></li>
         </ul>
       </div>
       <!-- ----------------------------  FORMULARIO 1 Tabs  ---------------------------------------->
@@ -183,12 +184,12 @@
                   <th>Fecha y Hora</th>
                   <th>Cambio</th>            
                   <th>Total</th>
-                  <th>Usuario</th>
-                  <th>Estatus</th>
+                  <th>Realizo</th>
                   <th>Detalles</th>
                   <th>Facturar</th>
                   <th>Devolución</th>
                   <th>Borrar</th>
+                  <th>Imprimir</th>
                 </tr>
               </thead>
               <tbody id="VentasR">
@@ -213,7 +214,35 @@
                   <th>Fecha y Hora</th>
                   <th>Cambio</th>            
                   <th>Total</th>
-                  <th>Usuario</th>
+                  <th>Realiza</th>
+                  <th>Estatus</th>
+                  <th>Ver</th>
+                  <th>Cancelar</th>
+                </tr>
+              </thead>
+              <tbody id="VentasP">
+              </tbody>
+            </table>
+        </div>
+      </div>
+      <!-- ----------------------------  FORMULARIO 3 Tabs  ---------------------------------------->
+      <div  id="test-swipe-3" class="col s12"><br><br>
+        <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
+        <div class="input-field col s12 m6 l6 right">
+          <i class="material-icons prefix">search</i>
+          <input id="busqueda2" name="busqueda2" type="text" class="validate" onkeyup="buscarVentasP();">
+          <label for="busqueda2">Buscar: (N° Venta, N° Cliente, Fecha (ej: 2022-10-26))</label>
+        </div>
+        <div class="row"><br>
+            <table class="bordered centered highlight">
+              <thead>
+                <tr>
+                  <th>N°</th>
+                  <th>Cliente</th>
+                  <th>Fecha y Hora</th>
+                  <th>Cambio</th>            
+                  <th>Total</th>
+                  <th>Realiza</th>
                   <th>Estatus</th>
                   <th>Ver</th>
                   <th>Cancelar</th>

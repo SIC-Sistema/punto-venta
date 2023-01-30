@@ -7,7 +7,9 @@
     include('is_logged.php');
 
     $Venta =$_GET['v'];//TOMAMOS EL ID DE LA VENTA PREVIAMENTE CREADO
-    $FormaPago = $_GET['p'];
+    if (isset($_GET['p']) == true) {
+        $FormaPago = $_GET['p'];
+    }
     $descripcion = 'Venta N°'.$Venta;
     $pago = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM pagos WHERE descripcion = '$descripcion' AND tipo = 'Punto Venta'"));
 
@@ -108,20 +110,22 @@ class PDF extends FPDF{
     $pdf->SetX(35);
     $ventaAll = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_ventas` WHERE id = $Venta"));
     $pdf->MultiCell(39,5,utf8_decode('$'.sprintf('%.2f',$ventaAll['total']*0.16)."\n".'$'.sprintf('%.2f',$ventaAll['total']-($ventaAll['total']*0.16))."\n".'$'.sprintf('%.2f',$ventaAll['total'])),0,'R',0);
+    if ($FormaPago != 0) {
+        // co
+        $pdf->SetY($pdf->GetY());
+        $pdf->SetX(6);
+        $pdf->SetFont('Helvetica','', 8);
+        $pdf->MultiCell(69,3,utf8_decode('-----------------------------------------------------------------------'),0,'L',0);
+        $pdf->SetY($pdf->GetY()+1);
+        $pdf->SetX(6);
+        $pdf->SetFont('Helvetica','B', 10);
+        $pdf->MultiCell(27,5,utf8_decode('Pago '.$ventaAll['tipo_cambio'].':'."\n".'Cambio:'),0,'R',0);
+        $pdf->SetY($pdf->GetY()-10);
+        $pdf->SetX(35);
+        $pdf->MultiCell(39,5,utf8_decode('$'.sprintf('%.2f',$FormaPago)."\n".'$'.sprintf('%.2f',$FormaPago-$ventaAll['total'])),0,'R',0);
+    }
 
-    $pdf->SetY($pdf->GetY());
-    $pdf->SetX(6);
-    $pdf->SetFont('Helvetica','', 8);
-    $pdf->MultiCell(69,3,utf8_decode('-----------------------------------------------------------------------'),0,'L',0);
-    $pdf->SetY($pdf->GetY()+1);
-    $pdf->SetX(6);
-    $pdf->SetFont('Helvetica','B', 10);
-    $pdf->MultiCell(27,5,utf8_decode('Pago '.$ventaAll['tipo_cambio'].':'."\n".'Cambio:'),0,'R',0);
-    $pdf->SetY($pdf->GetY()-10);
-    $pdf->SetX(35);
-    $pdf->MultiCell(39,5,utf8_decode('$'.sprintf('%.2f',$FormaPago)."\n".'$'.sprintf('%.2f',$FormaPago-$ventaAll['total'])),0,'R',0);
-
-    $pdf->SetY($pdf->GetY()+12);
+    $pdf->SetY($pdf->GetY()+10);
     $pdf->SetX(6);
     $pdf->SetFont('Helvetica','', 8);
     $pdf->MultiCell(69,3,utf8_decode('-----------------------------------------------------------------------'),0,'L',0);

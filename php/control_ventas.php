@@ -26,12 +26,13 @@ switch ($Accion) {
         $tipo_cambio = $conn->real_escape_string($_POST['tipo_cambio']);  
         $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS Total FROM `tmp_pv_detalle_venta` WHERE usuario = $id_user AND id_venta = $id_venta"));
         $Total = $sql_total['Total'];
+        $pago = $conn->real_escape_string($_POST['pago']);  
         
         //SÍ LA FORMA DE PAGO ES A CREDITO Y NO HAY CLIENTE, NO SE PUEDE HACER LA VENTA
         if ($tipo_cambio == 'Credito' AND $cliente == 0){
             echo '<script >M.toast({html:"Debe seleccionar un cliente sí quiere registrar a crédito.", classes: "rounded"})</script>'; 
         }else{
-            $sql = "UPDATE `punto_venta_ventas` SET id_cliente = $cliente, fecha= '$Fecha_hoy', hora = '$Hora', tipo_cambio = '$tipo_cambio', total = '$Total', usuario = $id_user, estatus = 2  WHERE id = $id_venta";
+            $sql = "UPDATE `punto_venta_ventas` SET id_cliente = $cliente, fecha= '$Fecha_hoy', hora = '$Hora', tipo_cambio = '$tipo_cambio', total = '$Total', usuario = $id_user, estatus = 2, pagada = $pago   WHERE id = $id_venta";
   
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
             if(mysqli_query($conn, $sql)){
@@ -60,41 +61,44 @@ switch ($Accion) {
                             mysqli_query($conn, "DELETE FROM `tmp_pv_detalle_venta` WHERE `tmp_pv_detalle_venta`.`id_articulo` = $id_articulo AND id_venta = $id_venta");
                         }//FIN if insert              
                     }//FIN while
-                    $descripcion = 'Venta N°'.$id_venta;
+                    $pago = $conn->real_escape_string($_POST['pago']);  
+                    if ($pago) {
+                        $descripcion = 'Venta N°'.$id_venta;
 
-                    if ($tipo_cambio == 'Credito') {
-                        $cliente_punto_venta = $cliente + 10000;
-                        $mysql_deudas = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";  
-                        mysqli_query($conn,$mysql_deudas);
-                        //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
-                        $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
-                        $id_deuda = $ultimo['id'];
-                        $sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente_punto_venta, '$Descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
-                        //SE AÑADE EL ID DE LA DEUDA A LA VENTA
-                        $esecuele = "UPDATE `punto_venta_ventas` SET id_deuda = $id_deuda WHERE id = $id_venta";
-                        // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
-                        $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, id_deuda, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $id_deuda, $Total, $id_user)");
-                        if(mysqli_query($conn, $mysql_deuda)){
-                            echo '<script >M.toast({html:"Se agrego una nueva deuda.", classes: "rounded"})</script>';  
+                        if ($tipo_cambio == 'Credito') {
+                            $cliente_punto_venta = $cliente + 10000;
+                            $mysql_deudas = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";  
+                            mysqli_query($conn,$mysql_deudas);
+                            //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
+                            $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
+                            $id_deuda = $ultimo['id'];
+                            $sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente_punto_venta, '$Descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
+                            //SE AÑADE EL ID DE LA DEUDA A LA VENTA
+                            $esecuele = "UPDATE `punto_venta_ventas` SET id_deuda = $id_deuda WHERE id = $id_venta";
+                            // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
+                            $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, id_deuda, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $id_deuda, $Total, $id_user)");
+                            if(mysqli_query($conn, $mysql_deuda)){
+                                echo '<script >M.toast({html:"Se agrego una nueva deuda.", classes: "rounded"})</script>';  
+                            }
                         }
-                    }
 
-                    $cliente = ($cliente == 0)? $cliente: $cliente+10000;
-                    #--- CREAMOS EL SQL PARA LA INSERCION ---
-                    $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
-                    #--- SE INSERTA EL PAGO -----------
-                    if(mysqli_query($conn, $sql)){
-                        $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
-                        ?>
-                        <script>
-                            var a = document.createElement("a");
-                            a.href = "../php/ticket_venta.php?p="+<?php echo $cantidadPago; ?>+"&v="+<?php echo $id_venta; ?>;
-                            a.target = "blank";
-                            a.click();
-                        </script>
-                        <?php
-                        echo '<script>M.toast({html:"El pago se dió de alta satisfcatoriamente.", classes: "rounded"})</script>';
-                    }// FIN if pago
+                        $cliente = ($cliente == 0)? $cliente: $cliente+10000;
+                        #--- CREAMOS EL SQL PARA LA INSERCION ---
+                        $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
+                        #--- SE INSERTA EL PAGO -----------
+                        if(mysqli_query($conn, $sql)){
+                            $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
+                            ?>
+                            <script>
+                                var a = document.createElement("a");
+                                a.href = "../php/ticket_venta.php?p="+<?php echo $cantidadPago; ?>+"&v="+<?php echo $id_venta; ?>;
+                                a.target = "blank";
+                                a.click();
+                            </script>
+                            <?php
+                            echo '<script>M.toast({html:"El pago se dió de alta satisfcatoriamente.", classes: "rounded"})</script>';
+                        }// FIN if pago
+                    }// FIN IF CONDICION SE HACE PAGO
                 }//FIN if consulta
                 echo '<script>recargar_venta();</script>';
             }else{
@@ -463,9 +467,9 @@ switch ($Accion) {
         //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
         if ($Texto != "") {
             //MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...... Codigo, Nombre, Descripcion
-            $sql = "SELECT * FROM `punto_venta_ventas` WHERE estatus = 2 AND (id = '$Texto' OR id_cliente = '$Texto' OR fecha LIKE '$Texto%')";   
+            $sql = "SELECT * FROM `punto_venta_ventas` WHERE estatus = 2 AND pagada = 1 AND (id = '$Texto' OR id_cliente = '$Texto' OR fecha LIKE '$Texto%')";   
         }else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE 
-            $sql = "SELECT * FROM `punto_venta_ventas` WHERE estatus = 2 LIMIT 50";
+            $sql = "SELECT * FROM `punto_venta_ventas` WHERE estatus = 2 AND pagada = 1 LIMIT 50";
         }//FIN else $Texto VACIO O NO
 
         // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
@@ -488,7 +492,6 @@ switch ($Accion) {
                 }
                 $id_usuario = $venta['usuario'];
                 $user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM users WHERE user_id = $id_usuario"));
-                $estatus = ($venta['estatus'] == 2)? '<span class="new badge black" data-badge-caption="Terminada"></span>':'';
                 //Output
                 $contenido .= '         
                   <tr>
@@ -498,11 +501,11 @@ switch ($Accion) {
                     <td>'.$venta['tipo_cambio'].'</td>
                     <td><b>$'.sprintf('%.2f', $venta['total']).'</b></td>
                     <td>'.$user['firstname'].'</td>
-                    <td>'.$estatus.'</td>
                     <td><form method="post" action="../views/detalles_venta_pv.php"><input id="venta" name="venta" type="hidden" value="'.$venta['id'].'"><br><button class="btn-small waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
                     <td><a onclick="facturar('.$venta['id'].')" class="btn-small blue darken-1 waves-effect waves-light"><i class="material-icons">note</i></a></td>
                     <td><a onclick="devolucion_venta_pv('.$venta['id'].')" class="btn-small grey darken-4 waves-effect waves-light"><i class="material-icons">reply</i></a></td>
                     <td><a onclick="borrar_venta_pv('.$venta['id'].')" class="btn-small red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+                    <td><a href = "../php/ticket_venta.php?p=0&v='.$venta['id'].'" target = "blank" class="btn-small pink darken-1 waves-effect waves-light"><i class="material-icons">print</i></a></td>
                   </tr>';
             }//FIN while
         }//FIN else

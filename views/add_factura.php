@@ -11,6 +11,21 @@
     $factura = mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM tmp_pv_factura WHERE folio = $folio "));
   ?>
   <script>
+    //FUNCION QUE BUCARA EN LA BASE DE DATOS CLIENTES CON EL MISMO NOMBRE MOSTRARA Y DARA A ELEGIR
+    function buscarClientes() {
+      var rfc = $("input#rfc").val();
+      var razon = $("input#razon_social").val();
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_facturas.php"
+      $.post("../php/control_facturas.php", {
+        //Cada valor se separa por una ,
+          rfc: rfc,
+          razon: razon,
+          accion: 7,
+        }, function(mensaje){
+        //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_facturas.php"
+        $("#buscarClientes").html(mensaje);
+      });//FIN post
+    }//FIN function 
     //FUNCION QUE BORRA LOS COMPRAS (SE ACTIVA AL INICIAR EL BOTON BORRAR)
     function borrar_venta(id){
       var answer = confirm("Deseas eliminar la venta N°"+id+" de la lista?");
@@ -47,6 +62,8 @@
       var cdfi = $("select#cdfi").val();
       var metodo_pago = $("select#metodo_pago").val();
       var forma_pago = $("select#forma_pago").val();
+      var id_cliente = $("input#id_cliente").val();
+      var total = $("input#total").val();
 
       //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_facturas.php"
       $.post("../php/control_facturas.php", {
@@ -55,6 +72,8 @@
           regimen: regimen,
           cdfi: cdfi,
           metodo_pago: metodo_pago,
+          total: total,
+          id_cliente: id_cliente,
           forma_pago: forma_pago,
           accion: 3,
         }, function(mensaje){
@@ -62,6 +81,18 @@
             $("#cancelar").html(mensaje);
       });//FIN post
     }//FIN function
+    //FUNICION QUE MUESTRA LA INFORMACION DEL CLIENTE SI SELECCIONAMOS ALGUNO O VACIO PARA NUEVO
+    function mostrarCliente(id_cliente) {
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO NE LA DIRECCION "../php/control_facturas.php"
+        $.post("../php/control_facturas.php", {
+          //Cada valor se separa por una ,
+            accion: 8,
+            id_cliente: id_cliente,
+        }, function(mensaje) {
+          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_facturas.php"
+            $("#infoCliente").html(mensaje);
+        }); 
+    }//FIN function 
   </script>
 </head>
 <main>
@@ -123,7 +154,7 @@
           <ul class="collection">
             <li class="collection-item indigo"><b class="white-text">RECEPTOR: </b></li>
           </ul>
-           <div class="row col s12">
+           <div class="row col s12" id="infoCliente">
             <div class="col s5 m4">
               <b class="right">*RFC: </b><br>
               <b class="right">Razón Social: </b><br><br>
@@ -146,8 +177,9 @@
                 $value = $factura['uso_cdfi']; $show = $factura['uso_cdfi'].'-'.$array[$factura['uso_cdfi']];
               }
               ?>
-              <input class="col s12 m6" type="" id = "rfc" value="<?php echo $rfc; ?>"><br>
-              <input class="col s12 m7" type="" id = "razon_social" value="<?php echo $razon_social; ?>"><br>
+              <input class="col s12 m5" type="" id = "rfc" value="<?php echo $rfc; ?>" onkeyup="buscarClientes()"/><div class="col s12 m7" id="buscarClientes" align="right"><br></div>
+              <input type="hidden" id="id_cliente" value="<?php echo $factura['cliente']; ?>" />
+              <input class="col s12 m7" type="" id = "razon_social" value="<?php echo $razon_social; ?>"  onkeyup="buscarClientes()"/><br>
               <select class="browser-default col s12 m9" id="cdfi">
                 <option value="<?php echo $value; ?>" selected><?php echo $show; ?></option>
                 <option value="G01">G01-Adquisición de mercancia</option>
@@ -175,7 +207,7 @@
               </select>
               <input class="col s12 m8" type="" id="correo" value="<?php echo $correo; ?>"><br>
             </div>
-          </div><br><br><br><br><br><br><br>
+           </div><br><br><br><br><br><br><br>
         </div>
       </div>
       <!-- ----------------------------  FORMULARIO 2 Tabs  ---------------------------------------->
@@ -183,22 +215,7 @@
         <div class="row"><br>
             <!--    //////    BOTON QUE REDIRECCIONA AL FORMULARIO DE AGREGAR COMPRA    ///////   -->
             <a href="ventas_punto_venta.php" class="waves-effect waves-light btn pink left right">Agregar Venta<i class="material-icons prefix left">add</i></a>
-            <table class="bordered centered highlight">
-              <thead>
-                <tr>
-                  <th>CLAVE PRODUCTO/SERVICIO</th>
-                  <th>CANTIDAD</th>
-                  <th>CLAVE UNIDAD</th>
-                  <th>UNIDAD</th>            
-                  <th>DESCRIPCION</th>
-                  <th>VALOR UNITARIO</th>
-                  <th>IMPORTE</th>
-                  <th>ACCION</th>
-                </tr>
-              </thead>
-              <tbody id="VentasP">
-              </tbody>
-            </table>
+            <div id="VentasP"></div>
         </div>
       </div>
       <!-- ----------------------------  FORMULARIO 3 Tabs  ---------------------------------------->
