@@ -7,6 +7,7 @@ include('is_logged.php');
 date_default_timezone_set('America/Mexico_City');
 $id_user = $_SESSION['user_id'];// ID DEL USUARIO LOGEADO
 $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
+$Hora = date('H:i:s');
 $datos_user = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM users WHERE user_id=$id_user"));
 $almacen = $datos_user['almacen'];
 
@@ -537,11 +538,101 @@ switch ($Accion) {
             echo '<script >M.toast({html:"Solo los Administradores pueden editar...", classes: "rounded"})</script>';
         }
             
-    break;
+        break;
+    case 11:
+        // $Accion es igual a 11 realiza:
+
+        //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO QUE NESECITAMOS PARA INSERTAR LA INFO DE LA VENTA
+        $id_cotizacion = $conn->real_escape_string($_POST['id_cotizacion']); 
+        $id_cotizacionCR7 = $id_cotizacion+10000;
+        $cliente = $conn->real_escape_string($_POST['cliente']);   
+        $tipo_cambio = $conn->real_escape_string($_POST['tipo_cambio']);  
+        $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS importe FROM `punto_venta_detalle_cotizacion` WHERE id_venta = $id_cotizacion"));
+        $Total = $sql_total['importe'];
+        //echo $id_venta;
+        
+        //SÍ LA FORMA DE PAGO ES A CREDITO Y NO HAY CLIENTE, NO SE PUEDE HACER LA VENTA
+        if ($tipo_cambio == 'Credito' AND $cliente == 0){
+            echo '<script >M.toast({html:"Debe seleccionar un cliente sí quiere registrar a crédito.", classes: "rounded"})</script>'; 
+        }else{
+            $sql01 = "INSERT INTO `punto_venta_ventas`(id_deuda, id_cliente, fecha, hora, tipo_cambio, total, usuario, estatus) VALUES (0, $cliente,'$Fecha_hoy', '$Hora', '$tipo_cambio', '$Total', $id_user, 2)";
+            //Actualizamos el estatus de la cotizacion para indicar que esta cotización tiene una venta
+            $sql11= mysqli_query($conn, ("UPDATE `punto_venta_cotizaciones` SET venta = 1 WHERE id = $id_cotizacion"));
+            //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
+            if(mysqli_query($conn, $sql01)){
+                echo '<script >M.toast({html:"La venta se termino exitosamente.", classes: "rounded"})</script>';
+                //REGISTRAMOS LOS ARTICULOS EN punto_venta_detalle_venta
+                //REALIZAMOS LA CONSULTA A LA BASE DE DATOS Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+                $consulta = mysqli_query($conn, "SELECT * FROM `punto_venta_detalle_cotizacion` WHERE id_venta = $id_cotizacion");
+                
+                //Seleccionamos el id de la ultima venta
+                $ultima_venta = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto_venta_ventas` ORDER BY id DESC LIMIT 1"));
+                $id_ultimaventa = $ultima_venta['id'];
+                
+                //VERIFICAMOS SI HAY ARTICULOS POR AGREGAR
+                if(mysqli_num_rows($consulta)>0){
+                    //RECORREMOS CON UN WHILE UNO POR UNO LOS ARTICULOS
+                    while($detalle_articulo = mysqli_fetch_array($consulta)){
+                        $id_articulo = $detalle_articulo['id_articulo'];
+                        $cantidad = $detalle_articulo['cantidad'];
+                        $precio_venta = $detalle_articulo['precio_venta_u'];
+                        $importe = $detalle_articulo['importe'];
+                        // CREAMOS EL SQL INSERT DEL ARTICULO EN TURNO EN punto_venta_detalle_venta
+                        $sql = "INSERT INTO `punto_venta_detalle_venta` (id_venta, id_producto, cantidad, precio_venta, importe) VALUES($id_ultimaventa, $id_articulo, '$cantidad', '$precio_venta','$importe')";
+                        
+                        // VERIFICAMOS SI SE HIZO LA INSERCION
+                        if (mysqli_query($conn, $sql)) {
+                            // VERIFICAMOS SI EL ARTICULO YA ESTA EN ALMACEN Y SOLO MODIFICAMOS LA CANTIDAD -
+                            if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_almacen_general` WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'"))>0) {
+                                mysqli_query($conn, "UPDATE `punto_venta_almacen_general` SET cantidad = cantidad-$cantidad, modifico = $id_user, fecha_modifico = '$Fecha_hoy' WHERE id_articulo = '$id_articulo' AND id_almacen = '$almacen'");
+                            }//FIN if esta en ALMACEN
+                        }//FIN if insert              
+                    }//FIN while
+                    $descripcion = 'Venta N°'.$id_venta;
+
+                    //Seleccionamos el id de la ultima venta
+                    $ultima_venta = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto_venta_ventas` ORDER BY id DESC LIMIT 1"));
+                    $id_ultimaventa = $ultima_venta['id'];
+                    if ($tipo_cambio == 'Credito') {
+                        $cliente_punto_venta = $cliente + 10000;
+                        $mysql_deudas = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";  
+                        mysqli_query($conn,$mysql_deudas);
+                        //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
+                        $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
+                        $id_deuda = $ultimo['id'];
+                        $sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente_punto_venta, '$Descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
+                        //SE AÑADE EL ID DE LA DEUDA A LA VENTA
+                        $esecuele = "UPDATE `punto_venta_ventas` SET id_deuda = $id_deuda WHERE id = $id_ultimaventa";
+                        // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
+                        $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, id_deuda, total, usuario) VALUES($cliente, $id_ultimaventa, '$Fecha_hoy', '$Hora', '$tipo_cambio', $id_deuda, $Total, $id_user)");
+                        if(mysqli_query($conn, $mysql_deuda)){
+                            echo '<script >M.toast({html:"Se agrego una nueva deuda.", classes: "rounded"})</script>';  
+                        }
+                    }
+
+                    $cliente = ($cliente == 0)? $cliente: $cliente+10000;
+                    #--- CREAMOS EL SQL PARA LA INSERCION ---
+                    $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
+                    #--- SE INSERTA EL PAGO -----------
+                    if(mysqli_query($conn, $sql)){
+                        $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
+                        ?>
+                        <script>
+                            var a = document.createElement("a");
+                            a.href = "../php/ticket_venta.php?p="+<?php echo $cantidadPago; ?>+"&v="+<?php echo $id_venta; ?>;
+                            a.target = "blank";
+                            a.click();
+                        </script>
+                        <?php
+                        echo '<script>M.toast({html:"El pago se dió de alta satisfcatoriamente.", classes: "rounded"})</script>';
+                    }// FIN if pago
+                }//FIN if consulta
+                echo '<script>recargar_venta();</script>';
+            }else{
+                echo '<script >M.toast({html:"Ha ocurrido un error.", classes: "rounded"})</script>';            
+            }// FIN else error
+        }//FIN else COMPROBACION DE CLIENTE EN CREDITO
+        break;
 }// FIN switch
 mysqli_close($conn);
-?>
-
-        
-
-        
+?>       

@@ -38,12 +38,75 @@ if (isset($_POST['cotizacion']) == false) {
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_venta.php" PARA MOSTRAR EL MODAL
           $.post("modal_venta_cotizacion.php", {
             //Cada valor se separa por una ,
-            $id_cotizacion: <?php echo $id_cotizacion; ?>,
+            id_cotizacion: <?php echo $id_cotizacion; ?>,
           }, function(mensaje){
             //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_venta.php"
             $("#modal").html(mensaje);
           });//FIN post
         }
+
+        //FUNCION Calcula el Cambio
+	      function cambio(){
+	        //RECIBIMOS LOS VALORES DE LOS INPUTS AFECTADOS
+	        var total = $("input#total").val();
+	        var efectivo = $("input#efectivoV").val();
+	        var credito = $("input#creditoV").val();
+	        var banco = $("input#bancoV").val(); 
+	        var Efectivo = parseFloat(efectivo);
+	        var Credito = parseFloat(credito);
+	        var Banco = parseFloat(banco);
+	        var Total = parseFloat(total);
+	        document.getElementById("cambio").value ='$'+((-1)*(Total-Efectivo-Banco-Credito)).toFixed(2);
+	      }// FIN function
+
+	      function insert_venta(){
+	      	var efectivo = $("input#efectivoV").val();
+	        var credito = $("input#creditoV").val();
+	        var banco = $("input#bancoV").val(); 
+	        var cliente = $("input#id_cliente").val();
+          var cotizacion = $("input#id_cotizacion").val();  
+
+	        if (efectivo > 0) {
+	        	tipo_cambio = 'Efectivo';
+	        	cantidadPago = efectivo;
+	        }else if (credito > 0) {
+	        	tipo_cambio = 'Credito';
+	        	cantidadPago = credito;
+	        }else if (banco > 0) {
+	        	tipo_cambio = 'Banco';
+	        	cantidadPago = banco;
+	        }
+
+	        if (efectivo == 0 && credito== 0 && banco== 0) {
+	          M.toast({html: 'Ingrese una forma de pago.', classes: 'rounded'});
+	        }else{
+	        	//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
+	          $.post("../php/control_cotizacion.php", {
+	            //Cada valor se separa por una ,
+	            accion: 11,
+	            cliente: cliente,
+	            tipo_cambio: tipo_cambio,
+	            cantidadPago: cantidadPago,
+		          id_cotizacion: cotizacion,
+	          }, function(mensaje) {
+	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+	            $("#tablaArticuloVenta").html(mensaje);
+	          }); //FIN post
+	        }
+	      }// FIN function
+
+        //FUINCION QUE PAUSARA LA VENTA
+		  	function pausar_venta() {
+		      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+		      $.post("../php/control_ventas.php", {
+		        //Cada valor se separa por una ,
+		          accion: 5,
+		          id_venta: <?php echo $id_cotizacion+10000; ?>,
+		      }, function(mensaje) {
+		          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION  "control_ventas.php"
+		          $("#modal").html(mensaje);
+		      });  
+		    };
       </script>
     </head>
     
@@ -127,6 +190,7 @@ if (isset($_POST['cotizacion']) == false) {
             </tbody>            
           </table>          
         </div>
+        <div id="tablaArticuloVenta"></div>
     	</div><!--DIV DEL CONTAINER-->
     </body>
   </html>
