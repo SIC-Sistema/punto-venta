@@ -131,11 +131,17 @@ class PDF extends FPDF{
     $pdf->MultiCell(69,3,utf8_decode('-----------------------------------------------------------------------'),0,'L',0);
     $pdf->SetY($pdf->GetY());
     $pdf->SetX(6);
-    $pdf->SetFont('Helvetica','B', 9);      
-    $id_user = $ventaAll['usuario'];// ID DEL USUARIO AL QUE SE LE APLICO EL CORTE
-    #TOMAMOS LA INFORMACION DEL USUARIO QUE ESTA LOGEADO QUIEN HIZO LOS COBROS
+    $pdf->SetFont('Helvetica','B', 9);          
+    $id_user = $ventaAll['usuario'];// ID DEL USUARIO AL QUE HIZO LA VENTA
+    #TOMAMOS LA INFORMACION DEL USUARIO QUE HIZO LLA VENTA
     $usuario = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM users WHERE user_id = $id_user"));  
-    $pdf->MultiCell(69,4,utf8_decode('LE ATENDIO: '.$usuario['firstname'].' '.$usuario['lastname']),0,'C',0);
+    $id_user2 = $pago['id_user'];// ID DEL USUARIO AL QUE HIZO EL PAGO
+    #TOMAMOS LA INFORMACION DEL USUARIO QUE HIZO LEL PAGO
+    $usuario2 = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM users WHERE user_id = $id_user2"));  
+    $pdf->MultiCell(69,4,utf8_decode('VENTA: '.$usuario['firstname'].' '.$usuario['lastname']),0,'C',0);
+    $pdf->SetY($pdf->GetY());
+    $pdf->SetX(6);
+    $pdf->MultiCell(69,4,utf8_decode('COBRO: '.$usuario2['firstname'].' '.$usuario2['lastname']),0,'C',0);
     $pdf->SetY($pdf->GetY());
     $pdf->SetX(6);
     $pdf->SetFont('Helvetica','', 8);
