@@ -11,6 +11,7 @@
         $FormaPago = $_GET['p'];
     }
     $descripcion = 'Venta N°'.$Venta;
+    $ventaAll = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_ventas` WHERE id = $Venta"));
     $pago = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM pagos WHERE descripcion = '$descripcion' AND tipo = 'Punto Venta'"));
 
     #DEFINIMOS UNA ZONA HORARIA
@@ -51,7 +52,7 @@ class PDF extends FPDF{
     $pdf->SetX(6);
     $pdf->SetFont('Helvetica','', 8);
     $pdf->MultiCell(69,3,utf8_decode('-----------------------------------------------------------------------'),0,'L',0);   
-    if ($pago['id_cliente'] == 0) {
+    if ($ventaAll['id_cliente'] == 0) {
         $pdf->SetY($pdf->GetY()+3);
         $pdf->SetX(6);
         $pdf->SetFont('Helvetica','B', 10);
@@ -61,7 +62,7 @@ class PDF extends FPDF{
     }else{
         $pdf->SetY($pdf->GetY());
         $pdf->SetX(6);
-        $id_cliente = $pago['id_cliente']-10000;
+        $id_cliente = $ventaAll['id_cliente']-10000;
         $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id = $id_cliente"));
         $pdf->SetFont('Courier','B', 9);
         $pdf->MultiCell(69,3,utf8_decode('CLIENTE: '.$cliente['nombre']."\n".'RFC:  '.$cliente['rfc']."\n".'TELEFONO:  '.$cliente['telefono']."\n".'EMAIL: '.$cliente['email']."\n".'DIRECCION: '.$cliente['direccion'].' '.$cliente['colonia'].', '.$cliente['localidad']),0,'L',0);
@@ -108,7 +109,6 @@ class PDF extends FPDF{
     $pdf->MultiCell(27,5,utf8_decode('IVA:'."\n".'SUBTOTAL:'."\n".'TOTAL VENTAS:'),0,'R',0);    
     $pdf->SetY($pdf->GetY()-15);
     $pdf->SetX(35);
-    $ventaAll = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_ventas` WHERE id = $Venta"));
     $pdf->MultiCell(39,5,utf8_decode('$'.sprintf('%.2f',$ventaAll['total']*0.16)."\n".'$'.sprintf('%.2f',$ventaAll['total']-($ventaAll['total']*0.16))."\n".'$'.sprintf('%.2f',$ventaAll['total'])),0,'R',0);
     if ($FormaPago != 0) {
         // co
