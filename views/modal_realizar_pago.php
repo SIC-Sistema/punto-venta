@@ -50,7 +50,7 @@
             </ul>  
             <a class="modal-action modal-close waves-effect waves-light btn-large indigo lighten-5 indigo-text right"><b>Regresar<i class="material-icons left">close</i></b></a>
             <a class="right white-text"> <br>_ _ _ _</a>
-            <a onclick="insert_pago()" class="waves-effect waves-green btn-large indigo lighten-5 teal-text right"><b>REALIZAR<i class="material-icons left">local_atm</i></b></a>          
+            <a onclick="insert_pago(<?php echo $Venta;?>)" class="waves-effect waves-green btn-large indigo lighten-5 teal-text right"><b>REALIZAR<i class="material-icons left">local_atm</i></b></a>          
         </div>
     </div>
 </div>

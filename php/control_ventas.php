@@ -64,27 +64,20 @@ switch ($Accion) {
                     $pago = $conn->real_escape_string($_POST['pago']);  
                     if ($pago) {
                         $descripcion = 'Venta N°'.$id_venta;
-
-                        if ($tipo_cambio == 'Credito') {
-                            $cliente_punto_venta = $cliente + 10000;
-                            $mysql_deudas = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, '$Tipo', '$descripcion', $id_user)";  
-                            mysqli_query($conn,$mysql_deudas);
-                            //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
-                            $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
-                            $id_deuda = $ultimo['id'];
-                            $sql = "INSERT INTO pagos(id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente_punto_venta, '$Descripcion', $Total, '$Fecha_hoy', '$Hora', '$Tipo', $id_user, 0, 0, '$Tipo_Cambio', $id_deuda, 0)";
-                            //SE AÑADE EL ID DE LA DEUDA A LA VENTA
-                            $esecuele = "UPDATE `punto_venta_ventas` SET id_deuda = $id_deuda WHERE id = $id_venta";
-                            // CREAMOS LA DEUDA DE CREDITO AL CLIENTE
-                            $sql_credito = mysqli_query($conn,"INSERT INTO `punto_venta_credito` (id_cliente, id_venta, fecha, hora, tipo_cambio, id_deuda, total, usuario) VALUES($cliente, $id_venta, '$Fecha_hoy', '$Hora', '$tipo_cambio', $id_deuda, $Total, $id_user)");
-                            if(mysqli_query($conn, $mysql_deuda)){
-                                echo '<script >M.toast({html:"Se agrego una nueva deuda.", classes: "rounded"})</script>';  
-                            }
-                        }
-
+                        //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
                         $cliente = ($cliente == 0)? $cliente: $cliente+10000;
                         #--- CREAMOS EL SQL PARA LA INSERCION ---
                         $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
+                        if ($tipo_cambio == 'Credito') {
+                            $mysql_deuda = "INSERT INTO deudas (id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente_punto_venta, $Total, '$Fecha_hoy', NULL, 'Punto Venta', '$descripcion', $id_user)";  
+                            if(mysqli_query($conn, $mysql_deuda)){
+                                echo '<script >M.toast({html:"Se agrego una nueva deuda.", classes: "rounded"})</script>';  
+                            }
+                            $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente_punto_venta"));            
+                            $id_deuda = $ultimo['id'];
+                            $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente_punto_venta, '$Descripcion', $Total, '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, 0, '$tipo_cambio', $id_deuda, 0)";
+                        }
+                       
                         #--- SE INSERTA EL PAGO -----------
                         if(mysqli_query($conn, $sql)){
                             $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
@@ -109,6 +102,45 @@ switch ($Accion) {
     case 1:  ///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 1 realiza:
 
+        $id_venta = $conn->real_escape_string($_POST['id_venta']);  
+        $tipo_cambio = $conn->real_escape_string($_POST['tipo_cambio']);  
+        $venta = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_ventas` WHERE id = $id_venta"));
+        $Total = $venta['total'];
+        $cliente = $venta['id_cliente'];
+        $descripcion = 'Venta N°'.$id_venta;
+        if ($tipo_cambio == 'Credito' AND $cliente == 0){
+            echo '<script >M.toast({html:"Debe seleccionar un cliente sí quiere registrar a crédito.", classes: "rounded"})</script>'; 
+        }else{
+            //SE LE SUMA 10,000 AL id DEL CLIENTE DEL PUNTO DE VENTA
+            $cliente = ($cliente == 0)? $cliente: $cliente+10000;
+            #--- CREAMOS EL SQL PARA LA INSERCION ---
+            $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, tipo_cambio) VALUES ($cliente, '$descripcion', '$Total', '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, '$tipo_cambio')";
+            if ($tipo_cambio == 'Credito') {
+                $mysql_deuda = "INSERT INTO deudas(id_cliente, cantidad, fecha_deuda, hasta, tipo, descripcion, usuario) VALUES ($cliente, $Total, '$Fecha_hoy', NULL, 'Punto Venta', '$descripcion', $id_user)";  
+                if(mysqli_query($conn, $mysql_deuda)){
+                    echo '<script >M.toast({html:"Se agrego una nueva deuda.", classes: "rounded"})</script>';  
+                }
+                $ultimo =  mysqli_fetch_array(mysqli_query($conn, "SELECT MAX(id_deuda) AS id FROM deudas WHERE id_cliente = $cliente"));
+                $id_deuda = $ultimo['id'];
+                $sql = "INSERT INTO pagos (id_cliente, descripcion, cantidad, fecha, hora, tipo, id_user, corte, corteP, tipo_cambio, id_deuda, Cotejado) VALUES ($cliente, '$descripcion', $Total, '$Fecha_hoy', '$Hora', 'Punto Venta', $id_user, 0, 0, '$tipo_cambio', $id_deuda, 0)";                            
+            }
+
+            #--- SE INSERTA EL PAGO -----------
+            if(mysqli_query($conn, $sql)){
+                $cantidadPago = $conn->real_escape_string($_POST['cantidadPago']);  
+                mysqli_query($conn, "UPDATE `punto_venta_ventas` SET tipo_cambio = '$tipo_cambio', pagada = 1  WHERE id = $id_venta");
+                ?>
+                <script>
+                    var a = document.createElement("a");
+                        a.href = "../php/ticket_venta.php?p="+<?php echo $cantidadPago; ?>+"&v="+<?php echo $id_venta; ?>;
+                        a.target = "blank";
+                        a.click();
+                </script>
+                <?php
+                echo '<script>M.toast({html:"El pago se dió de alta satisfcatoriamente.", classes: "rounded"})</script>';
+            }// FIN if pago
+            echo '<script>recargar_venta();</script>';
+        }
         break;
     case 2:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 2 realiza:
