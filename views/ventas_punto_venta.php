@@ -158,6 +158,17 @@
         }// FIN ELSE
       }// FIN PREGUNTA reviso
     }//FIN function
+    function realizar_pago(id) {
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_realizar_pago.php" PARA MOSTRAR EL MODAL
+      $.post("modal_realizar_pago.php", {
+        //Cada valor se separa por una ,
+          id_venta: id,
+      }, function(mensaje){
+        //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_realizar_pago.php"
+          $("#modal").html(mensaje);
+      });//FIN post
+      
+    }
   </script>
 </head>
 <main>
@@ -255,10 +266,11 @@
                   <th>Fecha y Hora</th>
                   <th>Cambio</th>            
                   <th>Total</th>
-                  <th>Realiza</th>
-                  <th>Estatus</th>
-                  <th>Ver</th>
-                  <th>Cancelar</th>
+                  <th>Realizo</th>
+                  <th>Detalles</th>
+                  <th>Devolver</th>
+                  <th>Borrar</th>
+                  <th>Pago</th>
                 </tr>
               </thead>
               <tbody id="VentasSIN">

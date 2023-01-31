@@ -640,7 +640,7 @@ switch ($Accion) {
                     }
                     $id_usuario = $venta['usuario'];
                     $user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM users WHERE user_id = $id_usuario"));
-                    $estatus = ($venta['estatus'] == 1)? '<span class="new badge blue" data-badge-caption="Pausada"></span>': '<span class="new badge green" data-badge-caption="En Proceso"></span>';
+                    
                     //Output
                     $contenido .= '         
                       <tr>
@@ -650,9 +650,10 @@ switch ($Accion) {
                         <td>'.$venta['tipo_cambio'].'</td>
                         <td>$'.sprintf('%.2f', $venta['total']).'</td>
                         <td>'.$user['firstname'].'</td>
-                        <td>'.$estatus.'</td>
-                        <td><a href = "add_venta.php?id='.$venta['id'].'" class="btn-small waves-effect waves-light pink"><i class="material-icons">visibility</i></a></td>
-                        <td><a onclick="borrar_lista_all('.$venta['id'].')" class="btn-small red darken-1 waves-effect waves-light"><i class="material-icons">remove_shopping_cart</i></a></td>
+                        <td><form method="post" action="../views/detalles_venta_pv.php"><input id="venta" name="venta" type="hidden" value="'.$venta['id'].'"><br><button class="btn-small waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
+                        <td><a onclick="devolucion_venta_pv('.$venta['id'].')" class="btn-small grey darken-4 waves-effect waves-light"><i class="material-icons">reply</i></a></td>
+                        <td><a onclick="borrar_venta_pv('.$venta['id'].')" class="btn-small red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+                        <td><a onclick="realizar_pago('.$venta['id'].')"  class="btn-small blue darken-1 waves-effect waves-light"><i class="material-icons">local_atm</i></a></td>
                       </tr>';
                 }//FIN while
             }//FIN else
