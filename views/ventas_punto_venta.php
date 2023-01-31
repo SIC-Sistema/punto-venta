@@ -68,7 +68,20 @@
             $("#VentasP").html(mensaje);
       });//FIN post
     }//FIN function
-
+    //FUNCION QUE HACE LA BUSQUEDA DE ALMACENES (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+    function buscarVentasSIN(){
+      //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+      var texto = $("input#busqueda3").val();
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+      $.post("../php/control_ventas.php", {
+        //Cada valor se separa por una ,
+          texto: texto,
+          accion: 12,
+        }, function(mensaje){
+            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+            $("#VentasSIN").html(mensaje);
+      });//FIN post
+    }//FIN function
     //FUNCION QUE MOSTRARA EL MODAL PARA ESCOGER FACRTURA O NUEVA
     function facturar(venta){
       //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_factura.php" PARA MOSTRAR EL MODAL
@@ -148,7 +161,7 @@
   </script>
 </head>
 <main>
-<body onload="buscarVentasR(); buscarVentasP();">
+<body onload="buscarVentasR(); buscarVentasP(); buscarVentasSIN();">
   <div class="container">
     <!-- CREAMOS UN DIV EL CUAL TENGA id = "cancelar"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
     <div id="cancelar"></div>
@@ -230,8 +243,8 @@
         <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
         <div class="input-field col s12 m6 l6 right">
           <i class="material-icons prefix">search</i>
-          <input id="busqueda2" name="busqueda2" type="text" class="validate" onkeyup="buscarVentasP();">
-          <label for="busqueda2">Buscar: (N° Venta, N° Cliente, Fecha (ej: 2022-10-26))</label>
+          <input id="busqueda3" name="busqueda3" type="text" class="validate" onkeyup="buscarVentasSIN();">
+          <label for="busqueda3">Buscar: (N° Venta, N° Cliente, Fecha (ej: 2022-10-26))</label>
         </div>
         <div class="row"><br>
             <table class="bordered centered highlight">
@@ -248,7 +261,7 @@
                   <th>Cancelar</th>
                 </tr>
               </thead>
-              <tbody id="VentasP">
+              <tbody id="VentasSIN">
               </tbody>
             </table>
         </div>
