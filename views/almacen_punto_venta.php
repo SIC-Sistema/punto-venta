@@ -68,7 +68,8 @@ if ($datos['almacen'] == 0) {
         <div class="col">
           <br>
           <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
-          <a href="../php/imprimir_mi_almacen.php" target="blank" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR ARTÍCULOS</a>
+          <a href="../php/imprimir_mi_almacen.php" target="blank" class="waves-effect waves-light btn pink left"><i class="material-icons right">print</i>IMPRIMIR ARTÍCULOS</a>
+          <a href="../views/excel_almacen.php?id=<?php echo $id_almacen; ?>"  class="waves-effect waves-light btn red darken-2"><i class="material-icons right">list</i>SUBIR EXCEL</a>
         </div>
         <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
         <div class="input-field col s12 m6 l6 right">

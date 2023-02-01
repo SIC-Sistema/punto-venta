@@ -62,7 +62,7 @@ class PDF extends FPDF{
     }else{
         $pdf->SetY($pdf->GetY());
         $pdf->SetX(6);
-        $id_cliente = $ventaAll['id_cliente']-10000;
+        $id_cliente = $ventaAll['id_cliente'];
         $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id = $id_cliente"));
         $pdf->SetFont('Courier','B', 9);
         $pdf->MultiCell(69,3,utf8_decode('CLIENTE: '.$cliente['nombre']."\n".'RFC:  '.$cliente['rfc']."\n".'TELEFONO:  '.$cliente['telefono']."\n".'EMAIL: '.$cliente['email']."\n".'DIRECCION: '.$cliente['direccion'].' '.$cliente['colonia'].', '.$cliente['localidad']),0,'L',0);

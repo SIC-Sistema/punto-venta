@@ -1,18 +1,18 @@
-<?php
-include 'fredyNav.php';
-use Shuchkin\SimpleXLSX;
-
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', true);
-
-require_once __DIR__.'/../ReadXLSX/src/SimpleXLSX.php';
-?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SIC | SUBIR EXCEL</title>
+    <?php
+    include 'fredyNav.php';
+    use Shuchkin\SimpleXLSX;
+
+    ini_set('error_reporting', E_ALL);
+    ini_set('display_errors', true);
+
+    require_once __DIR__.'/../ReadXLSX/src/SimpleXLSX.php';
+    ?>
 </head>
 <body>
     <div class="container">
@@ -23,6 +23,8 @@ require_once __DIR__.'/../ReadXLSX/src/SimpleXLSX.php';
 
         if (isset($_FILES['file'])) {
             if ($xlsx = SimpleXLSX::parse($_FILES['file']['tmp_name'])) {
+                $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
+                $id_user = $_SESSION['user_id'];// ID DEL USUARIO LOGEADO
                 echo '<h3>Resultados de la Inserción: </h3>';
                 echo '<table >';
 
@@ -52,10 +54,9 @@ require_once __DIR__.'/../ReadXLSX/src/SimpleXLSX.php';
                             if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo'"))>0){
                                 echo '<td><b class="red-text">¡Repetido! (NO)</b></td>';                             
                             }else{
-                                // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-                                $Fecha_hoy = date('Y-m-d');// FECHA ACTUAL
                                 //REALIZAMOS LA INSERCION A LA BD
-                                $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, usuario, fecha)  VALUES('$codigo', '$nombre', '$nombre', '$precio', '$unidad', '$CFiscal', '$CUnidad', 'Por Definir', 10, 49,'$Fecha_hoy')";
+                                // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE                               
+                                $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, usuario, fecha)  VALUES('$codigo', '$nombre', '$nombre', '$precio', '$unidad', '$CFiscal', '$CUnidad', 'Por Definir', 10, $id_user,'$Fecha_hoy')";
                                 //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
                                 if(mysqli_query($conn, $sql)){
                                     echo '<td><b class="green-text">¡Exito! (SI)</b></td>';                                
