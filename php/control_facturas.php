@@ -240,7 +240,7 @@ switch ($Accion) {
     case 5:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 5 realiza:
 
-        //RECIBIMOS TODAS LAS VARIABLES DES DE EL ARCHIVO modal_almacen.php
+        //RECIBIMOS TODAS LAS VARIABLES DES DE EL ARCHIVO facturas_punto_venta
         $id_articulo = $conn->real_escape_string($_POST['id_articulo']);
         $almacen = $conn->real_escape_string($_POST['almacen']);
         $DesCambio = $conn->real_escape_string($_POST['descripcion_cambio']);
