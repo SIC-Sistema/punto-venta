@@ -58,7 +58,7 @@
     function buscarFacturasR(){
       //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
       var texto = $("input#busqueda2").val();
-      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/controlventas.php"
+      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_facturas.php"
       $.post("../php/control_facturas.php", {
         //Cada valor se separa por una ,
           texto: texto,
