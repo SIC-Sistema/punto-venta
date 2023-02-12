@@ -76,7 +76,7 @@ if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM pagos WHERE id_cliente = $
 ?>
   <?php 
   $no_cliente = $IdCliente;
-  $sql = mysqli_query($conn,"SELECT * FROM `punto-venta_clientes` WHERE id_cliente=$no_cliente");
+  $sql = mysqli_query($conn,"SELECT * FROM `punto-venta_clientes` WHERE id=$no_cliente");
   if (mysqli_num_rows($sql)<=0) {
     $sql = mysqli_query($conn,"SELECT * FROM especiales WHERE id_cliente=$no_cliente");
   } 
