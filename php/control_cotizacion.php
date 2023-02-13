@@ -477,7 +477,7 @@ switch ($Accion) {
 
             //RECIBIMOS TODAS LAS VARIABLES DES DE EL ARCHIVO detalle_cotizacion.php
             $id_cotizacion = $conn->real_escape_string($_POST['id_cotizacion']);
-            $DesCambio = $conn->real_escape_string($_POST['descripcion_cambio']);
+            //$DesCambio = $conn->real_escape_string($_POST['descripcion_cambio']);
             $Cantidad = $conn->real_escape_string($_POST['cantidadCambiar']);
             $Precio = $conn->real_escape_string($_POST['precioCambiar']);
 
@@ -489,19 +489,32 @@ switch ($Accion) {
             //CON LA VARIABLE $id_articulo DECIMOS NOS TRAEMOS LA INFORMACION DEL ID DEL ARTICULO PARA SER UTILIZADA 
             $id_articulo=$detalle_cotizacion['id_articulo'];
             $id_detalle=$detalle_cotizacion['id'];
+            //DECLARAMOS EL id DE DE LA COTIZACION, (NO DEL DETALLE)
+            $ID_COTIZACION=$detalle_cotizacion['id_venta'];
 
             //CREAMOS LA SENTENCIAS SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION Y LAS GUARDAMOS EN UNA VARIABLE
-            $sql_update1 = "UPDATE `punto_venta_articulos` SET precio = '$Precio' WHERE id = $id_articulo";
-            $up_1 = "UPDATE `punto_venta_detalle_cotizacion` SET precio_venta_u = $Precio WHERE id = $id_detalle AND id_articulo = $id_articulo";
-            $sql_update2 = "UPDATE `punto_venta_detalle_cotizacion` SET cantidad = '$Cantidad' WHERE id = $id_detalle";
-            $sql_update_importe = "UPDATE `punto_venta_detalle_cotizacion` SET importe = ('$Cantidad'*'$Precio')WHERE id = $id_detalle AND id_articulo = $id_articulo";
-
+            $sql_update1 = mysqli_query($conn,"UPDATE `punto_venta_articulos` SET precio = '$Precio' WHERE id = $id_articulo");
+            $up_1 = mysqli_query($conn,"UPDATE `punto_venta_detalle_cotizacion` SET precio_venta_u = $Precio WHERE id = $id_detalle AND id_articulo = $id_articulo");
+            $sql_update2 = mysqli_query($conn,"UPDATE `punto_venta_detalle_cotizacion` SET cantidad = '$Cantidad' WHERE id = $id_detalle");
+            $sql_update_importe = mysqli_query($conn,"UPDATE `punto_venta_detalle_cotizacion` SET importe = ('$Cantidad'*'$Precio')WHERE id = $id_detalle AND id_articulo = $id_articulo");
+            
+            //SUMAMOS LOS NUEVOS IMPORTES ACTUALIZADOS
+            $totalsuma = mysqli_fetch_array(mysqli_query($conn,"SELECT SUM(importe) as impsum FROM `punto_venta_detalle_cotizacion` WHERE id_venta = $ID_COTIZACION"));
+            $abc=$totalsuma['impsum'];
+            $sql_update_totalsuma2 = "UPDATE `punto_venta_cotizaciones` SET total = $abc WHERE id = $ID_COTIZACION";
+            if(mysqli_query($conn, $sql_update_totalsuma2)){
+                echo 'Se actualizo el precio de la cotizacion.';
+            }else{
+                echo 'Hubo un error al actulizar el precio de la cotizacion.';
+            }
+            echo 'Se actualizo el precio de la cotizacion.';
+            
             //VERIFICAMOS QUE LAS SENTECIAS SON EJECUTADAS CON EXITO!
             if(mysqli_query($conn, $sql_update1)){
                 if(mysqli_query($conn, $up_1)){
                     if(mysqli_query($conn, $sql_update2)){
                         if(mysqli_query($conn, $sql_update_importe)){
-                            $sql_insert = "INSERT INTO `punto_venta_modificaciones_cotizacion` (descripcion_cambio, producto, codigo_cotizacion, usuario, fecha) VALUES('$DesCambio',$id_articulo,10,$id_user,'$Fecha_hoy')";
+                            $sql_insert = "INSERT INTO `punto_venta_modificaciones_cotizacion` (descripcion_cambio, producto, codigo_cotizacion, usuario, fecha) VALUES('EDITADA',$id_articulo,10,$id_user,'$Fecha_hoy')";
                             if(mysqli_query($conn, $sql_insert)){
                                 echo 'Los datos se actualizarón con exito.';
                             }else{
