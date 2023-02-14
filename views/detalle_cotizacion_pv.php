@@ -64,7 +64,12 @@ if (isset($_POST['cotizacion']) == false) {
 	        var credito = $("input#creditoV").val();
 	        var banco = $("input#bancoV").val(); 
 	        var cliente = $("input#id_cliente").val();
-          var cotizacion = $("input#id_cotizacion").val();  
+          var cotizacion = $("input#id_cotizacion").val();
+          if(document.getElementById('pago').checked = true){
+            var pago = 1;
+          }else{
+            var pago = 0;
+          } 
 
 	        if (efectivo > 0) {
 	        	tipo_cambio = 'Efectivo';
@@ -88,6 +93,7 @@ if (isset($_POST['cotizacion']) == false) {
 	            tipo_cambio: tipo_cambio,
 	            cantidadPago: cantidadPago,
 		          id_cotizacion: cotizacion,
+              pago: pago,
 	          }, function(mensaje) {
 	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
 	            $("#tablaArticuloVenta").html(mensaje);

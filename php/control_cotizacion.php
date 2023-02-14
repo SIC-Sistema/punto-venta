@@ -535,13 +535,19 @@ switch ($Accion) {
         $tipo_cambio = $conn->real_escape_string($_POST['tipo_cambio']);  
         $sql_total = mysqli_fetch_array(mysqli_query($conn, "SELECT sum(importe) AS importe FROM `punto_venta_detalle_cotizacion` WHERE id_venta = $id_cotizacion"));
         $Total = $sql_total['importe'];
+        $pago = $conn->real_escape_string($_POST['pago']);
         //echo $id_venta;
         
         //SÍ LA FORMA DE PAGO ES A CREDITO Y NO HAY CLIENTE, NO SE PUEDE HACER LA VENTA
         if ($tipo_cambio == 'Credito' AND $cliente == 0){
             echo '<script >M.toast({html:"Debe seleccionar un cliente sí quiere registrar a crédito.", classes: "rounded"})</script>'; 
         }else{
-            $sql01 = "INSERT INTO `punto_venta_ventas`(id_deuda, id_cliente, fecha, hora, tipo_cambio, total, usuario, estatus) VALUES (0, $cliente,'$Fecha_hoy', '$Hora', '$tipo_cambio', '$Total', $id_user, 2)";
+            if($pago='1'){
+                $sql01 = "INSERT INTO `punto_venta_ventas`(id_deuda, id_cliente, fecha, hora, tipo_cambio, total, usuario, estatus, pagada) VALUES (0, $cliente,'$Fecha_hoy', '$Hora', '$tipo_cambio', '$Total', $id_user, 2, 1)";
+
+            }else{
+                $pago = "INSERT INTO `punto_venta_ventas`(id_deuda, id_cliente, fecha, hora, tipo_cambio, total, usuario, estatus, pagada) VALUES (0, $cliente,'$Fecha_hoy', '$Hora', '$tipo_cambio', '$Total', $id_user, 2, 0)";
+            }
             //Actualizamos el estatus de la cotizacion para indicar que esta cotización tiene una venta
             $sql11= mysqli_query($conn, ("UPDATE `punto_venta_cotizaciones` SET venta = 1 WHERE id = $id_cotizacion"));
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
