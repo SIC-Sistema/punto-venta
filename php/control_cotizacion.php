@@ -497,7 +497,12 @@ switch ($Accion) {
             $up_1 = mysqli_query($conn,"UPDATE `punto_venta_detalle_cotizacion` SET precio_venta_u = $Precio WHERE id = $id_detalle AND id_articulo = $id_articulo");
             $sql_update2 = mysqli_query($conn,"UPDATE `punto_venta_detalle_cotizacion` SET cantidad = '$Cantidad' WHERE id = $id_detalle");
             $sql_update_importe = mysqli_query($conn,"UPDATE `punto_venta_detalle_cotizacion` SET importe = ('$Cantidad'*'$Precio')WHERE id = $id_detalle AND id_articulo = $id_articulo");
-            
+            $sql_insert = "INSERT INTO `punto_venta_modificaciones_cotizacion` (descripcion_cambio, producto, codigo_cotizacion, usuario, fecha) VALUES('EDITADA',$id_articulo,$id_detalle,$id_user,'$Fecha_hoy')";
+            if(mysqli_query($conn, $sql_insert)){
+                echo 'Los datos se actualizarón con exito.';
+            }else{
+                echo 'Los datos NO se actualizarón.';
+            }
             //SUMAMOS LOS NUEVOS IMPORTES ACTUALIZADOS
             $totalsuma = mysqli_fetch_array(mysqli_query($conn,"SELECT SUM(importe) as impsum FROM `punto_venta_detalle_cotizacion` WHERE id_venta = $ID_COTIZACION"));
             $abc=$totalsuma['impsum'];
@@ -507,45 +512,13 @@ switch ($Accion) {
             }else{
                 echo 'Hubo un error al actulizar el precio de la cotizacion.';
             }
-            echo 'Se actualizo el precio de la cotizacion.';
-            
-            //VERIFICAMOS QUE LAS SENTECIAS SON EJECUTADAS CON EXITO!
-            if(mysqli_query($conn, $sql_update1)){
-                if(mysqli_query($conn, $up_1)){
-                    if(mysqli_query($conn, $sql_update2)){
-                        if(mysqli_query($conn, $sql_update_importe)){
-                            $sql_insert = "INSERT INTO `punto_venta_modificaciones_cotizacion` (descripcion_cambio, producto, codigo_cotizacion, usuario, fecha) VALUES('EDITADA',$id_articulo,10,$id_user,'$Fecha_hoy')";
-                            if(mysqli_query($conn, $sql_insert)){
-                                echo 'Los datos se actualizarón con exito.';
-                            }else{
-                                echo 'Los datos se actualizarón con exito.';
-                            }
-                            ?>
-                            <script>
-                                // REDIRECCIONAMOS 
-                                setTimeout("location.href='../views/cotizaciones_punto_venta.php'", 500);
-                            </script>
-                            <?php
-                        }else{
-                            echo 'Ha ocurrido un error en el UPDATE del nuevo importe ...';
-                        }
-                    
-                    }else{
-                        echo 'Ha ocurrio un error con la actualizacion de la cantidad en la base de datos del los detalles de la cotización...';
-                    }             
-                }else{
-                    echo 'Ha ocurrio un error con la actualizacion del precio en la base de datos del los detalles de la cotización...';	
-                }//FIN else DE ERROR
-            }else{
-                echo 'Ha ocurrido un error en el UPDATE del precio en la base de datos de los articulos...';
-                
-                ?>
+            echo 'Se actualizo el precio de la cotizacion.';                
+            ?>
                 <script>
                     // REDIRECCIONAMOS 
                     setTimeout("location.href='../views/cotizaciones_punto_venta.php'", 500);
                 </script>
-                <?php
-            }
+            <?php
                 
         }else{
             echo '<script >M.toast({html:"Solo los Administradores pueden editar...", classes: "rounded"})</script>';
