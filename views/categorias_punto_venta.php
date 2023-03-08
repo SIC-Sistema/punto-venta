@@ -90,7 +90,6 @@
                         <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
                         <a onclick="insert_categoria();" class="waves-effect waves-light btn pink right"><i class="material-icons right">send</i>Agregar</a>
                     </div>
-
                     <!--    //////    INPUT DE LA BUSQUEDA    ///////   -->   
                     <div class="input-field col s12">
                         <i class="material-icons prefix">search</i>
@@ -99,7 +98,6 @@
                     </div>
                 </form>
             </div><br>
-
             <!--    //////    TABLA QUE MUESTRA LA INFORMACION DE LOS ARTICULO    ///////   -->
             <div class="row">
                 <table class="bordered highlight responsive-table">
@@ -111,6 +109,7 @@
                             <th>Fecha</th>
                             <th>Editar</th>
                             <th>Borrar</th>
+                            <th>Subcategorias</th>
                         </tr>
                     </thead>
                     <!-- DENTRO DEL tbody COLOCAMOS id = "categoriasALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_categorias() -->

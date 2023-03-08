@@ -35,7 +35,11 @@ $Hoy = date('Y-m-d');
 				    <li><a href = "clientes_punto_venta.php" class="indigo-text"><i class="material-icons">people</i>Clientes </a></li>
 					<li><a href = "usuarios.php" class="indigo-text"><i class="material-icons">perm_identity</i>Usuarios </a></li>
 				    <li><a href = "articulos_punto_venta.php" class="indigo-text"><i class="material-icons">dashboard</i>Articulos </a></li>
-					<li><a href = "categorias_punto_venta.php" class="indigo-text"><i class="material-icons">view_list</i>Categorias </a></li>   			 
+					<li><a class='dropdown-btn1 indigo-text' data-target='sub-dropdown4'><i class="material-icons left">view_list</i> Categorias <i class="material-icons right">chevron_right</i></a></li>
+				    <ul id='sub-dropdown4' class='dropdown-content'>
+				    	<li><a href="categorias_punto_venta.php" class="indigo-text"><i class="material-icons">filter_list</i>Categorías</a></li>   
+				    	<li><a href="agregar_subcat_punto_venta.php" class="indigo-text"><i class="material-icons">filter_none</i>Subcaetegorías</a></li>
+				    </ul>	   			 
  				 </ul>
 				<li><a class='dropdown-button indigo-text' data-target='dropdown2'><i class="material-icons left">library_add</i><b>Compras</b><span class=" new badge pink" data-badge-caption="">7</span><i class="material-icons right">arrow_drop_down</i></a></li>
 				<ul id='dropdown2' class='dropdown-content'>

@@ -113,7 +113,6 @@
             </div>
             <!--    //////    BOTÓN PARA IMPRIMIR LA INFORMACIÓN DE LA TABLA    ///////   -->
             <a onclick="imprimir_catalogo()" class="waves-effect waves-light btn pink right"><i class="material-icons right">print</i>IMPRIMIR CATÁLOGO</a>
-
           </div>
         </form>
       </div>
@@ -132,6 +131,7 @@
               <th>C. Unidad</th>
               <th>C. Fiscal</th>
               <th>Categoria</th>
+              <th>Subcategoría</th>
               <th>Registro</th>
               <th>Fecha</th>
               <th>Editar</th>

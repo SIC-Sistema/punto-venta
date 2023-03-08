@@ -1,6 +1,11 @@
 <html>
   <head>
   	<title>SIC | Agregar Artículos</title>
+    <style rel="stylesheet">
+		  .select-dropdown{
+        overflow-y: auto !important;
+      }
+	  </style>
     <?php 
     //INCLUIMOS EL ARCHIVO QUE CONTIENE LA BARRA DE NAVEGACION TAMBIEN TIENE (scripts, conexion, is_logged, modals)
     include('fredyNav.php');
@@ -21,11 +26,12 @@
         var textoCUnidad = $("input#codigo_unidad").val();
         var textoCFiscal = $("input#c_fiscal").val();
         var textoCategoria = $("select#categoria").val();
+        var textoSubCategoria = $("select#subcategories").val();
 
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
         //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
         if (textoCodigo == "") {
-          M.toast({html: 'El campo Código se encuentra vacío.', classes: 'rounded'});
+          M.toast({html: 'El campo Código de artículo se encuentra vacío.', classes: 'rounded'});
         }else if (textoNombre == "") {
           M.toast({html: 'El campo Nombre se encuentra vacío.', classes: 'rounded'});
         }else if (textoModelo == "") {
@@ -42,6 +48,8 @@
           M.toast({html: 'El campo Codigo Fiscal se encuentra vacío.', classes: 'rounded'});
         }else if(textoCategoria == 0){
           M.toast({html: 'El campo de Categoria se encuentra vacío.', classes: 'rounded'});
+        }else if(textoSubCategoria == 0){
+          M.toast({html: 'El campo de Subcategoria se encuentra vacío.', classes: 'rounded'});
         }else{
           //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_articulo.php"
@@ -57,13 +65,33 @@
               valorCUnidad: textoCUnidad,
               valorCFiscal: textoCFiscal,
               valorCategoria: textoCategoria,
+              valorSubCategoria: textoSubCategoria,
             }, function(mensaje) {
                 //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_articulo.php"
                 $("#resultado_insert").html(mensaje);
             }); 
         }//FIN else CONDICIONES
       };//FIN function 
-    </script>
+
+      $(document).ready(function(){
+        $('#categoria').on('change', function(){
+          var categoryID = $(this).val();
+          if(categoryID){
+            $.ajax({
+              type:'POST',
+              url:'ajaxCategories.php',
+              data:'category_id='+categoryID,
+              success:function(html){
+                $('#subcategories').html(html);       
+                  }
+              }); 
+          }else{
+            $('#subcategories').html('<option value="">Selecciona una categoría primero</option>');    
+          }
+        });
+   });  
+</script>
+   
   </head>
   <main>
   <body>
@@ -105,14 +133,13 @@
             </div>
             <!-- CAJA DE SELECCION DE CATEGORIAS -->
             <div class="input-field">
-              <i class="material-icons prefix">view_list</i>
               <!--<label for="categoria">Categoria:</label>-->
-              <select id="categoria" name="categoria" class="validate">
+              <select id="categoria" name="categoria" class="browser-default">
                 <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
                 <option value="0" select>Seleccione una categoria</option>
                 <?php 
                   // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-                  $consulta = mysqli_query($conn,"SELECT * FROM punto_venta_categorias");
+                  $consulta = mysqli_query($conn,"SELECT * FROM punto_venta_categorias where parent_id =0");
                   //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
                   if (mysqli_num_rows($consulta) == 0) {
                     echo '<script>M.toast({html:"No se encontraron categorias.", classes: "rounded"})</script>';
@@ -121,7 +148,7 @@
                     while($categoria_pv = mysqli_fetch_array($consulta)) {
                     //Output
                     ?>                      
-                    <option value="<?php echo $categoria_pv['id'];?>"><?php echo $categoria_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>-->
+                    <option value="<?php echo $categoria_pv['id'];?>"><?php echo $categoria_pv['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>
                     <?php
                   }//FIN while
                 }//FIN else
@@ -152,6 +179,11 @@
               <input id="codigo_unidad" type="text" class="validate" data-length="15" required>
               <label for="codigo_unidad">Código Unidad:</label>
             </div>  
+            <div class="input-field">
+              <select id="subcategories" class="browser-default">
+              <option value="">Selecciona una categoía primero</option>
+              </select>
+            </div>
           </div>
         </form>
         <!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->

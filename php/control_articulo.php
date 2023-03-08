@@ -26,15 +26,16 @@ switch ($Accion) {
         $unidad = $conn->real_escape_string($_POST['valorUnidad']);        
         $CUnidad = $conn->real_escape_string($_POST['valorCUnidad']);        
         $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']); 
-        $Categoria = $conn->real_escape_string($_POST['valorCategoria']);    
+        $Categoria = $conn->real_escape_string($_POST['valorCategoria']);  
+        $subCategoria = $conn->real_escape_string($_POST['valorSubCategoria']);   
 
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
 		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo'"))>0){
             echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
         }else{
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-            $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, usuario, fecha) 
-               VALUES('$codigo', '$Nombre', '$descripcion', '$precio', '$unidad', '$CFiscal', '$CUnidad', '$Modelo', $Categoria, '$id_user','$Fecha_hoy')";
+            $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, subcategoria, usuario, fecha) 
+               VALUES('$codigo', '$Nombre', '$descripcion', '$precio', '$unidad', '$CFiscal', '$CUnidad', '$Modelo', $Categoria, '$subCategoria', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"El artículo se dió de alta satisfactoriamente.", classes: "rounded"})</script>';	
@@ -56,7 +57,7 @@ switch ($Accion) {
 			//MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
 			$sql = "SELECT * FROM `punto_venta_articulos` WHERE  codigo LIKE '%$Texto%' OR nombre LIKE '%$Texto%' OR descripcion LIKE '%$Texto%' OR codigo_fiscal LIKE '%$Texto%' OR categoria = 'Texto' ORDER BY id";	
 		}else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
-			$sql = "SELECT * FROM `punto_venta_articulos`";
+			$sql = "SELECT * FROM `punto_venta_articulos` LIMIT 30";
 		}//FIN else $Texto VACIO O NO
 
         // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
@@ -71,11 +72,12 @@ switch ($Accion) {
             //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
             //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
             while($articulo = mysqli_fetch_array($consulta)) {
+                $sinCategoria = "Sin definir";
                 $id_user = $articulo['usuario'];
-                $id_categoria = $articulo['categoria'];
+                $id_categoria = $articulo['subcategoria'];
+                
 				$user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
-                $categoria_pv = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_categorias` WHERE id=$id_categoria"));
-				//Output
+                if ($categoria_pv = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_categorias` WHERE id=$id_categoria"))){
                 $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>';
                 $contenido .= '			
 		          <tr>
@@ -89,18 +91,39 @@ switch ($Accion) {
                     <td>'.$articulo['codigo_unidad'].'</td>
 		            <td>'.$articulo['codigo_fiscal'].'</td>
                     <td>'.$categoria_pv['nombre'].'</td>
+                    <td>'.$categoria_pv['nombre_sub'].'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td>'.$articulo['fecha'].'</td>
 		            <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="borrar_articulo_pv('.$articulo['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
                     <td><a onclick="subirImagen('.$articulo['id'].')" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">backup</i></a></td>
 		          </tr>';
-
+                }else {
+                    //Output
+                $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>';
+                $contenido .= '			
+		          <tr>
+                    <td>'.$articulo['codigo'].'</td>
+		            '.$img.'
+                    <td>'.$articulo['nombre'].'</td>
+		            <td>'.$articulo['descripcion'].'</td>
+                    <td>'.$articulo['modelo'].'</td>
+		            <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
+                    <td>'.$articulo['unidad'].'</td>
+                    <td>'.$articulo['codigo_unidad'].'</td>
+		            <td>'.$articulo['codigo_fiscal'].'</td>
+                    <td>'.$sinCategoria.'</td>
+                    <td>'.$sinCategoria.'</td>
+		            <td>'.$user['firstname'].'</td>
+		            <td>'.$articulo['fecha'].'</td>
+		            <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
+		            <td><a onclick="borrar_articulo_pv('.$articulo['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+                    <td><a onclick="subirImagen('.$articulo['id'].')" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">backup</i></a></td>
+		          </tr>';
+                }
 			}//FIN while
         }//FIN else
-
         echo $contenido;// MOSTRAMOS LA INFORMACION HTML
-
         break;
     case 2:///////////////           IMPORTANTE               ///////////////
         // $Accion es igual a 2 realiza:

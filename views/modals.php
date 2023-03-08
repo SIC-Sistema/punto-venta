@@ -38,6 +38,9 @@
   function cerrar_sesion() {
     setTimeout("location.href='../php/cerrar_sesion.php'", 1200);
   }
+  function recargar_subcategorias() {
+    setTimeout("location.href='../views/agregar_subcat_punto_venta.php'", 800);
+  }
 </script>
 <!--Termina Script Buscar clientes-->
 

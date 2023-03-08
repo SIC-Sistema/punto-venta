@@ -1,0 +1,25 @@
+---
+deployment
+  tasks
+    # Developer José Ulises Domínguez
+    # NOTA la carpeta publica de producción no debe renombrarse o cambiar permisos.
+    # Mucho mennos hacer deployment de manera directa.
+    # El modificar nombre o permisos tendrá como consecuencia que el o los sistemas no se ejecuten 
+    # como está planeado. Al final se agregan comandos para establecer los permisos como la documentación
+    # de CPANEL lo esablece 755 para carpetas y 644 para archivos.
+
+    # Se define la ruta de destino.   
+    - export DEPLOYPATH=/home2/sicsomco/public_html/punto-venta/
+    # Se define el comando y el origen del repositorio (recodar que la carpeta de origen se define al clonar 
+    # el reopsitorio por primera vez).
+    - export REPOPATH=/home2/sicsomco/repositories/PV/
+    # Elimina el contenido de la carpeta old si existen.
+    - binrm -Rf ${DEPLOYPATH}_old
+    # Copia el contenido del deploypath como respaldo a deploypath_old.
+    - bincp -R ${DEPLOYPATH} ${DEPLOYPATH}_old
+    # Sincroniza la carpeta del repositorio a la de producción excluyendo el contenido de git.
+    - binrsync -aP --exclude '.git' --exclude '.well-known' ${REPOPATH} ${DEPLOYPATH} --delete-after
+    # IMPORTANTE Incluye los permisos adecuados para las carpetas y archivos.
+    - binchmod 755 ${DEPLOYPATH}
+    - binfind ${DEPLOYPATH} -type d -exec binchmod 755 '{}' ;
+    - binfind ${DEPLOYPATH} -type f -exec binchmod 644 '{}' ;
