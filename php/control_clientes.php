@@ -1,4 +1,4 @@
-<?php 
+<?php
 //ARCHIVO QUE CONTIENE LA VARIABLE CON LA CONEXION A LA BASE DE DATOS
 include('../php/conexion.php');
 //ARCHIVO QUE CONDICIONA QUE TENGAMOS ACCESO A ESTE ARCHIVO SOLO SI HAY SESSION INICIADA Y NOS PREMITE TIMAR LA INFORMACION DE ESTA
@@ -155,5 +155,83 @@ switch ($Accion) {
 			M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
 	    }   
     	break;
+	case 4:
+		// $Accion es igual a 4 realiza:
+
+    	//CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO DE "add_venta.php"
+    	$Texto = $conn->real_escape_string($_POST['texto']);
+
+    	//VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+		if ($Texto != "") {
+			//MOSTRARA LOS CLIENTES QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
+			$sql = "SELECT * FROM `punto-venta_clientes` WHERE  nombre LIKE '%$Texto%' OR id = '$Texto' OR rfc LIKE '%$Texto%' OR colonia LIKE '%$Texto%' OR localidad LIKE '%$Texto%' ORDER BY id";	
+		}else{
+			//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
+			$sql = "SELECT * FROM `punto-venta_clientes`";
+		}//FIN else $Texto VACIO O NO
+
+		// REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+		$consulta = mysqli_query($conn, $sql);		
+
+		//VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+		if (mysqli_num_rows($consulta) == 0) {
+			echo '<script>M.toast({html:"No se encontraron clientes.", classes: "rounded"})</script>';
+		} else{
+			?>
+			<?php
+			//SI NO ESTA EN == 0 SI TIENE INFORMACION
+			// REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+			$consulta = mysqli_query($conn, $sql);      
+			?>
+			<div class="row">
+				<div class="hide-on-small-only col s1"><br></div>
+				<table class="col s12 m10 l10">
+					<thead>
+						<tr>
+						<th>Id</th>
+						<th>Nombre</th>
+						<th>Teléfono</th>
+						<th>RFC</th>
+						<th>E-mail</th>
+						<th>Dirección</th>
+						<th>Colonia</th>
+						<th>Localidad</th>
+						<th>C.P.</th>
+						</tr>
+					</thead>
+				  	<tbody>
+						<?php
+						//VERIFICAMOS SI HAY ARRTICULOS EN LA TABLA
+						if(mysqli_num_rows($consulta)>0){
+							while($cliente = mysqli_fetch_array($consulta)){
+								?>
+								<!-- Output -->
+								<tr>
+									<td><?php echo $cliente['id'] ?></td>
+									<td><?php echo $cliente['nombre'] ?></td>
+									<td><?php echo $cliente['telefono'] ?></td>
+									<td><?php echo $cliente['rfc'] ?></td>
+									<td><?php echo $cliente['email'] ?></td>
+									<td><?php echo $cliente['direccion'] ?></td>
+									<td><?php echo $cliente['colonia'] ?></td>
+									<td><?php echo $cliente['localidad'] ?></td>
+									<td><?php echo $cliente['cp'] ?></td>
+									<!-- <td><a href="add_venta.php?id=<?php //echo $cliente['id'] ?>" class="waves-effect waves-light btn-small indigo right">Agregar</a></td> -->
+									<td><a onclick="MostrarCliente(<?php echo $cliente['id'] ?>);" class="waves-effect waves-light btn-small indigo right">Agregar</a></td>
+								</tr>
+								<?php
+							}//FIN WHILE
+						}else{
+							echo '<tr><td></td><td></td><td><h6> Sin Artículos </h6></td></tr>';
+						}//FIN ELSE
+				   		?>                
+				  	</tbody>
+				</table>
+			</div>
+			<?php
+		}//FIN else
+    break;
 }// FIN switch
+
 mysqli_close($conn);
+?>

@@ -362,7 +362,7 @@ switch ($Accion) {
                   <i class="material-icons prefix">local_offer</i>
                   <input id="codigoP" type="text" value="<?php echo $consulta['codigo']; ?>">
                   <label for="codigoP">Código Producto:</label>
-              </div>
+                </div>
               <div class="input-field col s6 m3">
                   <i class="material-icons prefix">edit</i>
                   <input id="nombreP" type="text" value="<?php echo $consulta['nombre']; ?>">
