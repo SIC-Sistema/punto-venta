@@ -181,7 +181,7 @@
             </div>  
             <div class="input-field">
               <select id="subcategories" class="browser-default">
-              <option value="">Selecciona una categoía primero</option>
+              <option value="">Selecciona una categoría primero</option>
               </select>
             </div>
           </div>

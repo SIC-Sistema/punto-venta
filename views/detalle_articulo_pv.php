@@ -45,12 +45,12 @@ if (isset($_POST['articulo']) == false) {
       }
 
       //SE ASIGNA NOMBRE DE LA SUBCATEGORIA
-      if(isset($Articulo['categoria']) && $Articulo['categoria'] != NULL && $Articulo['categoria'] != NAN && $Articulo['categoria'] != 0 && $Articulo['categoria'] != ''){
-        $id_categoria = $Articulo['categoria'];
-        $Categoria =  mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM `punto_venta_categorias` WHERE id=$id_categoria"));
-        $NombreCategoria = $Categoria['nombre'];
+      if(isset($Articulo['subcategoria']) && $Articulo['subcategoria'] != NULL && $Articulo['subcategoria'] != NAN && $Articulo['subcategoria'] != 0 && $Articulo['subcategoria'] != ''){
+        $id_subcategoria = $Articulo['subcategoria'];
+        $SubCategoria =  mysqli_fetch_array( mysqli_query($conn,"SELECT * FROM `punto_venta_categorias` WHERE id=$id_subcategoria"));
+        $NombreSubCategoria = $SubCategoria['nombre_sub'];
       }else{
-        $NombreCategoria = "Sin Categoria Definida";
+        $NombreSubCategoria = "Sin Subategoria Definida";
       }
       ?>
     </head>
@@ -65,7 +65,7 @@ if (isset($_POST['articulo']) == false) {
             <!-- <img src="ruta/a/la/imagen.jpg" class="responsive-img"> -->
           </div>
           <div class="center-align">
-            <a class="waves-effect waves-light btn">Regresar</a>
+            <a  href="articulos_punto_venta.php" class="waves-effect waves-light btn-large"><i class="material-icons left">keyboard_backspace</i>REGRESAR</a>
           </div>
         </div>
         <!-- Div para la tabla -->
@@ -105,7 +105,7 @@ if (isset($_POST['articulo']) == false) {
                   <td style="font-weight: bold;">Categoria: <?php echo $NombreCategoria; ?></td>
                 </tr>
                 <tr>
-                  <td style="font-weight: bold;">Subcategoria: <?php echo $Articulo['subcategoria']; ?></td>
+                  <td style="font-weight: bold;">Subcategoria: <?php echo $NombreSubCategoria; ?></td>
                 </tr>
                 <tr>
                   <td style="font-weight: bold;">Registro: <?php echo $Nombre_usuario ?></td>
