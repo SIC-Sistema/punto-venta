@@ -34,50 +34,88 @@ if (isset($_GET['id']) == false) {
 	      <?php
 	    }
 	    ?>
-		    <script>
-	        //FUNCION QUE HACE LA ACTUALIZACION DE LA CATEGORIA (SE ACTIVA AL PRECIONAR UN BOTON)
-	        function buscar() {
-	          //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-	          var textoCodigo = $("input#codigoP").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN INPUT QUE TENGA EL id = "codigoP"
-	          var textoNombre = $("input#nombreP").val();//ej:LA VARIABLE "textoNombre" GUARDAREMOS LA INFORMACION QUE ESTE EN INPUT QUE TENGA EL id = "nombreP"
-	          
-	          // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
-	          //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
-	          if (textoNombre == "" && textoCodigo == "") {
-	            M.toast({html: 'El campo Nombre y/o Codigo se encuentra vacío.', classes: 'rounded'});
-	          }else{
-	              //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-	              //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-	              $.post("../php/control_ventas.php", {
-	              //Cada valor se separa por una ,
-	                  accion: 6,
-	                  valorNombre: textoNombre,
-	                  valorCodigo: textoCodigo,
-	              }, function(mensaje) {
-	                  //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
-	                  $("#info_articulo").html(mensaje);
-	              }); 
-	          }//FIN else CONDICIONES
-	        };//FIN function 
+		<script>
+	    //FUNCION QUE HACE LA ACTUALIZACION DE LA CATEGORIA (SE ACTIVA AL PRECIONAR UN BOTON)
+	    //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+      		function buscar_articulos(){
+				//PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+				var texto = $("input#busquedaArticulo").val();
+				//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+				$.post("../php/control_ventas.php", {
+					//Cada valor se separa por una ,
+					accion: 13,
+					texto: texto,
+				}, function(mensaje){
+				//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+				$("#tablaArticulo").html(mensaje);
+				});//FIN post
+     		 }//FIN function
 
-	        //FUINCION QUE AL SELECCIONAR UN Cliente MUESTRA SU INFORMACION
-		      function showContent() {
-		        var textoCliente = $("select#cliente").val();
+			function insertBusquedaArticulo(id,codigoArticulo, precio, descripcion){
+				idArticulo = id;
+				codigoArticulo= codigoArticulo;
+				descripcionArticulo = descripcion;
+				precioArticulo = precio;
+				document.getElementById('id_articulo').value=idArticulo;
+				document.getElementById('codigoP').value=codigoArticulo;
+				document.getElementById('nombreP').value=descripcion;
+				document.getElementById('precio_venta').value=precio;
+    			M.updateTextFields();
+				$('#modal_addArticulo').modal('close');
+			}
 
-		        //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-		        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-		        $.post("../php/control_ventas.php", {
-		          //Cada valor se separa por una ,
-		            accion: 2,
-		            cliente: textoCliente,
-		          }, function(mensaje) {
-		            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
-		            $("#resultado_info").html(mensaje);
-		        });  
-		      };
 
-			    function tmp_articulos(insert){
+			//FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+			function buscar_clientes(){
+        		//PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+        		var texto = $("input#busquedaClientes").val();
+        		//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+        		$.post("../php/control_clientes.php", {
+            	//Cada valor se separa por una ,
+					accion: 4,
+					texto: texto,
+				}, function(mensaje){
+					//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+						$("#tablaClientes").html(mensaje);
+					});//FIN post
+			}//FIN function
+
+		 //FUINCION QUE AL SELECCIONAR UN CLIENTE MUESTRA SU INFORMACION
+		function showContent(id_cliente) {
+        	idCliente = id_cliente;
+          	//SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+			//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+			$.post("../php/control_clientes.php", {
+				//Cada valor se separa por una ,
+				accion: 5,
+				cliente: idCliente,
+				}, function(mensaje) {
+				//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+				$("#resultado_info").html(mensaje);
+				$('#modal_addClientes').modal('close');
+			});  
+		}; 
+
+			 //FUINCION QUE AL SELECCIONAR UN CLIENTE MUESTRA SU INFORMACION
+			function showVentaGeneral() {
+				//SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+				//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+				$.post("../php/control_clientes.php", {
+					//Cada valor se separa por una ,
+					accion: 6,
+					general: 1,
+					}, function(mensaje) {
+					//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+					$("#resultado_info").html(mensaje);
+					
+				});  
+			}; 
+
+
+
+			 function tmp_articulos(insert){
 	        if (insert) {
+				
 			      var id_art = $("input#id_articulo").val();
 			      var cantidad = $("input#cantidadP").val();
 			      var precio_venta = $("input#precio_venta").val();
@@ -184,44 +222,49 @@ if (isset($_GET['id']) == false) {
 	      	var efectivo = $("input#efectivoV").val();
 	        var credito = $("input#creditoV").val();
 	        var banco = $("input#bancoV").val(); 
-	        var cliente = $("select#cliente").val(); 
+	        var cliente = $("input#cliente").val(); 
 
-	        if (efectivo > 0) {
-	        	tipo_cambio = 'Efectivo';
-	        	cantidadPago = efectivo;
-	        }else if (credito > 0) {
-	        	tipo_cambio = 'Credito';
-	        	cantidadPago = credito;
-	        }else if (banco > 0) {
-	        	tipo_cambio = 'Banco';
-	        	cantidadPago = banco;
-	        }
+			if (typeof cliente ==='undefined'){
+				M.toast({html: 'Seleccione un Cliente o venta general.', classes: 'rounded'});
+			}else{
 
-	        if(document.getElementById('pago').checked==true){
-	        	var pago = 1;
-	        }else{
-	        	var pago = 0;
-	        	tipo_cambio = 'Pendiente';
-	        	cantidadPago = 0;
-	        }
+				if (efectivo > 0) {
+					tipo_cambio = 'Efectivo';
+					cantidadPago = efectivo;
+				}else if (credito > 0) {
+					tipo_cambio = 'Credito';
+					cantidadPago = credito;
+				}else if (banco > 0) {
+					tipo_cambio = 'Banco';
+					cantidadPago = banco;
+				}
 
-	        if (efectivo == 0 && credito== 0 && banco== 0 && pago) {
-	          M.toast({html: 'Ingrese una forma de pago.', classes: 'rounded'});
-	        }else{
-	        	//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-	          $.post("../php/control_ventas.php", {
-	            //Cada valor se separa por una ,
-	            accion: 0,
-	            cliente: cliente,
-	            pago: pago,
-	            tipo_cambio: tipo_cambio,
-	            cantidadPago: cantidadPago,
-		        	id_venta: <?php echo $Venta; ?>,
-	          }, function(mensaje) {
-	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
-	            $("#tablaArticuloVenta").html(mensaje);
-	          }); //FIN post
-	        }
+				if(document.getElementById('pago').checked==true){
+					var pago = 1;
+				}else{
+					var pago = 0;
+					tipo_cambio = 'Pendiente';
+					cantidadPago = 0;
+				}
+
+				if (efectivo == 0 && credito== 0 && banco== 0 && pago) {
+				M.toast({html: 'Ingrese una forma de pago.', classes: 'rounded'});
+				}else{
+					//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+				$.post("../php/control_ventas.php", {
+					//Cada valor se separa por una ,
+					accion: 0,
+					cliente: cliente,
+					pago: pago,
+					tipo_cambio: tipo_cambio,
+					cantidadPago: cantidadPago,
+						id_venta: <?php echo $Venta; ?>,
+				}, function(mensaje) {
+					//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+					$("#tablaArticuloVenta").html(mensaje);
+				}); //FIN post
+				}
+			}	
 	      }// FIN function
 
       	//FUINCION QUE PAUSARA LA VENTA
@@ -251,32 +294,14 @@ if (isset($_GET['id']) == false) {
 	      </div>
 	      <div class="row">
           <div class="input-field col s12 m3 l3">
-            <i class="material-icons prefix">people</i>
-            <select id="cliente" name="cliente" class="validate" onchange="javascript:showContent()">
-              <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
-              <option value="0" select>Seleccione un cliente</option>
-              <option value="0">N/A</option>
-                <?php 
-                  // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-                  $consulta = mysqli_query($conn,"SELECT * FROM `punto-venta_clientes`");
-                  //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
-                  if (mysqli_num_rows($consulta) == 0) {
-                    echo '<script>M.toast({html:"No se encontraron clientes.", classes: "rounded"})</script>';
-                  } else {
-                    //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
-                    while($cliente = mysqli_fetch_array($consulta)) {
-	                    //Output
-	                    ?>                      
-	                    <option value="<?php echo $cliente['id'];?>"><?php echo $cliente['nombre'];?></option>-->
-	                    <?php
-                    }//FIN while
-                  }//FIN else
-                ?>
-            </select>
+		 	 <a href="#modal_addClientes" class="waves-effect waves-light btn-small modal-trigger  cyan darken-4 right">Buscar cliente<i class="material-icons left">search</i></a>
           </div> 
-          <div class="col s12 m9 l9 center">
+		  <div class="input-field col s12 m6 l6">
+		 	 <a onclick="showVentaGeneral();" class="waves-effect waves-light btn-small modal-trigger  cyan darken-4 right">Venta general<i class="material-icons left">shopping_cart</i></a>
+          </div> 
+          <div class="col s12 m12 l12 center">
             <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_info"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
-            <div id="resultado_info"><h5><b>VENTA AL PUBLICO</b></h5></div>
+            <div id="resultado_info"></div>
           </div>
         </div>
         <hr>
@@ -284,7 +309,8 @@ if (isset($_GET['id']) == false) {
 		      <div class="row">
 		      	<div class="input-field col s6 m3">
 	              <i class="material-icons prefix">local_offer</i>
-	              <input id="codigoP" type="text" class="validate" data-length="30" required>
+				  <input id="id_articulo" type="hidden" class="validate" data-length="30" required>
+				  <input id="codigoP" type="text" class="validate" data-length="30" required>
 	              <label for="codigoP">Código Producto:</label>
 	          </div>
 	          <div class="input-field col s6 m3">
@@ -305,7 +331,7 @@ if (isset($_GET['id']) == false) {
 	          <input type="hidden" id="id_articulo" value="">
 	          <div class="col s4 m2"><br>
 	          	<!-- BOTON QUE MANDA LLAMAR EL SCRIPT PARA QUE EL SCRIPT HAGA LO QUE LA FUNCION CONTENGA -->
-	        		<a onclick="buscar();" class="waves-effect waves-light btn indigo lighten-5 indigo-text right"><b><i class="material-icons right">search</i>Buscar</b></a>
+				  <a href="#modal_addArticulo" class="waves-effect waves-light btn-small modal-trigger indigo right">Buscar<i class="material-icons left">add</i></a>
 	          </div>	        
 		      </div>
 		    </div> 

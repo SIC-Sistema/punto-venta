@@ -18,31 +18,31 @@
 
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
         var textoCodigo = $("input#codigo").val();//ej:LA VARIABLE "textoCodigo" GUARDAREMOS LA INFORMACION QUE ESTE EN EL INPUT QUE TENGA EL id = "codigo"
-        var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA 142 (id="descripcion")
-        var textoNombre = $("input#nombre").val();
         var textoModelo = $("input#modelo").val();
-        var textoPrecio = $("input#precio").val();
-        var textoUnidad = $("input#unidad").val();
-        var textoCUnidad = $("input#codigo_unidad").val();
+        var textoMarca = $("input#marca").val();
         var textoCFiscal = $("input#c_fiscal").val();
         var textoCategoria = $("select#categoria").val();
+        var textoPrecio = $("input#precio").val();
+        var textoDescripcion = $("input#descripcion").val();// ej: TRAE LE INFORMACION DEL INPUT FILA 142 (id="descripcion")
+        var textoUnidadMedida = $("select#unidad_medida").val();
+        var textoCodigoUnidad = $("input#codigo_unidad").val();
         var textoSubCategoria = $("select#subcategories").val();
 
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
         //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
         if (textoCodigo == "") {
           M.toast({html: 'El campo Código de artículo se encuentra vacío.', classes: 'rounded'});
-        }else if (textoNombre == "") {
-          M.toast({html: 'El campo Nombre se encuentra vacío.', classes: 'rounded'});
         }else if (textoModelo == "") {
+          M.toast({html: 'El campo Modelo se encuentra vacío.', classes: 'rounded'});
+        }else if (textoMarca == "") {
           M.toast({html: 'El campo Marca se encuentra vacío.', classes: 'rounded'});
         }else if(textoDescripcion.length == ""){
           M.toast({html: 'El campo Descripción se encuentra vacío.', classes: 'rounded'});
         }else if(textoPrecio <= 0){
           M.toast({html: 'El campo Precio no puede ser menor o igual a 0.', classes: 'rounded'});
-        }else if(textoUnidad == ""){
-          M.toast({html: 'El campo Unidad se encuentra vacío.', classes: 'rounded'});
-        }else if(textoCUnidad == ""){
+        }else if(textoUnidadMedida == 0){
+          M.toast({html: 'Seleccione una unidad de medida.', classes: 'rounded'});
+        }else if(textoCodigoUnidad == ""){
           M.toast({html: 'El campo Codigo Unidad se encuentra vacío.', classes: 'rounded'});
         }else if(textoCFiscal == ""){
           M.toast({html: 'El campo Codigo Fiscal se encuentra vacío.', classes: 'rounded'});
@@ -57,14 +57,14 @@
             //Cada valor se separa por una ,
               accion: 0,
               valorCodigo: textoCodigo,
-              valorNombre: textoNombre,
               valorModelo: textoModelo,
-              valorDescripcion: textoDescripcion,
-              valorPrecio: textoPrecio,
-              valorUnidad: textoUnidad,
-              valorCUnidad: textoCUnidad,
+              valorMarca: textoMarca,
               valorCFiscal: textoCFiscal,
               valorCategoria: textoCategoria,
+              valorPrecio: textoPrecio,
+              valorDescripcion: textoDescripcion,
+              valorUnidadMedida: textoUnidadMedida,
+              valorCUnidad: textoCodigoUnidad,
               valorSubCategoria: textoSubCategoria,
             }, function(mensaje) {
                 //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_articulo.php"
@@ -89,7 +89,7 @@
             $('#subcategories').html('<option value="">Selecciona una categoría primero</option>');    
           }
         });
-   });  
+      });  
 </script>
    
   </head>
@@ -118,13 +118,13 @@
             </div>      
             <div class="input-field">
               <i class="material-icons prefix">edit</i>
-              <input id="nombre" type="text" class="validate" data-length="30" required>
-              <label for="nombre">Nombre:</label>
+              <input id="modelo" type="text" class="validate" data-length="30" required>
+              <label for="modelo">Modelo:</label>
             </div>  
             <div class="input-field">
               <i class="material-icons prefix">local_offer</i>
-              <input id="modelo" type="text" class="validate" data-length="30" required>
-              <label for="modelo">Marca:</label>
+              <input id="marca" type="text" class="validate" data-length="30" required>
+              <label for="marca">Marca:</label>
             </div>  
             <div class="input-field">
               <i class="material-icons prefix">vpn_key</i>
@@ -170,18 +170,34 @@
               <label for="descripcion">Descripción:</label>
             </div> 
             <div class="input-field">
-              <i class="material-icons prefix">local_offer</i>
-              <input id="unidad" type="text" class="validate" data-length="15" required>
-              <label for="unidad">Unidad:</label>
+              <select id="unidad_medida"  class="browser-default">
+                <option value="0">Seleccione la unidad de medida</option> 
+                <?php 
+                  // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+                  $consultaUnidades = mysqli_query($conn,"SELECT * FROM unidades_medida_sat");
+                  //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
+                  if (mysqli_num_rows($consulta) == 0) {
+                    echo '<script>M.toast({html:"No se encontraron registros.", classes: "rounded"})</script>';
+                  } else {
+                    //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
+                    while($unidades_medida = mysqli_fetch_array($consultaUnidades)) {
+                    //Output
+                    ?>                      
+                    <option value="<?php echo $unidades_medida['id'];?>"><?php echo $unidades_medida['nombre'];// MOSTRAMOS LA INFORMACION HTML?></option>
+                    <?php
+                  }//FIN while
+                }//FIN else
+                ?>
+              </select>
             </div>
             <div class="input-field">
               <i class="material-icons prefix">vpn_key</i>
-              <input id="codigo_unidad" type="text" class="validate" data-length="15" required>
+              <input id="codigo_unidad" type="text" class="validate" disabled data-length="15" required>
               <label for="codigo_unidad">Código Unidad:</label>
             </div>  
             <div class="input-field">
               <select id="subcategories" class="browser-default">
-              <option value="">Selecciona una categoía primero</option>
+              <option value="">Selecciona una categoría primero</option>
               </select>
             </div>
           </div>
@@ -190,6 +206,25 @@
         <a onclick="insert_articulo();" class="waves-effect waves-light btn pink right"><i class="material-icons right">add</i>Agregar</a>
       </div> 
     </div><br>
+    <script>
+      document.getElementById("unidad_medida").onchange = function() {
+        selectValue = document.getElementById("unidad_medida").value;
+        if(selectValue){
+          $.ajax({
+              type:'POST',
+              url:'ajaxUnidadesSat.php',
+              data:'unidad_id='+selectValue,
+              success:function(html){
+                $('#codigo_unidad').html(html);
+                document.getElementById("codigo_unidad").value = html;
+                M.updateTextFields();      
+              }
+          }); 
+        }else{
+          document.getElementById("codigo_unidad").value = "Error al enviar petición de datos";   
+          }
+      };
+  </script>
   </body>
   </main>
 </html>

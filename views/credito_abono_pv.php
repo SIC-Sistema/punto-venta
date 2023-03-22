@@ -98,7 +98,7 @@ if ($Saldo < 0) {
               <p><b>Nombre(s): </b><?php echo $datos['nombre']; ?><br>
                  <b>Telefono: </b><?php echo $datos['telefono']; ?><br>
                  <b>Localidad: </b><?php echo $datos['localidad']; ?><br>
-                 <b>Dirección: </b><?php echo $datos['direccion']; ?><br>
+                 <b>Dirección: </b><?php echo $datos['calle']; ?><br>
                  <!-- <b>IP: </b><a href="http://<?php //echo $datos['ip']; ?>"><?php //echo $datos['ip']; ?></a> -->
                  <br><br><hr>
                  <b>SALDO: </b> <span class="new badge <?php echo $color ?>" id="mostrar_deuda" data-badge-caption="">$<?php echo $Saldo; ?><br>

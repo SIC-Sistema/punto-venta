@@ -123,17 +123,15 @@
             <tr>
               <th>Código</th>
               <th>Imagen</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
               <th>Marca</th>
+              <th>Modelo</th>
+              <th>Descripción</th>
               <th>Precio</th>
               <th>Unidad</th>
               <th>C. Unidad</th>
               <th>C. Fiscal</th>
               <th>Categoria</th>
               <th>Subcategoría</th>
-              <th>Registro</th>
-              <th>Fecha</th>
               <th>Editar</th>
               <th>Borrar</th>
               <th>Imagen</th>

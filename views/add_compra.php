@@ -23,26 +23,21 @@
     ?>
     <script>
       //FUINCION QUE AL SELECCIONAR UN PROOVEDOR MUESTRA SU INFORMACION
-      function showContent() {
-        element = document.getElementById("infoProveedor");
-        var textoProveedor = $("select#proveedor").val();
-        if (textoProveedor != 0) {
-            element.style.display='block';
-        } else {
-            element.style.display='none';
-        }  
-
-        //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
-        $.post("../php/control_compra.php", {
-          //Cada valor se separa por una ,
-            accion: 2,
-            proveedor: textoProveedor,
-          }, function(mensaje) {
-            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
-            $("#resultado_info").html(mensaje);
-        });  
-      };
+      function showContent(id_proveedor) {
+        idProveedor = id_proveedor;
+          //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+          $.post("../php/control_compra.php", {
+            //Cada valor se separa por una ,
+              accion: 11,
+              proveedor: idProveedor,
+            }, function(mensaje) {
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+              $("#resultado_info").html(mensaje);
+              $('#modal_addProveedores').modal('close');
+          });  
+        
+      };  
 
       function tmp_articulos(id, insert,id_art=0){
         if (insert) {
@@ -93,7 +88,7 @@
 
       //FUNCION QUE BORRA TODOS LOS ARTICULOS DE TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
       function borrar_lista_all(usuario){
-        var answer = confirm("Deseas cancelar la compra?");
+        var answer = confirm("¿Deseas cancelar la compra?");
         if (answer) {
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
           $.post("../php/control_compra.php", {
@@ -109,7 +104,6 @@
 
       //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
       function buscar_articulos(){
-        
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
         var texto = $("input#busquedaArticulo").val();
         //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
@@ -120,6 +114,21 @@
           }, function(mensaje){
               //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
               $("#tablaArticulo").html(mensaje);
+        });//FIN post
+      }//FIN function
+
+      //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+      function buscar_proveedores(){
+        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+        var texto = $("input#busquedaProveedor").val();
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+        $.post("../php/control_compra.php", {
+            //Cada valor se separa por una ,
+            accion: 10,
+            texto: texto,
+          }, function(mensaje){
+              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+              $("#tablaProveedores").html(mensaje);
         });//FIN post
       }//FIN function
 
@@ -162,8 +171,8 @@
         almacen = <?php echo $datos_user['almacen']; ?>;
         //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO LA INFORMCION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
         var textoFactura = $("input#factura").val();//ej:LA VARIABLE "textoFactura" GUARDAREMOS LA INFORMACION QUE ESTE EN EL SELECT QUE TENGA EL id = "factura"
-        var textoProveedor = $("select#proveedor").val();
-
+        var textoProveedor = $("input#proveedor").val();
+        
         if(document.getElementById('cambio').checked==true){
           textoTipoCambio = "Credito";  
         }else{    
@@ -172,7 +181,7 @@
 
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
         //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
-        if (textoProveedor == 0) {
+        if (typeof textoProveedor === 'undefined') {
           M.toast({html: 'Seleccione un Proveedor.', classes: 'rounded'});
         }else if (textoFactura == "") {
           M.toast({html: 'El campo Factura se encuentra vacío.', classes: 'rounded'});
@@ -234,29 +243,11 @@
             <hr>
             <div class="row">
               <div class="input-field col s12 m3 l3">
-                <i class="material-icons prefix">people</i>
-                <select id="proveedor" name="proveedor" class="validate" onchange="javascript:showContent()">
-                  <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
-                  <option value="0" select>Seleccione un proveedor</option>
-                  <?php 
-                    // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-                    $consulta = mysqli_query($conn,"SELECT * FROM punto_venta_proveedores");
-                    //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
-                    if (mysqli_num_rows($consulta) == 0) {
-                      echo '<script>M.toast({html:"No se encontraron proveedores.", classes: "rounded"})</script>';
-                    } else {
-                      //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
-                      while($proveedor_pv = mysqli_fetch_array($consulta)) {
-                      //Output
-                      ?>                      
-                      <option value="<?php echo $proveedor_pv['id'];?>"><?php echo $proveedor_pv['nombre'];?></option>-->
-                      <?php
-                    }//FIN while
-                  }//FIN else
-                  ?>
-                </select>
+               
+                <a href="#modal_addProveedores" class="waves-effect waves-light btn-small modal-trigger pink right">Buscar proveedor<i class="material-icons left">search</i></a>
+                
               </div> 
-              <div id="infoProveedor" class="col s12 m9 l9" style="display: none;"><br>
+              <div id="infoProveedor" class="col s12 m12 l12" ><br>
                 <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_info"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
                 <div id="resultado_info"></div>
               </div>

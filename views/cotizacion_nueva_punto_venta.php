@@ -23,27 +23,51 @@
     }
     ?>
     <script>
-        //FUINCION QUE AL SELECCIONAR UN CLIENTE MUESTRA SU INFORMACION
-        function showContent() {
-            element = document.getElementById("infoCliente");
-            var textoCliente = $("select#cliente").val();
-            if (textoCliente != 0) {
-                element.style.display='block';
-            } else {
-                element.style.display='none';
-            }  
+       //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+			function buscar_clientes(){
+        //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+        var texto = $("input#busquedaClientes").val();
+        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+        $.post("../php/control_clientes.php", {
+          //Cada valor se separa por una ,
+					accion: 4,
+					texto: texto,
+				}, function(mensaje){
+					//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+					$("#tablaClientes").html(mensaje);
+				});//FIN post
+			}//FIN function
+    
+    //FUINCION QUE AL SELECCIONAR UN CLIENTE MUESTRA SU INFORMACION
+		  function showContent(id_cliente) {
+        idCliente = id_cliente;
+        //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+			  //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+			  $.post("../php/control_clientes.php", {
+				  //Cada valor se separa por una ,
+				  accion: 5,
+				  cliente: idCliente,
+				}, function(mensaje) {
+				//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+				  $("#resultado_info").html(mensaje);
+				  $('#modal_addClientes').modal('close');
+			  });  
+		  };   
 
-            //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-            //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
-            $.post("../php/control_cotizacion.php", {
-                //Cada valor se separa por una ,
-                accion: 2,
-                cliente: textoCliente,
-            }, function(mensaje) {
-                //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_cotizacion.php"
-                $("#resultado_info").html(mensaje);
-            });  
-        };
+     //FUINCION QUE AL SELECCIONAR UN CLIENTE MUESTRA SU INFORMACION
+			function showSinCliente() {
+				//SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+				//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_compra.php"
+				$.post("../php/control_clientes.php", {
+					//Cada valor se separa por una ,
+					accion: 6,
+					general: 2,
+					}, function(mensaje) {
+					//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
+					$("#resultado_info").html(mensaje);
+				});  
+			}; 
+ 
 
       function tmp_articulos(id, insert,id_art=0){
         if (insert) {
@@ -160,11 +184,11 @@
 
       //FUNCION QUE HACE LA INSERCION DEL ARTICULO (SE ACTIVA AL PRECIONAR UN BOTON)
       function crear_cotizacion() {
-        var textoCliente = $("select#cliente").val();
+        var textoCliente = $("input#cliente").val();
         // CREAMOS CONDICIONES QUE SI SE CUMPLEN MANDARA MENSAJES DE ALERTA EN FORMA DE TOAST
         //SI SE CUMPLEN LOS IF QUIERE DECIR QUE NO PASA LOS REQUISITOS MINIMOS DE LLENADO...
-        if (textoCliente == 0) {
-          M.toast({html: 'Seleccione un Cliente.', classes: 'rounded'});
+        if (typeof textoCliente === 'undefined') {
+          M.toast({html: 'Seleccione un Cliente o pulse SIN CLIENTE.', classes: 'rounded'});
         }else{
           //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
           //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_cotizacion.php"
@@ -198,29 +222,12 @@
         <hr>
         <div class="row">
             <div class="input-field col s12 m3 l3">
-                <i class="material-icons prefix">people</i>
-                <select id="cliente" name="cliente" class="validate" onchange="javascript:showContent()">
-                  <!--OPTION PARA QUE LA SELECCION QUEDE POR DEFECTO VACIA-->
-                  <option value="0" select>Seleccione un cliente</option>
-                  <?php 
-                    // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
-                    $consulta = mysqli_query($conn,"SELECT * FROM `punto-venta_clientes`");
-                    //VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
-                    if (mysqli_num_rows($consulta) == 0) {
-                      echo '<script>M.toast({html:"No se encontraron clientes.", classes: "rounded"})</script>';
-                    } else {
-                      //RECORREMOS UNO A UNO LOS CLIENTES CON EL WHILE
-                      while($cliente_pv = mysqli_fetch_array($consulta)) {
-                      //Output
-                      ?>                      
-                      <option value="<?php echo $cliente_pv['id'];?>"><?php echo $cliente_pv['nombre'];?></option>-->
-                      <?php
-                    }//FIN while
-                  }//FIN else
-                  ?>
-                </select>
-              </div> 
-              <div id="infoCliente" class="col s12 m9 l9" style="display: none;"><br>
+            <a href="#modal_addClientes" class="waves-effect waves-light btn-small modal-trigger  cyan darken-4 right">Buscar cliente<i class="material-icons left">search</i></a>
+            </div> 
+            <div class="input-field col s12 m3 l3">
+              <a onclick="showSinCliente();" class="waves-effect waves-light btn-small modal-trigger  cyan darken-4 right">Sin cliente<i class="material-icons left">shopping_cart</i></a>
+            </div>  
+              <div id="infoCliente" class="col s12 m12 l12"><br>
                 <!-- CREAMOS UN DIV EL CUAL TENGA id = "resultado_info"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION  -->
                 <div id="resultado_info"></div>
               </div>

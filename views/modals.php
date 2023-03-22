@@ -68,6 +68,54 @@
 </div>
 <!--Cierre modal AGREGAR ARTICULOS COMPRA IMPORTANTE! -->
 
+<!-- Modal AGREGAR PROVEEDORES IMPOTANTE! -->
+<div id="modal_addProveedores" class="modal"><br>
+  <div class="modal-content">
+    <div class="row">
+      <h6 class="col s12 m5 l5"></h6>
+      <!--    //////    INPUT DE EL BUSCADOR    ///////   -->
+      <form class="col s12 m7 l7">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">search</i>
+            <input id="busquedaProveedor" name="busquedaProveedor" type="text" class="validate" autocomplete="off" onKeyUp="buscar_proveedores();" autofocus="true" required>
+            <label for="busquedaProveedor">Buscar Proveedor(Nombre, RFC, Email, Télefono)</label>
+          </div>
+        </div>
+      </form>
+      <div id="tablaProveedores"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="modal-action modal-close waves-effect waves-green red btn-small">Cerrar<i class="material-icons left">close</i></a>
+  </div><br>
+</div>
+<!--Cierre modal AGREGAR PROVEEDORES COMPRA IMPORTANTE! -->
+
+<!-- Modal SELECCIONAR CLIENTES IMPOTANTE! -->
+<div id="modal_addClientes" class="modal"><br>
+  <div class="modal-content">
+    <div class="row">
+      <h6 class="col s12 m5 l5"></h6>
+      <!--    //////    INPUT DE EL BUSCADOR    ///////   -->
+      <form class="col s12 m7 l7">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">search</i>
+            <input id="busquedaClientes" name="busquedaClientes" type="text" class="validate" autocomplete="off" onKeyUp="buscar_clientes();" autofocus="true" required>
+            <label for="busquedaClientes">Buscar Cliente(Número, Nombre, RFC)</label>
+          </div>
+        </div>
+      </form>
+      <div id="tablaClientes"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="modal-action modal-close waves-effect waves-green red btn-small">Cerrar<i class="material-icons left">close</i></a>
+  </div><br>
+</div>
+<!--Cierre modal SELECCIONAR CLIENTES COMPRA IMPORTANTE! -->
+
 <!-- Modal AGREGAR ARTICULOS A LA COTIZACIÓN IMPOTANTE! -->
 <div id="modal_addArticuloCotizacion" class="modal"><br>
   <div class="modal-content">

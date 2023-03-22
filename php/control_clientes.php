@@ -21,18 +21,22 @@ switch ($Accion) {
 		$Telefono = $conn->real_escape_string($_POST['valorTelefono']);
 		$Email = $conn->real_escape_string($_POST['valorEmail']);
 		$RFC = $conn->real_escape_string($_POST['valorRFC']);
-		$Direccion = $conn->real_escape_string($_POST['valorDireccion']);
+		$Estado = $conn->real_escape_string($_POST['valorEstadoMx']);
+		$Calle = $conn->real_escape_string($_POST['valorCalle']);
+		$NumeroInterior = $conn->real_escape_string($_POST['valorNumeroInterior']);
+		$NumeroExterior = $conn->real_escape_string($_POST['valorNumeroExterior']);
 		$Colonia = $conn->real_escape_string($_POST['valorColonia']);
+		$Municipio = $conn->real_escape_string($_POST['valorMunicipio']);
 		$Localidad = $conn->real_escape_string($_POST['valorLocalidad']);
 		$CP = $conn->real_escape_string($_POST['valorCP']);
 
 		//VERIFICAMOS QUE NO HALLA UN CLIENTE CON LOS MISMOS DATOS
-		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE(nombre='$Nombre' AND direccion='$Direccion' AND colonia='$Colonia' AND cp='$CP') OR rfc='$RFC' OR email='$Email'"))>0){
+		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE(nombre='$Nombre' AND calle='$Calle' AND colonia='$Colonia' AND cp='$CP') OR rfc='$RFC' OR email='$Email'"))>0){
 	 		echo '<script >M.toast({html:"Ya se encuentra un cliente con los mismos datos registrados.", classes: "rounded"})</script>';
 	 	}else{
 	 		// SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-	 		$sql = "INSERT INTO `punto-venta_clientes` (nombre, telefono, direccion, colonia, cp, rfc, email, localidad, usuario, fecha) 
-				VALUES('$Nombre', '$Telefono', '$Direccion', '$Colonia', '$CP', '$RFC', '$Email', '$Localidad', '$id_user','$Fecha_hoy')";
+	 		$sql = "INSERT INTO `punto-venta_clientes` (nombre, calle, numero_interior, numero_exterior, colonia, municipio, estado, cp, rfc, email, telefono, localidad, usuario, fecha) 
+				VALUES('$Nombre', '$Calle', '$NumeroInterior', '$NumeroExterior', '$Colonia', '$Municipio', '$Estado', '$CP', '$RFC', '$Email', '$Telefono', '$Localidad', '$id_user','$Fecha_hoy')";
 			//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"El cliente se dió de alta satisfactoriamente.", classes: "rounded"})</script>';	
@@ -81,12 +85,10 @@ switch ($Accion) {
 		            <td>'.$cliente['telefono'].'</td>
 		            <td>'.$cliente['rfc'].'</td>
 		            <td>'.$cliente['email'].'</td>
-		            <td>'.$cliente['direccion'].'</td>
+		            <td>'.$cliente['calle'].'</td>
 		            <td>'.$cliente['colonia'].'</td>
 		            <td>'.$cliente['localidad'].'</td>
 		            <td>'.$cliente['cp'].'</td>
-		            <td>'.$user['firstname'].'</td>
-		            <td>'.$cliente['fecha'].'</td>
 					<td><form method="post" action="../views/credito_abono_pv.php"><input id="no_cliente" name="no_cliente" type="hidden" value="'.$cliente['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">credit_card</i></button></form></td>
 		            <td><form method="post" action="../views/editar_cliente_pv.php"><input id="id" name="id" type="hidden" value="'.$cliente['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="borrar_cliente_pv('.$cliente['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
@@ -100,12 +102,16 @@ switch ($Accion) {
 
     	//CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_cliente_pv.php" QUE NESECITAMOS PARA ACTUALIZAR
     	$id = $conn->real_escape_string($_POST['id']);
-    	$Nombre = $conn->real_escape_string($_POST['valorNombre']);
+		$Nombre = $conn->real_escape_string($_POST['valorNombre']);
 		$Telefono = $conn->real_escape_string($_POST['valorTelefono']);
 		$Email = $conn->real_escape_string($_POST['valorEmail']);
 		$RFC = $conn->real_escape_string($_POST['valorRFC']);
-		$Direccion = $conn->real_escape_string($_POST['valorDireccion']);
+		$Estado = $conn->real_escape_string($_POST['valorEstadoMx']);
+		$Calle = $conn->real_escape_string($_POST['valorCalle']);
+		$NumeroInterior = $conn->real_escape_string($_POST['valorNumeroInterior']);
+		$NumeroExterior = $conn->real_escape_string($_POST['valorNumeroExterior']);
 		$Colonia = $conn->real_escape_string($_POST['valorColonia']);
+		$Municipio = $conn->real_escape_string($_POST['valorMunicipio']);
 		$Localidad = $conn->real_escape_string($_POST['valorLocalidad']);
 		$CP = $conn->real_escape_string($_POST['valorCP']);
 
@@ -114,7 +120,9 @@ switch ($Accion) {
 	 		echo '<script >M.toast({html:"El RFC, Telefono o Email ya se encuentra registrados en la BD.", classes: "rounded"})</script>';
 	 	}else{
 			//CREAMO LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
-			$sql = "UPDATE `punto-venta_clientes` SET nombre = '$Nombre', telefono = '$Telefono', email = '$Email', rfc = '$RFC', direccion = '$Direccion', colonia = '$Colonia', localidad = '$Localidad', cp = '$CP' WHERE id = '$id'";
+			$sql = "UPDATE `punto-venta_clientes` SET nombre = '$Nombre', calle = '$Calle', numero_exterior = '$NumeroExterior', numero_interior = '$NumeroInterior', 
+			colonia = '$Colonia', municipio = '$Municipio', estado = '$Estado', cp = '$CP', rfc = '$RFC', email = '$Email', 
+			telefono = '$Telefono', localidad = '$Localidad' WHERE id = '$id'";
 			//VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"El cliente se actualizo con exito.", classes: "rounded"})</script>';	
@@ -155,5 +163,82 @@ switch ($Accion) {
 			M.toast({html:"Comunicate con un administrador.", classes: "rounded"});</script>';
 	    }   
     	break;
+		case 4:///////////////           IMPORTANTE               ///////////////
+            // $Accion es igual a 4 realiza:
+            
+            //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "add_compra.php" MODAL
+            $Texto = $conn->real_escape_string($_POST['texto']);
+            //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+            if ($Texto != "") {
+                //MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
+                $sql = "SELECT * FROM `punto-venta_clientes` WHERE  id LIKE '%$Texto%' OR nombre LIKE '%$Texto%' OR rfc LIKE '%$Texto%' LIMIT 5 "; 
+            }else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
+                $sql = "SELECT * FROM `punto-venta_clientes` LIMIT 5";
+            }//FIN else $Texto VACIO O NO
+    
+             // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+            $consulta = mysqli_query($conn, $sql);      
+            ?>
+            <div class="row">
+                <div class="hide-on-small-only col s1"><br></div>
+                <table class="col s12 m10 l10">
+                  <thead>
+                    <tr>
+                      <th>Número</th>
+                      <th>Nombre</th>
+                      <th>RFC</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   <?php
+                   //VERIFICAMOS SI HA ARRTICULOS EN LA TABLA
+                   if(mysqli_num_rows($consulta)>0){
+                        while($clientes = mysqli_fetch_array($consulta)){
+                        ?>
+                            <tr>
+                                <td><?php echo $clientes['id'] ?></td>
+                                <td><?php echo $clientes['nombre'] ?></td>
+                                <td><?php echo $clientes['rfc'] ?></td>
+                                <td><a onclick="showContent(<?php echo $clientes['id']?>);" class="waves-effect waves-light btn-small indigo right">Agregar</a></td>
+                            </tr>
+                        <?php
+                        }//FIN WHILE
+                   }else{
+                        echo '<tr><td></td><td></td><td><h6> No se encontraron clientes. </h6></td></tr>';
+                   }//FIN ELSE
+                   ?>                
+                  </tbody>
+                </table>
+            </div>
+            <?php
+            break;
+			case 5:///////////////           IMPORTANTE               ///////////////
+                // $Accion es igual a 11 realiza:
+        
+                //CON POST RECIBIMOS EL ID DEL PROVEEDOR DEL FORMULARIO POR EL SCRIPT "add_compra.php" QUE NESECITAMOS PARA BUSCAR
+                $id = $conn->real_escape_string($_POST['cliente']);    
+                $contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
+                //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+                if ($id != 0) {
+                    //HACEMOS LA CONSULTA DEL PROVEEDOR Y MOSTRAMOS LA INFOR EN FORMATO HTML
+                    $cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id=$id"));
+                    $contenido .=  '<input type="hidden" id ="cliente"  value='.$cliente['id'].'><h6 class = "col s12 m4 l4"><b>Número: </b>'.$cliente['id'].'<h6 class = "col s12 m4 l4"><b>Nombre: </b>'.$cliente['nombre'].'<h6 class = "col s12 m4 l4"><b>RFC: </b>'.$cliente['rfc'].'</h6></h6>';
+                }
+                echo $contenido;// IMPRIMIMOS EL CONTENDIO QUE PUEDE IR VACIO SI ES $id = 0
+                break;
+				case 6:///////////////           IMPORTANTE               ///////////////
+					// $Accion es igual a 11 realiza:
+			
+					//CON POST RECIBIMOS EL ID DEL PROVEEDOR DEL FORMULARIO POR EL SCRIPT "add_compra.php" QUE NESECITAMOS PARA BUSCAR
+					$id = $conn->real_escape_string($_POST['general']);    
+					$contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
+					//VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+					
+						//HACEMOS LA CONSULTA DEL PROVEEDOR Y MOSTRAMOS LA INFOR EN FORMATO HTML
+						$cliente = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE id=$id"));
+						$contenido .=  '<input type="hidden" id ="cliente" value='.$cliente['id'].'><h6 class = "col s12 m4 l4"><b>Número: </b>'.$cliente['id'].'<h6 class = "col s12 m4 l4"><b>Nombre: </b>'.$cliente['nombre'].'<h6 class = "col s12 m4 l4"><b>RFC: </b>'.$cliente['rfc'].'</h6></h6>';
+					
+					echo $contenido;// IMPRIMIMOS EL CONTENDIO QUE PUEDE IR VACIO SI ES $id = 0
+					break;				
 }// FIN switch
 mysqli_close($conn);

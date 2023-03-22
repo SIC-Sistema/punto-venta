@@ -512,6 +512,71 @@ switch ($Accion) {
             echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>'; 
         }//FIN else DE ERROR
         break;
+        case 10:///////////////           IMPORTANTE               ///////////////
+            // $Accion es igual a 10 realiza:
+            
+            //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "add_compra.php" MODAL
+            $Texto = $conn->real_escape_string($_POST['texto']);
+            //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+            if ($Texto != "") {
+                //MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
+                $sql = "SELECT * FROM `punto_venta_proveedores` WHERE  nombre LIKE '%$Texto%' OR rfc LIKE '%$Texto%' LIMIT 5 "; 
+            }else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
+                $sql = "SELECT * FROM `punto_venta_proveedores` LIMIT 5";
+            }//FIN else $Texto VACIO O NO
+    
+             // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+            $consulta = mysqli_query($conn, $sql);      
+            ?>
+            <div class="row">
+                <div class="hide-on-small-only col s1"><br></div>
+                <table class="col s12 m10 l10">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>RFC</th>
+                      <th>E-mail</th>
+                      <th>Teléfono</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   <?php
+                   //VERIFICAMOS SI HA ARRTICULOS EN LA TABLA
+                   if(mysqli_num_rows($consulta)>0){
+                        while($proveedor = mysqli_fetch_array($consulta)){
+                        ?>
+                            <tr>
+                                <td><?php echo $proveedor['nombre'] ?></td>
+                                <td><?php echo $proveedor['rfc'] ?></td>
+                                <td><?php echo $proveedor['email'] ?></td>
+                                <td><?php echo $proveedor['telefono'] ?></td>
+                                <td><a onclick="showContent(<?php echo $proveedor['id']?>);" class="waves-effect waves-light btn-small indigo right">Agregar</a></td>
+                            </tr>
+                        <?php
+                        }//FIN WHILE
+                   }else{
+                        echo '<tr><td></td><td></td><td><h6> No se encontraron proveedores. </h6></td></tr>';
+                   }//FIN ELSE
+                   ?>                
+                  </tbody>
+                </table>
+            </div>
+            <?php
+            break;
+            case 11:///////////////           IMPORTANTE               ///////////////
+                // $Accion es igual a 11 realiza:
+        
+                //CON POST RECIBIMOS EL ID DEL PROVEEDOR DEL FORMULARIO POR EL SCRIPT "add_compra.php" QUE NESECITAMOS PARA BUSCAR
+                $id = $conn->real_escape_string($_POST['proveedor']);    
+                $contenido = '';//CREAMOS UNA VARIABLE VACIA PARA IR LLENANDO CON LA INFORMACION EN FORMATO
+                //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+                if ($id != 0) {
+                    //HACEMOS LA CONSULTA DEL PROVEEDOR Y MOSTRAMOS LA INFOR EN FORMATO HTML
+                    $proveedor = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_proveedores` WHERE id=$id"));
+                    $contenido .= '<input type="hidden" id ="proveedor" value='.$proveedor['id'].'><h6 class = "col s12 m3 l3"><b>Nombre: </b>'.$proveedor['nombre'].'<h6 class = "col s12 m3 l3"><b>RFC: </b>'.$proveedor['rfc'].'</h6>  <h6 class = "col s12 m3 l3"><b>Telefono: </b>'.$proveedor['telefono'].' </h6> <h6 class = "col s12 m3 l3"><b>Dias Credito:</b>'.$proveedor['dias_c'].' </h6>';
+                }
+                echo $contenido;// IMPRIMIMOS EL CONTENDIO QUE PUEDE IR VACIO SI ES $id = 0
+                break;
 }// FIN switch
 mysqli_close($conn);
     

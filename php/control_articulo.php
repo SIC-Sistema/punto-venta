@@ -19,23 +19,23 @@ switch ($Accion) {
 
         //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "add_articulo.php" QUE NESECITAMOS PARA INSERTAR
         $codigo = $conn->real_escape_string($_POST['valorCodigo']);
-        $Nombre = $conn->real_escape_string($_POST['valorNombre']);
         $Modelo = $conn->real_escape_string($_POST['valorModelo']);
+        $marca = $conn->real_escape_string($_POST['valorMarca']);
         $descripcion = $conn->real_escape_string($_POST['valorDescripcion']);
         $precio = $conn->real_escape_string($_POST['valorPrecio']);
-        $unidad = $conn->real_escape_string($_POST['valorUnidad']);        
-        $CUnidad = $conn->real_escape_string($_POST['valorCUnidad']);        
+        $unidadMedida = $conn->real_escape_string($_POST['valorUnidadMedida']);        
+        //$CUnidad = $conn->real_escape_string($_POST['valorCUnidad']);        
         $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']); 
         $Categoria = $conn->real_escape_string($_POST['valorCategoria']);  
-        $subCategoria = $conn->real_escape_string($_POST['valorSubCategoria']);   
-
+        $subCategoria = $conn->real_escape_string($_POST['valorSubCategoria']);
+        
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
 		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo'"))>0){
             echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
         }else{
             // SI NO HAY NUNGUNO IGUAL CREAMOS LA SENTECIA SQL  CON LA INFORMACION REQUERIDA Y LA ASIGNAMOS A UNA VARIABLE
-            $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, categoria, subcategoria, usuario, fecha) 
-               VALUES('$codigo', '$Nombre', '$descripcion', '$precio', '$unidad', '$CFiscal', '$CUnidad', '$Modelo', $Categoria, '$subCategoria', '$id_user','$Fecha_hoy')";
+            $sql = "INSERT INTO `punto_venta_articulos` (codigo, nombre, descripcion, precio, unidad, codigo_fiscal, codigo_unidad, modelo, marca, categoria, subcategoria, usuario, fecha) 
+               VALUES('$codigo', '$Modelo', '$descripcion', '$precio', '$unidadMedida', '$CFiscal', '$unidadMedida', '$Modelo', '$marca', $Categoria, '$subCategoria', '$id_user','$Fecha_hoy')";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
 			if(mysqli_query($conn, $sql)){
 				echo '<script >M.toast({html:"El artículo se dió de alta satisfactoriamente.", classes: "rounded"})</script>';	
@@ -75,7 +75,15 @@ switch ($Accion) {
                 $sinCategoria = "Sin definir";
                 $id_user = $articulo['usuario'];
                 $id_categoria = $articulo['subcategoria'];
-                
+                $idUnidadMedida = $articulo['codigo_unidad'];
+                if ($unidadMedidaSat = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `unidades_medida_sat` WHERE id=$idUnidadMedida"))){
+                    $nombreUnidad = $unidadMedidaSat['nombre'];
+                    $codigoUnidad = $unidadMedidaSat['clave'];
+                }else{
+                    $nombreUnidad = "N/A";
+                    $codigoUnidad = "N/A";
+                }
+
 				$user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
                 if ($categoria_pv = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_categorias` WHERE id=$id_categoria"))){
                 $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>';
@@ -83,17 +91,16 @@ switch ($Accion) {
 		          <tr>
                     <td>'.$articulo['codigo'].'</td>
 		            '.$img.'
-                    <td>'.$articulo['nombre'].'</td>
-		            <td>'.$articulo['descripcion'].'</td>
+                    <td>'.$articulo['marca'].'</td>
                     <td>'.$articulo['modelo'].'</td>
+		            <td>'.$articulo['descripcion'].'</td>
+                    
 		            <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
-                    <td>'.$articulo['unidad'].'</td>
-                    <td>'.$articulo['codigo_unidad'].'</td>
+                    <td>'.$nombreUnidad.'</td>
+                    <td>'.$codigoUnidad.'</td>
 		            <td>'.$articulo['codigo_fiscal'].'</td>
                     <td>'.$categoria_pv['nombre'].'</td>
                     <td>'.$categoria_pv['nombre_sub'].'</td>
-		            <td>'.$user['firstname'].'</td>
-		            <td>'.$articulo['fecha'].'</td>
 		            <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="borrar_articulo_pv('.$articulo['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
                     <td><a onclick="subirImagen('.$articulo['id'].')" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">backup</i></a></td>
@@ -105,17 +112,15 @@ switch ($Accion) {
 		          <tr>
                     <td>'.$articulo['codigo'].'</td>
 		            '.$img.'
-                    <td>'.$articulo['nombre'].'</td>
-		            <td>'.$articulo['descripcion'].'</td>
+                    <td>'.$articulo['marca'].'</td>
                     <td>'.$articulo['modelo'].'</td>
+                    <td>'.$articulo['descripcion'].'</td>
 		            <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
-                    <td>'.$articulo['unidad'].'</td>
-                    <td>'.$articulo['codigo_unidad'].'</td>
+                    <td>'.$nombreUnidad.'</td>
+                    <td>'.$codigoUnidad.'</td>
 		            <td>'.$articulo['codigo_fiscal'].'</td>
                     <td>'.$sinCategoria.'</td>
                     <td>'.$sinCategoria.'</td>
-		            <td>'.$user['firstname'].'</td>
-		            <td>'.$articulo['fecha'].'</td>
 		            <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="borrar_articulo_pv('.$articulo['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
                     <td><a onclick="subirImagen('.$articulo['id'].')" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">backup</i></a></td>
@@ -131,21 +136,24 @@ switch ($Accion) {
         //CON POST RECIBIMOS TODAS LAS VARIABLES DEL FORMULARIO POR EL SCRIPT "editar_articulo_pv.php" QUE NESECITAMOS PARA ACTUALIZAR
     	$id = $conn->real_escape_string($_POST['id']);
         $codigo = $conn->real_escape_string($_POST['valorCodigo']);
-        $Nombre = $conn->real_escape_string($_POST['valorNombre']);
         $Modelo = $conn->real_escape_string($_POST['valorModelo']);
+        $marca = $conn->real_escape_string($_POST['valorMarca']);
         $descripcion = $conn->real_escape_string($_POST['valorDescripcion']);
         $precio = $conn->real_escape_string($_POST['valorPrecio']);
-        $unidad = $conn->real_escape_string($_POST['valorUnidad']);        
-        $CUnidad = $conn->real_escape_string($_POST['valorCUnidad']);        
+        $unidadMedida = $conn->real_escape_string($_POST['valorUnidadMedida']);        
+        //$CUnidad = $conn->real_escape_string($_POST['valorCUnidad']);        
         $CFiscal = $conn->real_escape_string($_POST['valorCFiscal']); 
         $Categoria = $conn->real_escape_string($_POST['valorCategoria']);  
-
+        $subCategoria = $conn->real_escape_string($_POST['valorSubCategoria']);        
+        
         //VERIFICAMOS QUE NO HALLA UN ARTICULO CON LOS MISMOS DATOS
         if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto_venta_articulos` WHERE codigo='$codigo' AND id != $id"))>0){
             echo '<script >M.toast({html:"Ya se encuentra un articulo con el mismo Codigo.", classes: "rounded"})</script>';
         }else{
             //CREAMOS LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL ARTICULO Y LA GUARDAMOS EN UNA VARIABLE
-    		$sql = "UPDATE `punto_venta_articulos` SET codigo = '$codigo', nombre = '$Nombre', modelo = '$Modelo', descripcion = '$descripcion', precio = '$precio', unidad = '$unidad', codigo_unidad = '$CUnidad', codigo_fiscal = '$CFiscal', categoria = '$Categoria', usuario = '$id_user', fecha= '$Fecha_hoy' WHERE id = '$id'";
+    		$sql = "UPDATE `punto_venta_articulos` SET codigo = '$codigo', nombre = '$Modelo', modelo = '$Modelo', descripcion = '$descripcion', precio = '$precio', 
+            unidad = '$unidadMedida', codigo_unidad = '$unidadMedida', marca = '$marca',  codigo_fiscal = '$CFiscal', categoria = '$Categoria', subcategoria = '$subCategoria', usuario = '$id_user', 
+            fecha= '$Fecha_hoy' WHERE id = '$id'";
             //VERIFICAMOS QUE LA SENTECIA FUE EJECUTADA CON EXITO!
     		if(mysqli_query($conn, $sql)){
     			echo '<script >M.toast({html:"El artículo se actualizo con exito.", classes: "rounded"})</script>';	

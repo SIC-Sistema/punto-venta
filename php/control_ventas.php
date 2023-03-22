@@ -691,7 +691,57 @@ switch ($Accion) {
             }//FIN else
             echo $contenido;// MOSTRAMOS LA INFORMACION HTML
             break;
-
+            case 13:///////////////           IMPORTANTE               ///////////////
+                // $Accion es igual a 6 realiza:
+                
+                //CON POST RECIBIMOS UN TEXTO DEL BUSCADOR VACIO O NO de "add_compra.php" MODAL
+                $Texto = $conn->real_escape_string($_POST['texto']);
+                //VERIFICAMOS SI CONTIENE ALGO DE TEXTO LA VARIABLE
+                if ($Texto != "") {
+                    //MOSTRARA LOS ARTICULOS QUE SE ESTAN BUSCANDO Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql......
+                    $sql = "SELECT * FROM `punto_venta_articulos` WHERE  codigo LIKE '%$Texto%' OR nombre LIKE '%$Texto%' OR descripcion LIKE '%$Texto%' LIMIT 5 "; 
+                }else{//ESTA CONSULTA SE HARA SIEMPRE QUE NO ALLA NADA EN EL BUSCADOR Y GUARDAMOS LA CONSULTA SQL EN UNA VARIABLE $sql...
+                    $sql = "SELECT * FROM `punto_venta_articulos` LIMIT 5";
+                }//FIN else $Texto VACIO O NO
+        
+                 // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+                $consulta = mysqli_query($conn, $sql);      
+                ?>
+                <div class="row">
+                    <div class="hide-on-small-only col s1"><br></div>
+                    <table class="col s12 m10 l10">
+                      <thead>
+                        <tr>
+                          <th>Código</th>
+                          <th>Nombre</th>
+                          <th>Descripcion</th>
+                          <th>Costo U.</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                       <?php
+                       //VERIFICAMOS SI HA ARRTICULOS EN LA TABLA
+                       if(mysqli_num_rows($consulta)>0){
+                            while($articulo = mysqli_fetch_array($consulta)){
+                            ?>
+                                <tr>
+                                    <td><?php echo $articulo['codigo'] ?></td>
+                                    <td><?php echo $articulo['nombre'] ?></td>
+                                    <td><?php echo $articulo['descripcion'] ?></td>
+                                    <td><?php echo $articulo['precio'] ?></td>
+                                    <td><a onclick="insertBusquedaArticulo(<?php echo $articulo['id'] ?>,<?php echo $articulo['codigo'] ?>, <?php echo $articulo['precio'] ?>,' <?php echo $articulo['descripcion'] ?>');" class="waves-effect waves-light btn-small indigo right">Agregar</a></td>
+                                </tr>
+                            <?php
+                            }//FIN WHILE
+                       }else{
+                            echo '<tr><td></td><td></td><td><h6> Sin Artículos </h6></td></tr>';
+                       }//FIN ELSE
+                       ?>                
+                      </tbody>
+                    </table>
+                </div>
+                <?php
+                break;
 }// FIN switch
 mysqli_close($conn);
     
