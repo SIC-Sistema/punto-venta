@@ -1,4 +1,4 @@
-<?php 
+<?php
 //ARCHIVO QUE CONTIENE LA VARIABLE CON LA CONEXION A LA BASE DE DATOS
 include('../php/conexion.php');
 //ARCHIVO QUE CONDICIONA QUE TENGAMOS ACCESO A ESTE ARCHIVO SOLO SI HAY SESSION INICIADA Y NOS PREMITE TIMAR LA INFORMACION DE ESTA
@@ -241,4 +241,6 @@ switch ($Accion) {
 					echo $contenido;// IMPRIMIMOS EL CONTENDIO QUE PUEDE IR VACIO SI ES $id = 0
 					break;				
 }// FIN switch
+
 mysqli_close($conn);
+?>

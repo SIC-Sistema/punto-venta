@@ -301,7 +301,7 @@ switch ($Accion) {
             $sql = "SELECT * FROM `punto_venta_articulos` LIMIT 3";
         }//FIN else $Texto VACIO O NO
 
-         // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
+        // REALIZAMOS LA CONSULTA A LA BASE DE DATOS MYSQL Y GUARDAMOS EN FORMARTO ARRAY EN UNA VARIABLE $consulta
         $consulta = mysqli_query($conn, $sql);      
         ?>
         <div class="row">

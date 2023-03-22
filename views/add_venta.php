@@ -1,17 +1,20 @@
 <?php
 //VERIFICAMOS QUE SI NOS ENVIE POR POST EL ID DEL ARTICULO
 if (isset($_GET['id']) == false) {
-  ?>
-  <script>    
-    M.toast({html: "Regresando a home.", classes: "rounded"});
-    setTimeout("location.href='home.php'", 800);
-  </script>
-  <?php
+    ?>
+    <script>
+        M.toast({
+            html: "Regresando a home.", classes: "rounded"
+        });
+        setTimeout("location.href='home.php'", 800);
+    </script>
+    <?php
 }else{
 	$Venta = $_GET['id'];
-?>
-  <!DOCTYPE html>
-	<html lang="en">
+	?>
+    <!DOCTYPE html>
+    <html lang="en">
+
     <head>
     	<title>SIC | Venta N° <?php echo $Venta ?></title>
     	<?php 
@@ -154,69 +157,82 @@ if (isset($_GET['id']) == false) {
 	        }//FIN ELSE insert
 	      }// FIN function
 
-	      //FUNCION QUE BORRA LOS ARTICULOS TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
-	      function borrar_lista_articulo(id){
-	        var answer = confirm("Deseas eliminar el artículo N°"+id+" de la lista ?");
-	        if (answer) {
-	          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-	          $.post("../php/control_ventas.php", {
-	            //Cada valor se separa por una ,
-	            accion: 7,
-	            id: id,
-		          id_venta: <?php echo $Venta; ?>,
-	          }, function(mensaje) {
-	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
-	            $("#tablaArticuloVenta").html(mensaje);
-	          }); //FIN post
-	        }//FIN IF
-	      };//FIN function
+            //FUINCION QUE AL SELECCIONAR UN Cliente MUESTRA SU INFORMACION
+            function showContent() {
+                var textoCliente = $("select#cliente").val();
 
-	      //FUNCION QUE BORRA TODOS LOS ARTICULOS DE TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
-	      function borrar_lista_all(){
-	        var answer = confirm("Deseas cancelar la venta <?php echo $Venta; ?>?");
-	        if (answer) {
-	          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-	          $.post("../php/control_ventas.php", {
-	            //Cada valor se separa por una ,
-	            accion: 8,
-		          id_venta: <?php echo $Venta; ?>,
-	          }, function(mensaje) {
-	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
-	            $("#tablaArticuloVenta").html(mensaje);
-	          }); //FIN post
-	        }//FIN IF
-	      };//FIN function
+                //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+                //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+                $.post("../php/control_ventas.php", {
+                    //Cada valor se separa por una ,
+                    accion: 2,
+                    cliente: textoCliente,
+                }, function(mensaje) {
+                    //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+                    $("#resultado_info").html(mensaje);
+                });
+            }; //FIN function
 
-	      function modal_venta() {
-	      	var exist = $("input#mayor_exist").val();
-	      	if (exist) {
-	          M.toast({html: '! NO SE PUEDE REALIZAR LA VENTA ¡', classes: 'rounded'});
-	          M.toast({html: 'Alguno de los articulos superan su existencia', classes: 'rounded'});
-	      	}else{
-	      		//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_venta.php" PARA MOSTRAR EL MODAL
-		        $.post("modal_venta.php", {
-		          //Cada valor se separa por una ,
-		            id_venta: <?php echo $Venta; ?>,
-		          }, function(mensaje){
-		              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_venta.php"
-		              $("#modal").html(mensaje);
-		        });//FIN post
-		      }//FIN else
-	      }
+            function tmp_articulos(insert) {
+                if (insert) {
+                    var id_art = $("input#id_articulo").val();
+                    var cantidad = $("input#cantidadP").val();
+                    var precio_venta = $("input#precio_venta").val();
+                    if (id_art == '' || cantidad == '' || precio_venta == '') {
+                        M.toast({
+                            html: 'Seleccione un articulo', classes: 'rounded'
+                        });
+                    } else {
+                        //PEDIMOS VARIABLES Y CONDICIONES PARA INSERTAR ARTICULO A TMP
+                        M.toast({
+                            html: 'Insertar articulo N° ' + id_art, classes: 'rounded'
+                        });
+                        //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+                        //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+                        $.post("../php/control_ventas.php", {
+                            //Cada valor se separa por una ,
+                            accion: 4,
+                            insert: insert,
+                            id_art: id_art,
+                            cantidad: cantidad,
+                            precio_venta: precio_venta,
+                            id_venta: <?php echo $Venta; ?>,
+                        }, function(mensaje) {
+                            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+                            $("#tablaArticuloVenta").html(mensaje);
+                        });
+                    } //FIN else
+                } else {
+                    //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
+                    //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+                    $.post("../php/control_ventas.php", {
+                        //Cada valor se separa por una ,
+                        accion: 4,
+                        insert: insert,
+                        id_venta: <?php echo $Venta; ?>,
+                    }, function(mensaje) {
+                        //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+                        $("#tablaArticuloVenta").html(mensaje);
+                    });
+                } //FIN ELSE insert
+            } // FIN function
 
-	      //FUNCION Calcula el Cambio
-	      function cambio(){
-	        //RECIBIMOS LOS VALORES DE LOS INPUTS AFECTADOS
-	        var total = $("input#total").val();
-	        var efectivo = $("input#efectivoV").val();
-	        var credito = $("input#creditoV").val();
-	        var banco = $("input#bancoV").val(); 
-	        var Efectivo = parseFloat(efectivo);
-	        var Credito = parseFloat(credito);
-	        var Banco = parseFloat(banco);
-	        var Total = parseFloat(total);
-	        document.getElementById("cambio").value ='$'+((-1)*(Total-Efectivo-Banco-Credito)).toFixed(2);
-	      }// FIN function
+            //FUNCION QUE BORRA LOS ARTICULOS TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+            function borrar_lista_articulo(id) {
+                var answer = confirm("Deseas eliminar el artículo N°" + id + " de la lista ?");
+                if (answer) {
+                    //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+                    $.post("../php/control_ventas.php", {
+                        //Cada valor se separa por una ,
+                        accion: 7,
+                        id: id,
+                        id_venta: <?php echo $Venta; ?>,
+                    }, function(mensaje) {
+                        //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+                        $("#tablaArticuloVenta").html(mensaje);
+                    }); //FIN post
+                } //FIN IF
+            }; //FIN function
 
 	      function insert_venta(){
 	      	var efectivo = $("input#efectivoV").val();
@@ -267,19 +283,75 @@ if (isset($_GET['id']) == false) {
 			}	
 	      }// FIN function
 
-      	//FUINCION QUE PAUSARA LA VENTA
-		  	function pausar_venta() {
-		      //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-		      $.post("../php/control_ventas.php", {
-		        //Cada valor se separa por una ,
-		          accion: 5,
-		          id_venta: <?php echo $Venta; ?>,
-		      }, function(mensaje) {
-		          //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION  "control_ventas.php"
-		          $("#modal").html(mensaje);
-		      });  
-		    };
-	    </script>
+                if (efectivo > 0) {
+                    tipo_cambio = 'Efectivo';
+                    cantidadPago = efectivo;
+                } else if (credito > 0) {
+                    tipo_cambio = 'Credito';
+                    cantidadPago = credito;
+                } else if (banco > 0) {
+                    tipo_cambio = 'Banco';
+                    cantidadPago = banco;
+                }
+
+                if (document.getElementById('pago').checked == true) {
+                    var pago = 1;
+                } else {
+                    var pago = 0;
+                    tipo_cambio = 'Pendiente';
+                    cantidadPago = 0;
+                }
+
+                if (efectivo == 0 && credito == 0 && banco == 0 && pago) {
+                    M.toast({
+                        html: 'Ingrese una forma de pago.', classes: 'rounded'
+                    });
+                } else {
+                    //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+                    $.post("../php/control_ventas.php", {
+                        //Cada valor se separa por una ,
+                        accion: 0,
+                        cliente: cliente,
+                        pago: pago,
+                        tipo_cambio: tipo_cambio,
+                        cantidadPago: cantidadPago,
+                        id_venta: <?php echo $Venta; ?>,
+                    }, function(mensaje) {
+                        //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+                        $("#tablaArticuloVenta").html(mensaje);
+                    }); //FIN post
+                } //FIN else
+            } // FIN function
+
+            //FUINCION QUE PAUSARA LA VENTA
+            function pausar_venta() {
+                //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+                $.post("../php/control_ventas.php", {
+                    //Cada valor se separa por una ,
+                    accion: 5,
+                    id_venta: <?php echo $Venta; ?>,
+                }, function(mensaje) {
+                    //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION  "control_ventas.php"
+                    $("#modal").html(mensaje);
+                });
+            };
+
+            //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
+            function buscar_clientes(){
+                //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
+                var texto = $("input#busquedaCliente").val();
+                //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_clientes.php"
+                $.post("../php/control_clientes.php", {
+                    //Cada valor se separa por una ,
+                    accion: 4,
+                    texto: texto,
+                }, function(mensaje){
+                    //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_clientes.php"
+                    $("#tablaCliente").html(mensaje);
+                });//FIN post
+            }//FIN function
+
+        </script>
     </head>
     <body  onload="tmp_articulos(0)">
     	<!-- DENTRO DE ESTE DIV VA TODO EL CONTENIDO Y HACE QUE SE VEA AL CENTRO DE LA PANTALLA.-->
@@ -342,6 +414,8 @@ if (isset($_GET['id']) == false) {
         <div id="tablaArticuloVenta"></div>
       </div>	       	
     </body>
+
     </html>
-<?php
+    <?php
 }
+?>
