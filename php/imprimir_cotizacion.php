@@ -91,7 +91,7 @@ $pdf->SetY($pdf->GetY()+5);
 $pdf->SetFont('Helvetica', 'B', 11);
 $id_cliente = $Cotizacion['id_cliente'];
 $cliente = mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `punto-venta_clientes` WHERE id=$id_cliente"));
-$pdf->MultiCell(0,6,utf8_decode('Cliente:  '.$cliente['nombre']."\n".'RFC:  '.$cliente['rfc']."\n".'Domicilio:  '.$cliente['direccion'].', '.$cliente['colonia']."\n".'Tel:  '.$cliente['telefono']),0,'L',0);
+$pdf->MultiCell(0,6,utf8_decode('Cliente:  '.$cliente['nombre']."\n".'RFC:  '.$cliente['rfc']."\n".'Domicilio:  '.$cliente['calle'].', '.$cliente['colonia']."\n".'Tel:  '.$cliente['telefono']),0,'L',0);
 
 $pdf->SetY($pdf->GetY()+3);
 $pdf->SetFont('Helvetica', '', 10);

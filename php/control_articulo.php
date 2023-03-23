@@ -67,7 +67,7 @@ switch ($Accion) {
 		//VERIFICAMOS QUE LA VARIABLE SI CONTENGA INFORMACION
 		if (mysqli_num_rows($consulta) == 0) {
 				echo '<script>M.toast({html:"No se encontraron artículos.", classes: "rounded"})</script>';
-        } else {
+        }else {
             //SI NO ESTA EN == 0 SI TIENE INFORMACION
             //La variable $contenido contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
             //RECORREMOS UNO A UNO LOS ARTICULOS CON EL WHILE
@@ -85,6 +85,7 @@ switch ($Accion) {
                 }
 
 				$user = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `users` WHERE user_id=$id_user"));
+                if ($categoria_pv = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `punto_venta_categorias` WHERE id=$id_categoria"))){
                 $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>';
                 $contenido .= '			
 		          <tr>
@@ -93,7 +94,6 @@ switch ($Accion) {
                     <td>'.$articulo['marca'].'</td>
                     <td>'.$articulo['modelo'].'</td>
 		            <td>'.$articulo['descripcion'].'</td>
-                    
 		            <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
                     <td>'.$nombreUnidad.'</td>
                     <td>'.$codigoUnidad.'</td>

@@ -80,6 +80,7 @@ if (isset($_GET['id']) == false) {
 				}, function(mensaje){
 					//SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_compra.php"
 						$("#tablaClientes").html(mensaje);
+						
 					});//FIN post
 			}//FIN function
 
@@ -157,22 +158,6 @@ if (isset($_GET['id']) == false) {
 	        }//FIN ELSE insert
 	      }// FIN function
 
-            //FUINCION QUE AL SELECCIONAR UN Cliente MUESTRA SU INFORMACION
-            function showContent() {
-                var textoCliente = $("select#cliente").val();
-
-                //SI LOS IF NO SE CUMPLEN QUIERE DECIR QUE LA INFORMACION CUENTA CON TODO LO REQUERIDO
-                //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-                $.post("../php/control_ventas.php", {
-                    //Cada valor se separa por una ,
-                    accion: 2,
-                    cliente: textoCliente,
-                }, function(mensaje) {
-                    //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
-                    $("#resultado_info").html(mensaje);
-                });
-            }; //FIN function
-
             function tmp_articulos(insert) {
                 if (insert) {
                     var id_art = $("input#id_articulo").val();
@@ -233,6 +218,53 @@ if (isset($_GET['id']) == false) {
                     }); //FIN post
                 } //FIN IF
             }; //FIN function
+			
+			//FUNCION QUE BORRA TODOS LOS ARTICULOS DE TMP (SE ACTIVA AL INICIAR EL BOTON BORRAR)
+			function borrar_lista_all(){
+	        var answer = confirm("Deseas cancelar la venta <?php echo $Venta; ?>?");
+	        if (answer) {
+	          //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
+	          $.post("../php/control_ventas.php", {
+	            //Cada valor se separa por una ,
+	            accion: 8,
+		          id_venta: <?php echo $Venta; ?>,
+	          }, function(mensaje) {
+	            //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
+	            $("#tablaArticuloVenta").html(mensaje);
+	          }); //FIN post
+	        }//FIN IF
+	      };//FIN function
+
+		  function modal_venta() {
+	      	var exist = $("input#mayor_exist").val();
+	      	if (exist) {
+	          M.toast({html: '! NO SE PUEDE REALIZAR LA VENTA ¡', classes: 'rounded'});
+	          M.toast({html: 'Alguno de los articulos superan su existencia', classes: 'rounded'});
+	      	}else{
+	      		//MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "modal_venta.php" PARA MOSTRAR EL MODAL
+		        $.post("modal_venta.php", {
+		          //Cada valor se separa por una ,
+		            id_venta: <?php echo $Venta; ?>,
+		          }, function(mensaje){
+		              //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "modal_venta.php"
+		              $("#modal").html(mensaje);
+		        });//FIN post
+		      }//FIN else
+	      }
+
+		   //FUNCION Calcula el Cambio
+		   function cambio(){
+	        //RECIBIMOS LOS VALORES DE LOS INPUTS AFECTADOS
+	        var total = $("input#total").val();
+	        var efectivo = $("input#efectivoV").val();
+	        var credito = $("input#creditoV").val();
+	        var banco = $("input#bancoV").val(); 
+	        var Efectivo = parseFloat(efectivo);
+	        var Credito = parseFloat(credito);
+	        var Banco = parseFloat(banco);
+	        var Total = parseFloat(total);
+	        document.getElementById("cambio").value ='$'+((-1)*(Total-Efectivo-Banco-Credito)).toFixed(2);
+	      }// FIN function
 
 	      function insert_venta(){
 	      	var efectivo = $("input#efectivoV").val();
@@ -283,45 +315,7 @@ if (isset($_GET['id']) == false) {
 			}	
 	      }// FIN function
 
-                if (efectivo > 0) {
-                    tipo_cambio = 'Efectivo';
-                    cantidadPago = efectivo;
-                } else if (credito > 0) {
-                    tipo_cambio = 'Credito';
-                    cantidadPago = credito;
-                } else if (banco > 0) {
-                    tipo_cambio = 'Banco';
-                    cantidadPago = banco;
-                }
-
-                if (document.getElementById('pago').checked == true) {
-                    var pago = 1;
-                } else {
-                    var pago = 0;
-                    tipo_cambio = 'Pendiente';
-                    cantidadPago = 0;
-                }
-
-                if (efectivo == 0 && credito == 0 && banco == 0 && pago) {
-                    M.toast({
-                        html: 'Ingrese una forma de pago.', classes: 'rounded'
-                    });
-                } else {
-                    //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_ventas.php"
-                    $.post("../php/control_ventas.php", {
-                        //Cada valor se separa por una ,
-                        accion: 0,
-                        cliente: cliente,
-                        pago: pago,
-                        tipo_cambio: tipo_cambio,
-                        cantidadPago: cantidadPago,
-                        id_venta: <?php echo $Venta; ?>,
-                    }, function(mensaje) {
-                        //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_ventas.php"
-                        $("#tablaArticuloVenta").html(mensaje);
-                    }); //FIN post
-                } //FIN else
-            } // FIN function
+              
 
             //FUINCION QUE PAUSARA LA VENTA
             function pausar_venta() {
@@ -336,20 +330,7 @@ if (isset($_GET['id']) == false) {
                 });
             };
 
-            //FUNCION QUE HACE LA BUSQUEDA DE ARTICULOS (SE ACTIVA AL INICIAR EL ARCHIVO O AL ECRIBIR ALGO EN EL BUSCADOR)
-            function buscar_clientes(){
-                //PRIMERO VAMOS Y BUSCAMOS EN ESTE MISMO ARCHIVO EL TEXTO REQUERIDO Y LO ASIGNAMOS A UNA VARIABLE
-                var texto = $("input#busquedaCliente").val();
-                //MEDIANTE EL METODO POST ENVIAMOS UN ARRAY CON LA INFORMACION AL ARCHIVO EN LA DIRECCION "../php/control_clientes.php"
-                $.post("../php/control_clientes.php", {
-                    //Cada valor se separa por una ,
-                    accion: 4,
-                    texto: texto,
-                }, function(mensaje){
-                    //SE CREA UNA VARIABLE LA CUAL TRAERA EN TEXTO HTML LOS RESULTADOS QUE ARROJE EL ARCHIVO AL CUAL SE LE ENVIO LA INFORMACION "control_clientes.php"
-                    $("#tablaCliente").html(mensaje);
-                });//FIN post
-            }//FIN function
+        
 
         </script>
     </head>

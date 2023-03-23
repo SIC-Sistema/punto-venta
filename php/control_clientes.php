@@ -116,9 +116,7 @@ switch ($Accion) {
 		$CP = $conn->real_escape_string($_POST['valorCP']);
 
 		//VERIFICAMOS QUE NO HALLA UN CLIENTE CON LOS MISMOS DATOS
-		if(mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `punto-venta_clientes` WHERE (telefono = '$Telefono' OR rfc='$RFC' OR email='$Email') AND id != $id"))>0){
-	 		echo '<script >M.toast({html:"El RFC, Telefono o Email ya se encuentra registrados en la BD.", classes: "rounded"})</script>';
-	 	}else{
+		
 			//CREAMO LA SENTENCIA SQL PARA HACER LA ACTUALIZACION DE LA INFORMACION DEL CLIENTE Y LA GUARDAMOS EN UNA VARIABLE
 			$sql = "UPDATE `punto-venta_clientes` SET nombre = '$Nombre', calle = '$Calle', numero_exterior = '$NumeroExterior', numero_interior = '$NumeroInterior', 
 			colonia = '$Colonia', municipio = '$Municipio', estado = '$Estado', cp = '$CP', rfc = '$RFC', email = '$Email', 
@@ -130,7 +128,7 @@ switch ($Accion) {
 			}else{
 				echo '<script >M.toast({html:"Ocurrio un error...", classes: "rounded"})</script>';	
 			}//FIN else DE ERROR
-		}// FIn else Validacion
+		// FIn else Validacion
         break;
     case 3:
         // $Accion es igual a 3 realiza:
