@@ -89,17 +89,10 @@ switch ($Accion) {
                 $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>';
                 $contenido .= '			
 		          <tr>
-                    <td>'.$articulo['codigo'].'</td>
-		            '.$img.'
                     <td>'.$articulo['marca'].'</td>
                     <td>'.$articulo['modelo'].'</td>
-		            <td>'.$articulo['descripcion'].'</td>
 		            <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
-                    <td>'.$nombreUnidad.'</td>
-                    <td>'.$codigoUnidad.'</td>
-		            <td>'.$articulo['codigo_fiscal'].'</td>
-                    <td>'.$categoria_pv['nombre'].'</td>
-                    <td>'.$categoria_pv['nombre_sub'].'</td>
+                    <td><form method="post" action="../views/detalle_articulo_pv.php"><input id="articulo" name="articulo" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
 		            <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="borrar_articulo_pv('.$articulo['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
                     <td><a onclick="subirImagen('.$articulo['id'].')" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">backup</i></a></td>
@@ -108,22 +101,15 @@ switch ($Accion) {
                     //Output
                 $img = ($articulo['imagen'] != '')? '<td><img class="materialboxed" width="100" src="../Imagenes/Catalogo/'.$articulo['imagen'].'"></td>': '<td></td>';
                 $contenido .= '			
-		          <tr>
-                    <td>'.$articulo['codigo'].'</td>
-		            '.$img.'
+                <tr>
                     <td>'.$articulo['marca'].'</td>
                     <td>'.$articulo['modelo'].'</td>
-                    <td>'.$articulo['descripcion'].'</td>
-		            <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
-                    <td>'.$nombreUnidad.'</td>
-                    <td>'.$codigoUnidad.'</td>
-		            <td>'.$articulo['codigo_fiscal'].'</td>
-                    <td>'.$sinCategoria.'</td>
-                    <td>'.$sinCategoria.'</td>
-		            <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
-		            <td><a onclick="borrar_articulo_pv('.$articulo['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
+                    <td>$'.sprintf('%.2f', $articulo['precio']).'</td>
+                    <td><form method="post" action="../views/detalle_articulo_pv.php"><input id="articulo" name="articulo" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
+                    <td><form method="post" action="../views/editar_articulo_pv.php"><input id="id" name="id" type="hidden" value="'.$articulo['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
+                    <td><a onclick="borrar_articulo_pv('.$articulo['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
                     <td><a onclick="subirImagen('.$articulo['id'].')" class="btn btn-floating indigo darken-1 waves-effect waves-light"><i class="material-icons">backup</i></a></td>
-		          </tr>';
+                </tr>';
                 }
 			}//FIN while
         }//FIN else

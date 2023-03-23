@@ -99,13 +99,13 @@ if (isset($_POST['articulo']) == false) {
                   <td style="font-weight: bold;">Código Unidad: <?php echo $Articulo['codigo_unidad']; ?></td>
                 </tr>
                 <tr>
-                  <td style="font-weight: bold;">Marca: <?php echo $Articulo['modelo']; ?></td>
+                  <td style="font-weight: bold;">Modelo: <?php echo $Articulo['modelo']; ?></td>
                 </tr>
                 <tr>
                   <td style="font-weight: bold;">Categoria: <?php echo $NombreCategoria; ?></td>
                 </tr>
                 <tr>
-                  <td style="font-weight: bold;">Subcategoria: <?php echo $NombreSubCategoria; ?></td>
+                  <td style="font-weight: bold;">Subcategoría: <?php echo $NombreSubCategoria; ?></td>
                 </tr>
                 <tr>
                   <td style="font-weight: bold;">Registro: <?php echo $Nombre_usuario ?></td>

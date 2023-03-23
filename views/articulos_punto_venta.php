@@ -121,20 +121,13 @@
         <table class="bordered highlight responsive-table">
           <thead>
             <tr>
-              <th>Código</th>
-              <th>Imagen</th>
-              <th>Marca</th>
               <th>Modelo</th>
-              <th>Descripción</th>
+              <th>Marca</th>
               <th>Precio</th>
-              <th>Unidad</th>
-              <th>C. Unidad</th>
-              <th>C. Fiscal</th>
-              <th>Categoria</th>
-              <th>Subcategoría</th>
+              <th>Detalles</th>
               <th>Editar</th>
               <th>Borrar</th>
-              <th>Imagen</th>
+              <th>Subir Imagen</th>
             </tr>
           </thead>
           <!-- DENTRO DEL tbody COLOCAMOS id = "articulosALL"  PARA QUE EN ESTA PARTE NOS MUESTRE LOS RESULTADOS EN TEXTO HTML DEL SCRIPT EN FUNCION buscar_articulos) -->
