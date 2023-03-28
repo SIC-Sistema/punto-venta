@@ -228,7 +228,7 @@
       <h5 class="hide-on-large-only">Ventas</h5>
     </div>
     <div class="row">
-    <!-- ----------------------------  TABs o MENU  ---------------------------------------->
+      <!-- ----------------------------  TABs o MENU  ---------------------------------------->
       <div class="col s12">
         <ul id="tabs-swipe-demo" class="tabs">
           <li class="tab col s4"><a class="active black-text" href="#test-swipe-2">VENTAS PAUSADAS O EN PROCESO</a></li>

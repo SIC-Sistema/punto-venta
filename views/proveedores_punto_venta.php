@@ -78,6 +78,7 @@
               <th>D. crédito</th>
               <th>Registro</th>
               <th>Fecha</th>
+              <th>Detalles</th>
               <th>Editar</th>
               <th>Borrar</th>
             </tr>

@@ -85,6 +85,7 @@ switch ($Accion) {
 		            <td>'.$proveedor['dias_c'].'</td>
 		            <td>'.$user['firstname'].'</td>
 		            <td>'.$proveedor['fecha'].'</td>
+                    <td><form method="post" action="../views/detalle_proveedor_pv.php"><input id="proveedor" name="proveedor" type="hidden" value="'.$proveedor['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">list</i></button></form></td>
 		            <td><form method="post" action="../views/editar_proveedor_pv.php"><input id="id" name="id" type="hidden" value="'.$proveedor['id'].'"><button class="btn-floating btn-tiny waves-effect waves-light pink"><i class="material-icons">edit</i></button></form></td>
 		            <td><a onclick="borrar_proveedor_pv('.$proveedor['id'].')" class="btn btn-floating red darken-1 waves-effect waves-light"><i class="material-icons">delete</i></a></td>
 		          </tr>';

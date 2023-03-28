@@ -3,7 +3,7 @@
 if (isset($_POST['articulo']) == false) {
   ?>
   <script>    
-    M.toast({html: "Regresando a Cotizaciones.", classes: "rounded"})
+    M.toast({html: "Regresando a Articulos.", classes: "rounded"})
     setTimeout("location.href='articulos_punto_venta.php'", 800);
   </script>
   <?php
